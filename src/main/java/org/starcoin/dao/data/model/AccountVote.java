@@ -1,0 +1,47 @@
+package org.starcoin.dao.data.model;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import java.math.BigInteger;
+
+@Entity
+public class AccountVote {
+
+    @EmbeddedId
+    @AttributeOverride(name = "accountAddress", column = @Column(name = "account_address", length = 100, nullable = false))
+    @AttributeOverride(name = "daoId", column = @Column(name = "dao_id", length = 100, nullable = false))
+    @AttributeOverride(name = "proposalNumber", column = @Column(name = "proposal_number", length = 20, nullable = false))
+    private AccountVoteId accountVoteId;
+
+    @Column(nullable = false)
+    private Integer choiceSequenceId;
+
+    @Column(precision = 50, scale = 0, nullable = false)
+    private BigInteger votingPower;
+
+    public AccountVoteId getAccountVoteId() {
+        return accountVoteId;
+    }
+
+    public void setAccountVoteId(AccountVoteId accountVoteId) {
+        this.accountVoteId = accountVoteId;
+    }
+
+    public Integer getChoiceSequenceId() {
+        return choiceSequenceId;
+    }
+
+    public void setChoiceSequenceId(Integer choiceSequenceId) {
+        this.choiceSequenceId = choiceSequenceId;
+    }
+
+    public BigInteger getVotingPower() {
+        return votingPower;
+    }
+
+    public void setVotingPower(BigInteger votingPower) {
+        this.votingPower = votingPower;
+    }
+}
