@@ -1,11 +1,16 @@
 package org.starcoin.dao.data.model;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class Proposal {
 
     @EmbeddedId
@@ -42,6 +47,7 @@ public class Proposal {
 
     @Column(length = 100)
     private String categoryId;
+
 
     public ProposalId getProposalId() {
         return proposalId;
@@ -122,4 +128,5 @@ public class Proposal {
     public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
+  
 }

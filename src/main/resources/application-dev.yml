@@ -1,0 +1,30 @@
+server:
+  servlet:
+    context-path: "/dev"
+
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        hbm2ddl:
+          # auto: create # 开发阶段使用
+          auto: update
+  flyway:
+    enabled: false # 启用或禁用 flyway
+
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG
+        #cache: TRACE
+        cache: INFO
+      hibernate:
+        tool:
+          hbm2ddl: DEBUG
+          # 输出数据库模型（开发阶段）
+

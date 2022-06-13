@@ -9,14 +9,14 @@ import java.util.Objects;
 public class ProposalVotingChoiceId implements Serializable {
     private ProposalId proposalId;
 
-    private Integer choiceSequenceId;
+    private Integer sequenceId;
 
     public ProposalVotingChoiceId() {
     }
 
     public ProposalVotingChoiceId(ProposalId proposalId, Integer choiceSequenceId) {
         this.proposalId = proposalId;
-        this.choiceSequenceId = choiceSequenceId;
+        this.sequenceId = choiceSequenceId;
     }
 
     @Column(length = 100)
@@ -38,19 +38,19 @@ public class ProposalVotingChoiceId implements Serializable {
     }
 
     @Column(length = 100)
-    public Integer getChoiceSequenceId() {
-        return choiceSequenceId;
+    public Integer getSequenceId() {
+        return sequenceId;
     }
 
-    public void setChoiceSequenceId(Integer choiceSequenceId) {
-        this.choiceSequenceId = choiceSequenceId;
+    public void setSequenceId(Integer sequenceId) {
+        this.sequenceId = sequenceId;
     }
 
     @Override
     public String toString() {
         return "ProposalVotingChoiceId{" +
                 "proposalId=" + proposalId +
-                ", choiceSequenceId=" + choiceSequenceId +
+                ", sequenceId=" + sequenceId +
                 '}';
     }
 
@@ -59,12 +59,12 @@ public class ProposalVotingChoiceId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProposalVotingChoiceId that = (ProposalVotingChoiceId) o;
-        return Objects.equals(proposalId, that.proposalId) && Objects.equals(choiceSequenceId, that.choiceSequenceId);
+        return Objects.equals(proposalId, that.proposalId) && Objects.equals(sequenceId, that.sequenceId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(proposalId, choiceSequenceId);
+        return Objects.hash(proposalId, sequenceId);
     }
 
 }

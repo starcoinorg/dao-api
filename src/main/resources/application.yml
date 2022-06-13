@@ -31,6 +31,6 @@ spring:
     properties:
       hibernate:
         hbm2ddl:
-          auto: create
+          auto: none
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
