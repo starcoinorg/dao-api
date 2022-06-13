@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import org.starcoin.dao.data.model.*;
+import org.starcoin.dao.data.repo.DaoRepository;
 import org.starcoin.dao.data.repo.ProposalRepository;
 import org.starcoin.dao.data.repo.ProposalVotingChoiceRepository;
 import org.starcoin.dao.vo.CastVoteRequest;
@@ -23,6 +24,9 @@ import java.util.Optional;
 @RequestMapping("v1")
 public class DaoController {
     @Resource
+    private DaoRepository daoRepository;
+
+    @Resource
     private ProposalRepository proposalRepository;
 
     @Resource
@@ -36,6 +40,21 @@ public class DaoController {
         return a;
     }
 
+    @GetMapping("daos")
+    public List<Dao> getDaos() {
+        return daoRepository.findAll();
+    }
+
+    @GetMapping("daos/{daoId}")
+    public Dao getDao(@PathVariable("daoId") String daoId) {
+        return daoRepository.findById(daoId).orElse(null);
+    }
+
+    @GetMapping("proposals")
+    public List<Proposal> getProposals() {
+        return proposalRepository.findAll();
+    }
+
     @GetMapping("proposals/{proposalId}")
     public ProposalVO getProposal(@PathVariable(name = "proposalId") String proposalId) {
         String[] a = splitByComma(proposalId, 2);
@@ -44,8 +63,7 @@ public class DaoController {
         if (!proposal.isPresent()) {
             return null;
         }
-        ProposalVO proposalVO = convertToProposalVO(proposal.get());
-        return proposalVO;
+        return convertToProposalVO(proposal.get());
     }
 
     @GetMapping("getVotingPower")

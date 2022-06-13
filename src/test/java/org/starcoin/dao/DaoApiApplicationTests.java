@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.starcoin.dao.data.model.*;
+import org.starcoin.dao.data.repo.DaoRepository;
 import org.starcoin.dao.data.repo.DaoVotingResourceRepository;
 import org.starcoin.dao.data.repo.ProposalRepository;
 import org.starcoin.dao.data.repo.ProposalVotingChoiceRepository;
@@ -14,13 +15,16 @@ import java.util.List;
 class DaoApiApplicationTests {
 
     @Autowired
+    private DaoRepository daoRepository;
+
+    @Autowired
     private ProposalRepository proposalRepository;
 
     @Autowired
-    private DaoVotingResourceRepository daoVotingResourceRepository;
+    private ProposalVotingChoiceRepository proposalVotingChoiceRepository;
 
     @Autowired
-    private ProposalVotingChoiceRepository proposalVotingChoiceRepository;
+    private DaoVotingResourceRepository daoVotingResourceRepository;
 
     @Test
     void contextLoads() {
@@ -34,22 +38,51 @@ class DaoApiApplicationTests {
     }
 
     @Test
-    void testAddProposal() {
-        Proposal p = new Proposal();
-        p.setProposalId(new ProposalId("test_dao_id", "1"));
-        p.setCategoryId("category1");
-        p.setTitle("title1");
-        p.setDescription("description1");
-        p.setDiscussion("https://github.com/starcoinorg/discussion1");
-        p.setBlockHeight(19999L);
-        p.setBlockStateRoot("0x99163c0fc319b62c3897ada8f97881e396e33b30383f47e23d93aaed07d6806d");
-        p.setVotingPeriodEnd(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7);
-        p.setVotingPeriodStart(System.currentTimeMillis());
-        p.setVotingType(VotingType.SINGLE_CHOICE);
-        proposalRepository.saveAndFlush(p);
+    void testAddDaos() {
+        Dao dao = new Dao();
+        dao.setDaoId("test_dao_id");
+        dao.setDescription("test_dao_description");
+        dao.setName("test_dao_name");
+        dao.setCommunityLinksDiscord("http://test_dao_community_links_discord");
+        dao.setCommunityLinksTelegram("http://test_dao_community_links_telegram");
+        dao.setCommunityLinksTwitter("http://test_dao_community_links_twitter");
+        dao.setPurposeId("test_dao_purpose_id");
+        dao.setTags("test_dao_tags,blockchain,dao");
+        daoRepository.saveAndFlush(dao);
+    }
 
-        List<ProposalVotingChoice> choices = VotingType.getYesNoChoices(p.getProposalId());
-        proposalVotingChoiceRepository.saveAllAndFlush(choices);
+    @Test
+    void testAddProposals() {
+        Proposal p1 = new Proposal();
+        p1.setProposalId(new ProposalId("test_dao_id", "1"));
+        p1.setCategoryId("category1");
+        p1.setTitle("title1");
+        p1.setDescription("description1");
+        p1.setDiscussion("https://github.com/starcoinorg/discussion1");
+        p1.setBlockHeight(19999L);
+        p1.setBlockStateRoot("0x99163c0fc319b62c3897ada8f97881e396e33b30383f47e23d93aaed07d6806d");
+        p1.setVotingPeriodEnd(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7);
+        p1.setVotingPeriodStart(System.currentTimeMillis());
+        p1.setVotingType(VotingType.SINGLE_CHOICE);
+        proposalRepository.saveAndFlush(p1);
+        List<ProposalVotingChoice> p1_choices = VotingType.getYesNoChoices(p1.getProposalId());
+        proposalVotingChoiceRepository.saveAllAndFlush(p1_choices);
+
+        // --------------- another proposal -----------------
+
+        Proposal p_2 = new Proposal();
+        p_2.setProposalId(new ProposalId("test_dao_id", "2"));
+        p_2.setCategoryId("category2");
+        p_2.setTitle("title2");
+        p_2.setDescription("description2");
+        p_2.setDiscussion("https://github.com/starcoinorg/discussion2");
+        p_2.setBlockHeight(19999L);
+        p_2.setBlockStateRoot("0x99163c0fc319b62c3897ada8f97881e396e33b30383f47e23d93aaed07d6806d");
+        p_2.setVotingPeriodEnd(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7);
+        p_2.setVotingPeriodStart(System.currentTimeMillis());
+        p_2.setVotingType(VotingType.YES_NO);
+        proposalRepository.saveAndFlush(p_2);
+
     }
 
     @Test
