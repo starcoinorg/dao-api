@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "dao-api-ingress"
+  #  namespace: "default"
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+  labels:
+    app: dao-api
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /dev/*
+            backend:
+              serviceName: "dao-api-dev"
+              servicePort: 80
+#          - path: /main/*
+#            backend:
+#              serviceName: "dao-api"
+#              servicePort: 80
+#          - path: /barnard/*
+#            backend:
+#              serviceName: "dao-api-barnard"
+#              servicePort: 80
+#          - path: /proxima/*
+#            backend:
+#              serviceName: "dao-api-proxima"
+#              servicePort: 80

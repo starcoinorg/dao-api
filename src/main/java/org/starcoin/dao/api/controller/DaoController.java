@@ -37,7 +37,7 @@ public class DaoController {
     }
 
     @GetMapping("proposals/{proposalId}")
-    public ProposalVO getProposal(String proposalId) {
+    public ProposalVO getProposal(@PathVariable(name = "proposalId") String proposalId) {
         String[] a = splitByComma(proposalId, 2);
         ProposalId id = new ProposalId(a[0], a[1]);
         Optional<Proposal> proposal = proposalRepository.findById(id);
