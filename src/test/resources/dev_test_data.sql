@@ -50,3 +50,15 @@ VALUES
 ('test_dao_id','1','0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapFarmBoost::UserInfo<0x00000000000000000000000000000001::STC::STC, 0x8c109349c6bd91411d6bc962e080c4a3::STAR::STAR>',''
 );
 
+
+INSERT INTO `account_vote`
+(`account_address`,
+`dao_id`,
+`proposal_number`,
+`choice_sequence_id`,
+`voting_power`)
+VALUES
+('0x8c109349c6bd91411d6bc962e080c4a3','test_dao_id','1','0','11111'),
+('0xa7cdbbd23a489acac81b07fdecbacc25','test_dao_id','1','0','21111')
+;
+

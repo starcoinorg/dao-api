@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import org.starcoin.dao.data.model.*;
+import org.starcoin.dao.data.repo.AccountVoteRepository;
 import org.starcoin.dao.data.repo.DaoRepository;
 import org.starcoin.dao.data.repo.ProposalRepository;
 import org.starcoin.dao.data.repo.ProposalVotingChoiceRepository;
@@ -13,7 +14,6 @@ import org.starcoin.dao.vo.GetVotingPowerResponse;
 import org.starcoin.dao.vo.ProposalVO;
 
 import javax.annotation.Resource;
-import javax.xml.soap.Detail;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,9 @@ public class DaoController {
 
     @Resource
     private ProposalVotingChoiceRepository proposalVotingChoiceRepository;
+
+    @Resource
+    private AccountVoteRepository accountVoteRepository;
 
     private static String[] splitByComma(String str, int expectedCount) {
         String[] a = str.split(",");
@@ -64,6 +67,19 @@ public class DaoController {
             return null;
         }
         return convertToProposalVO(proposal.get());
+    }
+
+    @GetMapping("accountVotes")
+    public List<AccountVote> getAccountVotes() {
+        return accountVoteRepository.findAll();
+    }
+
+    @GetMapping("accountVotes/{accountVoteId}")
+    public AccountVote getAccountVote(@PathVariable(name = "accountVoteId") String accountVoteId) {
+        String[] a = splitByComma(accountVoteId, 3);
+        AccountVoteId id = new AccountVoteId(a[0], new ProposalId(a[1], a[2]));
+        Optional<AccountVote> accountVote = accountVoteRepository.findById(id);
+        return accountVote.orElse(null);
     }
 
     @GetMapping("getVotingPower")

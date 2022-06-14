@@ -20,20 +20,20 @@ public class AccountVoteId implements Serializable {
     }
 
     @Column(length = 100)
-    public String getDaoId() {
+    protected String getDaoId() {
         return proposalId.getDaoId();
     }
 
-    public void setDaoId(String daoId) {
+    protected void setDaoId(String daoId) {
         proposalId.setDaoId(daoId);
     }
 
     @Column(length = 20)
-    public String getProposalNumber() {
+    protected String getProposalNumber() {
         return proposalId.getProposalNumber();
     }
 
-    public void setProposalNumber(String proposalNumber) {
+    protected void setProposalNumber(String proposalNumber) {
         proposalId.setProposalNumber(proposalNumber);
     }
 

@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.UUID;
 
 @ControllerAdvice
-public class GlobalExceptionHandler{
+public class GlobalExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 
     @ExceptionHandler(value = IllegalArgumentException.class)
-    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException e)
-    {
+    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException e) {
         ApiError error = new ApiError();
         error.setException("Illegal argument exception: " + e.getMessage());
         LOGGER.error(error.getException(), e);
@@ -27,8 +26,7 @@ public class GlobalExceptionHandler{
     }
 
     @ExceptionHandler(value = ArithmeticException.class)
-    public ResponseEntity<ApiError> handleArithmeticException(ArithmeticException e)
-    {
+    public ResponseEntity<ApiError> handleArithmeticException(ArithmeticException e) {
         ApiError error = new ApiError();
         String uuid = UUID.randomUUID().toString();
         error.setException("Arithmetic exception: " + uuid);
@@ -38,8 +36,7 @@ public class GlobalExceptionHandler{
     }
 
     @ExceptionHandler(value = NullPointerException.class)
-    public ResponseEntity<ApiError> handleNullPointerException(NullPointerException e)
-    {
+    public ResponseEntity<ApiError> handleNullPointerException(NullPointerException e) {
         ApiError error = new ApiError();
         String uuid = UUID.randomUUID().toString();
         error.setException("Null pointer exception: " + uuid);
@@ -49,8 +46,7 @@ public class GlobalExceptionHandler{
     }
 
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<ApiError> handleException(Exception e)
-    {
+    public ResponseEntity<ApiError> handleException(Exception e) {
         ApiError error = new ApiError();
         String uuid = UUID.randomUUID().toString();
         error.setException("Exception: " + uuid);

@@ -4,11 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.starcoin.dao.data.model.*;
-import org.starcoin.dao.data.repo.DaoRepository;
-import org.starcoin.dao.data.repo.DaoVotingResourceRepository;
-import org.starcoin.dao.data.repo.ProposalRepository;
-import org.starcoin.dao.data.repo.ProposalVotingChoiceRepository;
+import org.starcoin.dao.data.repo.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @SpringBootTest
@@ -25,6 +23,9 @@ class DaoApiApplicationTests {
 
     @Autowired
     private DaoVotingResourceRepository daoVotingResourceRepository;
+
+    @Autowired
+    private AccountVoteRepository accountVoteRepository;
 
     @Test
     void contextLoads() {
@@ -103,5 +104,22 @@ class DaoApiApplicationTests {
         for (DaoVotingResource r : daoVotingResourceRepository.findAll()) {
             System.out.println(r);
         }
+    }
+
+    @Test
+    void testAddAccountVotes() {
+        AccountVote vote1 = new AccountVote();
+        vote1.setAccountVoteId(new AccountVoteId("0x8c109349c6bd91411d6bc962e080c4a3",
+                new ProposalId("test_dao_id", "1")));
+        vote1.setChoiceSequenceId(0);
+        vote1.setVotingPower(BigInteger.valueOf(11111L));
+        accountVoteRepository.saveAndFlush(vote1);
+
+        AccountVote vote2 = new AccountVote();
+        vote2.setAccountVoteId(new AccountVoteId("0xa7cdbbd23a489acac81b07fdecbacc25",
+                new ProposalId("test_dao_id", "1")));
+        vote2.setChoiceSequenceId(0);
+        vote2.setVotingPower(BigInteger.valueOf(21111L));
+        accountVoteRepository.saveAndFlush(vote2);
     }
 }
