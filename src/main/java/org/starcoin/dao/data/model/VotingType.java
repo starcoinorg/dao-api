@@ -12,7 +12,7 @@ public class VotingType {
     public static List<ProposalVotingChoice> getYesNoChoices(ProposalId proposalId) {
         List<ProposalVotingChoice> choices = new ArrayList<>();
         choices.add(new ProposalVotingChoice(proposalId, 0, CHOICE_TITLE_YES));
-        choices.add(new ProposalVotingChoice(proposalId,  1, CHOICE_TITLE_NO));
+        choices.add(new ProposalVotingChoice(proposalId, 1, CHOICE_TITLE_NO));
         return choices;
     }
 }

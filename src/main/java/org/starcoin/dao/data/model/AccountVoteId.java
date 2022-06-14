@@ -10,6 +10,14 @@ public class AccountVoteId implements Serializable {
     private String accountAddress;
     private ProposalId proposalId;
 
+    public AccountVoteId() {
+    }
+
+    public AccountVoteId(String accountAddress, ProposalId proposalId) {
+        this.accountAddress = accountAddress;
+        this.proposalId = proposalId;
+    }
+
     @Column(length = 100)
     public String getAccountAddress() {
         return accountAddress;
@@ -42,14 +50,6 @@ public class AccountVoteId implements Serializable {
     }
 
     public void setProposalId(ProposalId proposalId) {
-        this.proposalId = proposalId;
-    }
-
-    public AccountVoteId() {
-    }
-
-    public AccountVoteId(String accountAddress, ProposalId proposalId) {
-        this.accountAddress = accountAddress;
         this.proposalId = proposalId;
     }
 

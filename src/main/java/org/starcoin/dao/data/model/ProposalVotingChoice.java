@@ -23,6 +23,19 @@ public class ProposalVotingChoice {
     @Column(length = 200, nullable = false)
     private String title;
 
+    public ProposalVotingChoice() {
+    }
+
+    public ProposalVotingChoice(ProposalVotingChoiceId proposalVotingChoiceId, String title) {
+        this.proposalVotingChoiceId = proposalVotingChoiceId;
+        this.title = title;
+    }
+
+    public ProposalVotingChoice(ProposalId proposalId, Integer choiceSequenceId, String title) {
+        this.proposalVotingChoiceId = new ProposalVotingChoiceId(proposalId, choiceSequenceId);
+        this.title = title;
+    }
+
     public ProposalVotingChoiceId getProposalVotingChoiceId() {
         return proposalVotingChoiceId;
     }
@@ -36,19 +49,6 @@ public class ProposalVotingChoice {
     }
 
     public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public ProposalVotingChoice() {
-    }
-
-    public ProposalVotingChoice(ProposalVotingChoiceId proposalVotingChoiceId, String title) {
-        this.proposalVotingChoiceId = proposalVotingChoiceId;
-        this.title = title;
-    }
-
-    public ProposalVotingChoice(ProposalId proposalId, Integer choiceSequenceId, String title) {
-        this.proposalVotingChoiceId = new ProposalVotingChoiceId(proposalId, choiceSequenceId);
         this.title = title;
     }
 }

@@ -1,8 +1,6 @@
 package org.starcoin.dao.vo;
 
 import org.starcoin.dao.data.model.Proposal;
-import org.starcoin.dao.data.model.ProposalId;
-import org.starcoin.dao.data.model.ProposalVotingChoice;
 
 import java.util.ArrayList;
 import java.util.List;

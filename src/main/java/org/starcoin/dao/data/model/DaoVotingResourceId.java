@@ -21,6 +21,22 @@ public class DaoVotingResourceId implements Serializable {
         this.sequenceId = sequenceId;
     }
 
+    public String getDaoId() {
+        return daoId;
+    }
+
+    public void setDaoId(String daoId) {
+        this.daoId = daoId;
+    }
+
+    public String getSequenceId() {
+        return sequenceId;
+    }
+
+    public void setSequenceId(String sequenceId) {
+        this.sequenceId = sequenceId;
+    }
+
     @Override
     public String toString() {
         return "DaoVotingResourceId{" +

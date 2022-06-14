@@ -8,8 +8,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @SpringBootApplication
 public class DaoApiApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DaoApiApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DaoApiApplication.class, args);
+    }
 
 }

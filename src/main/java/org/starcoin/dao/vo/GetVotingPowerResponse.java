@@ -1,7 +1,6 @@
 package org.starcoin.dao.vo;
 
 
-
 import java.math.BigInteger;
 import java.util.List;
 

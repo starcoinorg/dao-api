@@ -1,15 +1,12 @@
 package org.starcoin.dao.api.controller;
 
 import io.swagger.annotations.Api;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import org.starcoin.dao.data.model.*;
-import org.starcoin.dao.data.repo.AccountVoteRepository;
-import org.starcoin.dao.data.repo.DaoRepository;
-import org.starcoin.dao.data.repo.ProposalRepository;
-import org.starcoin.dao.data.repo.ProposalVotingChoiceRepository;
+import org.starcoin.dao.data.repo.*;
 import org.starcoin.dao.vo.CastVoteRequest;
+import org.starcoin.dao.vo.DaoVO;
 import org.starcoin.dao.vo.GetVotingPowerResponse;
 import org.starcoin.dao.vo.ProposalVO;
 
@@ -25,6 +22,9 @@ import java.util.Optional;
 public class DaoController {
     @Resource
     private DaoRepository daoRepository;
+
+    @Resource
+    private DaoVotingResourceRepository daoVotingResourceRepository;
 
     @Resource
     private ProposalRepository proposalRepository;
@@ -49,8 +49,9 @@ public class DaoController {
     }
 
     @GetMapping("daos/{daoId}")
-    public Dao getDao(@PathVariable("daoId") String daoId) {
-        return daoRepository.findById(daoId).orElse(null);
+    public DaoVO getDao(@PathVariable("daoId") String daoId) {
+        Optional<Dao> dao = daoRepository.findById(daoId);
+        return dao.map(this::convertToDaoVO).orElse(null);
     }
 
     @GetMapping("proposals")
@@ -63,10 +64,7 @@ public class DaoController {
         String[] a = splitByComma(proposalId, 2);
         ProposalId id = new ProposalId(a[0], a[1]);
         Optional<Proposal> proposal = proposalRepository.findById(id);
-        if (!proposal.isPresent()) {
-            return null;
-        }
-        return convertToProposalVO(proposal.get());
+        return proposal.map(this::convertToProposalVO).orElse(null);
     }
 
     @GetMapping("accountVotes")
@@ -109,7 +107,21 @@ public class DaoController {
         //todo
     }
 
-    @NotNull
+    private DaoVO convertToDaoVO(Dao dao) {
+        DaoVO vo = new DaoVO();
+        BeanUtils.copyProperties(dao, vo);
+        List<DaoVO.DaoVotingResource> resourceList = new ArrayList<>();
+        for (DaoVotingResource r : daoVotingResourceRepository.findByDaoVotingResourceId_DaoId(dao.getDaoId())) {
+            DaoVO.DaoVotingResource resourceVO = new DaoVO.DaoVotingResource();
+            resourceVO.setSequenceId(r.getDaoVotingResourceId().getSequenceId());
+            resourceVO.setResourceStructTag(r.getResourceStructTag());
+            resourceVO.setVotingPowerBcsPath(r.getVotingPowerBcsPath());
+            resourceList.add(resourceVO);
+        }
+        vo.setDaoVotingResources(resourceList);
+        return vo;
+    }
+
     private ProposalVO convertToProposalVO(Proposal proposal) {
         ProposalVO proposalVO = new ProposalVO();
         BeanUtils.copyProperties(proposal, proposalVO);
