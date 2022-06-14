@@ -70,8 +70,9 @@ public class DaoController {
     }
 
     @GetMapping("accountVotes")
-    public List<AccountVote> getAccountVotes() {
-        return accountVoteRepository.findAll();
+    public List<AccountVote> getAccountVotes(@RequestParam("daoId") String daoId,
+                                             @RequestParam("proposalNumber") String proposalNumber) {
+        return accountVoteRepository.findByDaoIdAndProposalNumber(daoId, proposalNumber);
     }
 
     @GetMapping("accountVotes/{accountVoteId}")
