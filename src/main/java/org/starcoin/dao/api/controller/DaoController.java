@@ -1,7 +1,6 @@
 package org.starcoin.dao.api.controller;
 
 import io.swagger.annotations.Api;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import org.starcoin.dao.data.model.*;
 import org.starcoin.dao.data.repo.*;
@@ -15,6 +14,9 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.starcoin.dao.api.utils.BeanUtils.convertToDaoVO;
+import static org.starcoin.dao.api.utils.BeanUtils.convertToProposalVO;
 
 @Api(tags = {"Starcoin DAO RESTful API"})
 @RestController
@@ -51,7 +53,7 @@ public class DaoController {
     @GetMapping("daos/{daoId}")
     public DaoVO getDao(@PathVariable("daoId") String daoId) {
         Optional<Dao> dao = daoRepository.findById(daoId);
-        return dao.map(this::convertToDaoVO).orElse(null);
+        return dao.map(d -> convertToDaoVO(d, daoVotingResourceRepository)).orElse(null);
     }
 
     @GetMapping("proposals")
@@ -64,7 +66,7 @@ public class DaoController {
         String[] a = splitByComma(proposalId, 2);
         ProposalId id = new ProposalId(a[0], a[1]);
         Optional<Proposal> proposal = proposalRepository.findById(id);
-        return proposal.map(this::convertToProposalVO).orElse(null);
+        return proposal.map(p -> convertToProposalVO(p, proposalVotingChoiceRepository)).orElse(null);
     }
 
     @GetMapping("accountVotes")
@@ -107,36 +109,5 @@ public class DaoController {
         //todo
     }
 
-    private DaoVO convertToDaoVO(Dao dao) {
-        DaoVO vo = new DaoVO();
-        BeanUtils.copyProperties(dao, vo);
-        List<DaoVO.DaoVotingResource> resourceList = new ArrayList<>();
-        for (DaoVotingResource r : daoVotingResourceRepository.findByDaoVotingResourceId_DaoId(dao.getDaoId())) {
-            DaoVO.DaoVotingResource resourceVO = new DaoVO.DaoVotingResource();
-            resourceVO.setSequenceId(r.getDaoVotingResourceId().getSequenceId());
-            resourceVO.setResourceStructTag(r.getResourceStructTag());
-            resourceVO.setVotingPowerBcsPath(r.getVotingPowerBcsPath());
-            resourceList.add(resourceVO);
-        }
-        vo.setDaoVotingResources(resourceList);
-        return vo;
-    }
-
-    private ProposalVO convertToProposalVO(Proposal proposal) {
-        ProposalVO proposalVO = new ProposalVO();
-        BeanUtils.copyProperties(proposal, proposalVO);
-        if (VotingType.YES_NO.equals(proposalVO.getVotingType())) {
-            proposalVO.setProposalVotingChoices(ProposalVO.getYesNoChoices());
-        } else if (VotingType.SINGLE_CHOICE.equals(proposalVO.getVotingType())) {
-            List<ProposalVO.ProposalVotingChoice> choices = new ArrayList<>();
-            for (ProposalVotingChoice c : proposalVotingChoiceRepository.findByProposalVotingChoiceId_ProposalId(proposalVO.getProposalId())) {
-                ProposalVO.ProposalVotingChoice c2 = new ProposalVO.ProposalVotingChoice(
-                        c.getProposalVotingChoiceId().getSequenceId(), c.getTitle());
-                choices.add(c2);
-            }
-            proposalVO.setProposalVotingChoices(choices);
-        }
-        return proposalVO;
-    }
 
 }
