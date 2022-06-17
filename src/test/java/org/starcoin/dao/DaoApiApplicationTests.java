@@ -94,12 +94,25 @@ class DaoApiApplicationTests {
                 "test_dao_id",
                 "1"
         ));
-        daoVotingResource.setResourceStructTag("0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapFarmBoost::UserInfo<" +
+        daoVotingResource.setResourceStructTag("0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapVestarMinter::Treasury");
+        // {"json":{"vtoken":{"token":{"value":0}}},"raw":"0x00000000000000000000000000000000"}
+        daoVotingResource.setVotingPowerBcsPath("{{{u128<-}}}");
+        daoVotingResourceRepository.saveAndFlush(daoVotingResource);
+
+        DaoVotingResource daoVotingResource2 = new DaoVotingResource();
+        daoVotingResource2.setDaoVotingResourceId(new DaoVotingResourceId(
+                "test_dao_id",
+                "2"
+        ));
+        daoVotingResource2.setResourceStructTag("0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapFarmBoost::UserInfo<" +
                 "0x00000000000000000000000000000001::STC::STC, " +
                 "0x8c109349c6bd91411d6bc962e080c4a3::STAR::STAR" +
                 ">");
-        daoVotingResource.setVotingPowerBcsPath("");
-        daoVotingResourceRepository.saveAndFlush(daoVotingResource);
+        // {"json":{"boost_factor":250,
+        // "locked_vetoken":{"token":{"value":2902046449728}},"user_amount":0},
+        // "raw":"0xfa0000000000000040a072afa3020000000000000000000000000000000000000000000000000000"}
+        daoVotingResource2.setVotingPowerBcsPath("{u128,{{u128<-}},u128}");
+        daoVotingResourceRepository.saveAndFlush(daoVotingResource2);
 
         for (DaoVotingResource r : daoVotingResourceRepository.findAll()) {
             System.out.println(r);

@@ -62,3 +62,21 @@ VALUES
 ('0xa7cdbbd23a489acac81b07fdecbacc25','test_dao_id','1','0','21111')
 ;
 
+
+-- ----------------------- 2022-06-17 -----------------------
+delete from dao_voting_resource where dao_id = 'test_dao_id' and (sequence_id = '1' or sequence_id = '2');
+
+INSERT INTO `dao_voting_resource`
+(`dao_id`,
+`sequence_id`,
+`resource_struct_tag`,
+`voting_power_bcs_path`)
+VALUES
+('test_dao_id','1','0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapVestarMinter::Treasury','{{{u128<-}}}'
+),
+('test_dao_id','2','0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapFarmBoost::UserInfo<0x00000000000000000000000000000001::STC::STC, 0x8c109349c6bd91411d6bc962e080c4a3::STAR::STAR>','{u128,{{u128<-}},u128}'
+);
+
+UPDATE `proposal` SET `block_state_root` = '0x5ee196ac92839743e79db7e6a7d75acdd4afe02b3c89c036e498f66df996c0cf' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '1');
+UPDATE `proposal` SET `block_state_root` = '0x5ee196ac92839743e79db7e6a7d75acdd4afe02b3c89c036e498f66df996c0cf' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '2');
+

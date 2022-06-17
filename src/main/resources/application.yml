@@ -34,3 +34,6 @@ spring:
           auto: none
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
+
+starcoin:
+  json-rpc-url: ${STARCOIN_JSON_RPC_URL}
