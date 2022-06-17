@@ -1,4 +1,3 @@
-
 ```shell
 cp ../../../../../../../../starcoinorg/starcoin-java/src/main/java/org/starcoin/types/AccessPath.java .
 cp ../../../../../../../../starcoinorg/starcoin-java/src/main/java/org/starcoin/types/DataPath.java .  

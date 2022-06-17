@@ -1,6 +1,7 @@
 package org.starcoin.bean;
 
 //import com.alibaba.fastjson.annotation.JSONField;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Event {

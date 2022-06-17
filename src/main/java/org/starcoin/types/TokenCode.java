@@ -15,6 +15,28 @@ public final class TokenCode {
         this.name = name;
     }
 
+    public static TokenCode deserialize(com.novi.serde.Deserializer deserializer) throws com.novi.serde.DeserializationError {
+        deserializer.increase_container_depth();
+        Builder builder = new Builder();
+        builder.address = AccountAddress.deserialize(deserializer);
+        builder.module = deserializer.deserialize_str();
+        builder.name = deserializer.deserialize_str();
+        deserializer.decrease_container_depth();
+        return builder.build();
+    }
+
+    public static TokenCode bcsDeserialize(byte[] input) throws com.novi.serde.DeserializationError {
+        if (input == null) {
+            throw new com.novi.serde.DeserializationError("Cannot deserialize null array");
+        }
+        com.novi.serde.Deserializer deserializer = new com.novi.bcs.BcsDeserializer(input);
+        TokenCode value = deserialize(deserializer);
+        if (deserializer.get_buffer_offset() < input.length) {
+            throw new com.novi.serde.DeserializationError("Some input bytes were not read");
+        }
+        return value;
+    }
+
     public void serialize(com.novi.serde.Serializer serializer) throws com.novi.serde.SerializationError {
         serializer.increase_container_depth();
         address.serialize(serializer);
@@ -29,37 +51,18 @@ public final class TokenCode {
         return serializer.get_bytes();
     }
 
-    public static TokenCode deserialize(com.novi.serde.Deserializer deserializer) throws com.novi.serde.DeserializationError {
-        deserializer.increase_container_depth();
-        Builder builder = new Builder();
-        builder.address = AccountAddress.deserialize(deserializer);
-        builder.module = deserializer.deserialize_str();
-        builder.name = deserializer.deserialize_str();
-        deserializer.decrease_container_depth();
-        return builder.build();
-    }
-
-    public static TokenCode bcsDeserialize(byte[] input) throws com.novi.serde.DeserializationError {
-        if (input == null) {
-             throw new com.novi.serde.DeserializationError("Cannot deserialize null array");
-        }
-        com.novi.serde.Deserializer deserializer = new com.novi.bcs.BcsDeserializer(input);
-        TokenCode value = deserialize(deserializer);
-        if (deserializer.get_buffer_offset() < input.length) {
-             throw new com.novi.serde.DeserializationError("Some input bytes were not read");
-        }
-        return value;
-    }
-
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         TokenCode other = (TokenCode) obj;
-        if (!java.util.Objects.equals(this.address, other.address)) { return false; }
-        if (!java.util.Objects.equals(this.module, other.module)) { return false; }
-        if (!java.util.Objects.equals(this.name, other.name)) { return false; }
-        return true;
+        if (!java.util.Objects.equals(this.address, other.address)) {
+            return false;
+        }
+        if (!java.util.Objects.equals(this.module, other.module)) {
+            return false;
+        }
+        return java.util.Objects.equals(this.name, other.name);
     }
 
     public int hashCode() {
@@ -77,9 +80,9 @@ public final class TokenCode {
 
         public TokenCode build() {
             return new TokenCode(
-                address,
-                module,
-                name
+                    address,
+                    module,
+                    name
             );
         }
     }

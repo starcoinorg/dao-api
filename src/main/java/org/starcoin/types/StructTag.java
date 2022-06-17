@@ -70,10 +70,7 @@ public final class StructTag {
         if (!java.util.Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!java.util.Objects.equals(this.type_params, other.type_params)) {
-            return false;
-        }
-        return true;
+        return java.util.Objects.equals(this.type_params, other.type_params);
     }
 
     public int hashCode() {

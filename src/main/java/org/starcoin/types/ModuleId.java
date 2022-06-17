@@ -54,10 +54,7 @@ public final class ModuleId {
         if (!java.util.Objects.equals(this.address, other.address)) {
             return false;
         }
-        if (!java.util.Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        return true;
+        return java.util.Objects.equals(this.name, other.name);
     }
 
     public int hashCode() {

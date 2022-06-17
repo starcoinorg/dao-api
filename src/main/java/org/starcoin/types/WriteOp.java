@@ -101,10 +101,7 @@ public abstract class WriteOp {
             if (obj == null) return false;
             if (getClass() != obj.getClass()) return false;
             Value other = (Value) obj;
-            if (!java.util.Objects.equals(this.value, other.value)) {
-                return false;
-            }
-            return true;
+            return java.util.Objects.equals(this.value, other.value);
         }
 
         public int hashCode() {

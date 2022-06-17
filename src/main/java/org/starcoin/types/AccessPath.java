@@ -54,10 +54,7 @@ public final class AccessPath {
         if (!java.util.Objects.equals(this.field0, other.field0)) {
             return false;
         }
-        if (!java.util.Objects.equals(this.field1, other.field1)) {
-            return false;
-        }
-        return true;
+        return java.util.Objects.equals(this.field1, other.field1);
     }
 
     public int hashCode() {

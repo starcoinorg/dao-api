@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 import org.starcoin.dao.data.model.*;
 import org.starcoin.dao.data.repo.*;
+import org.starcoin.dao.service.CastVoteService;
 import org.starcoin.dao.service.VotingPowerService;
 import org.starcoin.dao.vo.CastVoteRequest;
 import org.starcoin.dao.vo.DaoVO;
@@ -38,6 +39,9 @@ public class DaoController {
 
     @Resource
     private VotingPowerService votingPowerService;
+
+    @Resource
+    private CastVoteService castVoteService;
 
     private static String[] splitByComma(String str, int expectedCount) {
         String[] a = str.split(",");
@@ -95,7 +99,7 @@ public class DaoController {
 
     @PostMapping("castVote")
     public void castVote(@RequestBody CastVoteRequest request) {
-        //todo
+        castVoteService.castVote(request);
     }
 
 

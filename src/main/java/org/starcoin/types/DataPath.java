@@ -63,10 +63,7 @@ public abstract class DataPath {
             if (obj == null) return false;
             if (getClass() != obj.getClass()) return false;
             Code other = (Code) obj;
-            if (!java.util.Objects.equals(this.value, other.value)) {
-                return false;
-            }
-            return true;
+            return java.util.Objects.equals(this.value, other.value);
         }
 
         public int hashCode() {
@@ -114,10 +111,7 @@ public abstract class DataPath {
             if (obj == null) return false;
             if (getClass() != obj.getClass()) return false;
             Resource other = (Resource) obj;
-            if (!java.util.Objects.equals(this.value, other.value)) {
-                return false;
-            }
-            return true;
+            return java.util.Objects.equals(this.value, other.value);
         }
 
         public int hashCode() {

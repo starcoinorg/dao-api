@@ -54,10 +54,7 @@ public final class ArgumentABI {
         if (!java.util.Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!java.util.Objects.equals(this.type_tag, other.type_tag)) {
-            return false;
-        }
-        return true;
+        return java.util.Objects.equals(this.type_tag, other.type_tag);
     }
 
     public int hashCode() {

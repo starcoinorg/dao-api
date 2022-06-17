@@ -1,12 +1,22 @@
 package org.starcoin.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.novi.serde.DeserializationError;
+import com.novi.serde.SerializationError;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.starcoin.dao.data.model.*;
 import org.starcoin.dao.data.repo.*;
+import org.starcoin.dao.service.CastVoteService;
+import org.starcoin.dao.vo.CastVoteRequest;
+import org.starcoin.dao.vo.CastVoteVO;
+import org.starcoin.types.*;
+import org.starcoin.utils.HexUtils;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @SpringBootTest
@@ -26,6 +36,9 @@ class DaoApiApplicationTests {
 
     @Autowired
     private AccountVoteRepository accountVoteRepository;
+
+    @Autowired
+    private CastVoteService castVoteService;
 
     @Test
     void contextLoads() {
@@ -119,20 +132,52 @@ class DaoApiApplicationTests {
         }
     }
 
-    @Test
-    void testAddAccountVotes() {
-        AccountVote vote1 = new AccountVote();
-        vote1.setAccountVoteId(new AccountVoteId("0x8c109349c6bd91411d6bc962e080c4a3",
-                new ProposalId("test_dao_id", "1")));
-        vote1.setChoiceSequenceId(0);
-        vote1.setVotingPower(BigInteger.valueOf(11111L));
-        accountVoteRepository.saveAndFlush(vote1);
+//    @Test
+//    void testAddAccountVotes() {
+//        AccountVote vote1 = new AccountVote();
+//        vote1.setAccountVoteId(new AccountVoteId("0x8c109349c6bd91411d6bc962e080c4a3",
+//                new ProposalId("test_dao_id", "1")));
+//        vote1.setChoiceSequenceId(0);
+//        vote1.setVotingPower(BigInteger.valueOf(11111L));
+//        accountVoteRepository.saveAndFlush(vote1);
+//
+//        AccountVote vote2 = new AccountVote();
+//        vote2.setAccountVoteId(new AccountVoteId("0xa7cdbbd23a489acac81b07fdecbacc25",
+//                new ProposalId("test_dao_id", "1")));
+//        vote2.setChoiceSequenceId(0);
+//        vote2.setVotingPower(BigInteger.valueOf(21111L));
+//        accountVoteRepository.saveAndFlush(vote2);
+//    }
 
-        AccountVote vote2 = new AccountVote();
-        vote2.setAccountVoteId(new AccountVoteId("0xa7cdbbd23a489acac81b07fdecbacc25",
-                new ProposalId("test_dao_id", "1")));
-        vote2.setChoiceSequenceId(0);
-        vote2.setVotingPower(BigInteger.valueOf(21111L));
-        accountVoteRepository.saveAndFlush(vote2);
+    @Test
+    void testCastVote() throws JsonProcessingException, DeserializationError, SerializationError {
+        CastVoteVO castVoteVO = new CastVoteVO();
+        castVoteVO.setChoiceSequenceId(0);
+        castVoteVO.setAccountAddress("0x8c109349c6bd91411d6bc962e080c4a3");
+        castVoteVO.setDaoId("test_dao_id");
+        castVoteVO.setProposalNumber("1");
+        castVoteVO.setVotingPower(BigInteger.valueOf(1111111));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(castVoteVO);
+        System.out.println(json);
+
+        String hex = HexUtils.byteArrayToHex(json.getBytes(StandardCharsets.UTF_8));
+        System.out.println(hex);
+
+        SigningMessage signingMessage = new SigningMessage(
+                com.google.common.primitives.Bytes.asList(json.getBytes(StandardCharsets.UTF_8)));
+        //todo: sign the message
+        String just_a_test_authenticator_hex = "0x00204a4f7becc8b33af1ad34ed6195ab1109c4793e915759aa0eb26792fed4674f3d40097e0a748706c30de6457261bfc40ca0b83704072fb7614aac5b2643fe30860ed2e256b832e5160cd9da14d0fa183599d5e89b3169c8aa764ff86fc16f115600";
+        SignedMessage signedMessage = new SignedMessage(
+                AccountAddress.valueOf(HexUtils.hexToByteArray("0x8c109349c6bd91411d6bc962e080c4a3")),
+                signingMessage,
+                TransactionAuthenticator.Ed25519.bcsDeserialize(HexUtils.hexToByteArray(just_a_test_authenticator_hex)),
+                new ChainId((byte) 1)
+        );
+
+        CastVoteRequest castVoteRequest = new CastVoteRequest();
+        castVoteRequest.setSignedMessageHex(HexUtils.byteArrayToHex(signedMessage.bcsSerialize()));
+
+        castVoteService.castVote(castVoteRequest);
     }
 }

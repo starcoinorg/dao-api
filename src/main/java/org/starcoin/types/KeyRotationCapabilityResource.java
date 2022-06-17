@@ -46,10 +46,7 @@ public final class KeyRotationCapabilityResource {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         KeyRotationCapabilityResource other = (KeyRotationCapabilityResource) obj;
-        if (!java.util.Objects.equals(this.account_address, other.account_address)) {
-            return false;
-        }
-        return true;
+        return java.util.Objects.equals(this.account_address, other.account_address);
     }
 
     public int hashCode() {

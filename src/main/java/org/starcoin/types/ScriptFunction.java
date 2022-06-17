@@ -70,10 +70,7 @@ public final class ScriptFunction {
         if (!java.util.Objects.equals(this.ty_args, other.ty_args)) {
             return false;
         }
-        if (!java.util.Objects.equals(this.args, other.args)) {
-            return false;
-        }
-        return true;
+        return java.util.Objects.equals(this.args, other.args);
     }
 
     public int hashCode() {

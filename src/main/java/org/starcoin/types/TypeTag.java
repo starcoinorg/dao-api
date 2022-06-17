@@ -303,10 +303,7 @@ public abstract class TypeTag {
             if (obj == null) return false;
             if (getClass() != obj.getClass()) return false;
             Vector other = (Vector) obj;
-            if (!java.util.Objects.equals(this.value, other.value)) {
-                return false;
-            }
-            return true;
+            return java.util.Objects.equals(this.value, other.value);
         }
 
         public int hashCode() {
@@ -354,10 +351,7 @@ public abstract class TypeTag {
             if (obj == null) return false;
             if (getClass() != obj.getClass()) return false;
             Struct other = (Struct) obj;
-            if (!java.util.Objects.equals(this.value, other.value)) {
-                return false;
-            }
-            return true;
+            return java.util.Objects.equals(this.value, other.value);
         }
 
         public int hashCode() {

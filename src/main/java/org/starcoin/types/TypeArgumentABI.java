@@ -46,10 +46,7 @@ public final class TypeArgumentABI {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         TypeArgumentABI other = (TypeArgumentABI) obj;
-        if (!java.util.Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        return true;
+        return java.util.Objects.equals(this.name, other.name);
     }
 
     public int hashCode() {
