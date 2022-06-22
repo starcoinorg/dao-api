@@ -81,6 +81,12 @@ public class DaoController {
         return accountVoteRepository.findByDaoIdAndProposalNumber(daoId, proposalNumber);
     }
 
+    @GetMapping("sumAccountVotesGroupByChoice")
+    public List<AccountVoteSummary> sumAccountVotesGroupByChoice(@RequestParam("daoId") String daoId,
+                                                                 @RequestParam("proposalNumber") String proposalNumber) {
+        return accountVoteRepository.sumAccountVotesGroupByChoice(daoId, proposalNumber);
+    }
+
     @GetMapping("accountVotes/{accountVoteId}")
     public AccountVote getAccountVote(@PathVariable(name = "accountVoteId") String accountVoteId) {
         String[] a = splitByComma(accountVoteId, 3);

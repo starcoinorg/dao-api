@@ -150,6 +150,12 @@ class DaoApiApplicationTests {
 //    }
 
     @Test
+    void testSumProposalVotesGroupByChoice() {
+        List<AccountVoteSummary> summaries = accountVoteRepository.sumAccountVotesGroupByChoice("test_dao_id", "1");
+        System.out.println(summaries);
+    }
+
+    @Test
     void testCastVote() throws JsonProcessingException, DeserializationError, SerializationError {
         CastVoteVO castVoteVO = new CastVoteVO();
         castVoteVO.setChoiceSequenceId(0);
