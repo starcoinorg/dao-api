@@ -45,10 +45,16 @@ public class Proposal {
     private Long blockHeight;
 
     @Column(length = 100)
-    private String BlockStateRoot;
+    private String blockStateRoot;
 
     @Column(length = 100)
     private String categoryId;
+
+    @Column(length = 100)
+    private String submittedBy;
+
+    @Column
+    private Long submittedAt;
 
 
     public ProposalId getProposalId() {
@@ -116,11 +122,11 @@ public class Proposal {
     }
 
     public String getBlockStateRoot() {
-        return BlockStateRoot;
+        return blockStateRoot;
     }
 
     public void setBlockStateRoot(String blockStateRoot) {
-        BlockStateRoot = blockStateRoot;
+        this.blockStateRoot = blockStateRoot;
     }
 
     public String getCategoryId() {
@@ -131,4 +137,19 @@ public class Proposal {
         this.categoryId = categoryId;
     }
 
+    public String getSubmittedBy() {
+        return submittedBy;
+    }
+
+    public void setSubmittedBy(String submittedBy) {
+        this.submittedBy = submittedBy;
+    }
+
+    public Long getSubmittedAt() {
+        return submittedAt;
+    }
+
+    public void setSubmittedAt(Long submittedAt) {
+        this.submittedAt = submittedAt;
+    }
 }

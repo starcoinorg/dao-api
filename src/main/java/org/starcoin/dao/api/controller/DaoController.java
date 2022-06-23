@@ -63,8 +63,11 @@ public class DaoController {
     }
 
     @GetMapping("proposals")
-    public List<Proposal> getProposals() {
-        return proposalRepository.findAll();
+    public List<Proposal> getProposals(@RequestParam(name = "daoId",required = false) String daoId) {
+        if (daoId == null) {
+            return proposalRepository.findAll();
+        }
+        return proposalRepository.findByProposalId_DaoId(daoId);
     }
 
     @GetMapping("proposals/{proposalId}")

@@ -35,6 +35,13 @@ public class Dao {
     @Column(length = 200)
     private String communityLinksTelegram;
 
+    @Column(length = 500)
+    private String logoUrl;
+
+    @Column(length = 500)
+    private String moreTags;
+
+
     public String getDaoId() {
         return daoId;
     }
@@ -105,5 +112,21 @@ public class Dao {
 
     public void setCommunityLinksTelegram(String communityLinksTelegram) {
         this.communityLinksTelegram = communityLinksTelegram;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public String getMoreTags() {
+        return moreTags;
+    }
+
+    public void setMoreTags(String moreTags) {
+        this.moreTags = moreTags;
     }
 }
