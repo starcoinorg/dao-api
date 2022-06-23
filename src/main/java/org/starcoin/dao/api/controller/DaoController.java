@@ -63,7 +63,7 @@ public class DaoController {
     }
 
     @GetMapping("proposals")
-    public List<Proposal> getProposals(@RequestParam(name = "daoId",required = false) String daoId) {
+    public List<Proposal> getProposals(@RequestParam(name = "daoId", required = false) String daoId) {
         if (daoId == null) {
             return proposalRepository.findAll();
         }
@@ -75,7 +75,8 @@ public class DaoController {
         String[] a = splitByComma(proposalId, 2);
         ProposalId id = new ProposalId(a[0], a[1]);
         Optional<Proposal> proposal = proposalRepository.findById(id);
-        return proposal.map(p -> convertToProposalVO(p, proposalVotingChoiceRepository)).orElse(null);
+        return proposal.map(p -> convertToProposalVO(p, proposalVotingChoiceRepository, accountVoteRepository))
+                .orElse(null);
     }
 
     @GetMapping("accountVotes")

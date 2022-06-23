@@ -1,6 +1,7 @@
 package org.starcoin.dao.api.utils;
 
 import org.starcoin.dao.data.model.*;
+import org.starcoin.dao.data.repo.AccountVoteRepository;
 import org.starcoin.dao.data.repo.DaoVotingResourceRepository;
 import org.starcoin.dao.data.repo.ProposalVotingChoiceRepository;
 import org.starcoin.dao.vo.DaoVO;
@@ -26,7 +27,7 @@ public class BeanUtils {
         return vo;
     }
 
-    public static ProposalVO convertToProposalVO(Proposal proposal, ProposalVotingChoiceRepository proposalVotingChoiceRepository) {
+    public static ProposalVO convertToProposalVO(Proposal proposal, ProposalVotingChoiceRepository proposalVotingChoiceRepository, AccountVoteRepository accountVoteRepository) {
         ProposalVO proposalVO = new ProposalVO();
         org.springframework.beans.BeanUtils.copyProperties(proposal, proposalVO);
         if (VotingType.YES_NO.equals(proposalVO.getVotingType())) {
@@ -40,6 +41,9 @@ public class BeanUtils {
             }
             proposalVO.setProposalVotingChoices(choices);
         }
+        List<AccountVoteSummary> accountVoteSummaries = accountVoteRepository.sumAccountVotesGroupByChoice(
+                proposal.getProposalId().getDaoId(), proposal.getProposalId().getProposalNumber());
+        proposalVO.setAccountVoteSummaries(accountVoteSummaries);
         return proposalVO;
     }
 

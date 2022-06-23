@@ -1,5 +1,6 @@
 package org.starcoin.dao.vo;
 
+import org.starcoin.dao.data.model.AccountVoteSummary;
 import org.starcoin.dao.data.model.Proposal;
 
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import static org.starcoin.dao.data.model.VotingType.CHOICE_TITLE_YES;
 
 public class ProposalVO extends Proposal {
     private List<ProposalVotingChoice> proposalVotingChoices;
+
+    private List<AccountVoteSummary> accountVoteSummaries;
 
     public static List<ProposalVotingChoice> getYesNoChoices() {
         List<ProposalVotingChoice> choices = new ArrayList<>();
@@ -24,6 +27,14 @@ public class ProposalVO extends Proposal {
 
     public void setProposalVotingChoices(List<ProposalVotingChoice> proposalVotingChoices) {
         this.proposalVotingChoices = proposalVotingChoices;
+    }
+
+    public List<AccountVoteSummary> getAccountVoteSummaries() {
+        return accountVoteSummaries;
+    }
+
+    public void setAccountVoteSummaries(List<AccountVoteSummary> accountVoteSummaries) {
+        this.accountVoteSummaries = accountVoteSummaries;
     }
 
     public static class ProposalVotingChoice {
