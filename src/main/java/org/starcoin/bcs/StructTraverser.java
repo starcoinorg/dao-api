@@ -13,7 +13,7 @@ public class StructTraverser extends AbstractContainerTraverser {
     }
 
     @Override
-    public Iterable<BCSTraverser> elementTraversers(BcsDeserializer deserializer) {
+    public Iterable<BCSTraverser> elementTraversers(BcsDeserializer deserializer, ContentHandler contentHandler) {
         return this.elementTraversers;
     }
 

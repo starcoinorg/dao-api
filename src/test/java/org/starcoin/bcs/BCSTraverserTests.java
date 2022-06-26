@@ -9,6 +9,7 @@ import org.starcoin.utils.HexUtils;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.starcoin.bcs.PrintContentHandler.toObjectForPrint;
@@ -18,7 +19,7 @@ public class BCSTraverserTests {
     void testOptionalBytesVectorTraverse() throws DeserializationError {
         BytesTraverser bytesTraverser = new VectorU8Traverser();
         OptionalTraverser optionalTraverser = new OptionalTraverser(bytesTraverser, bytesTraverser.type());
-        VectorTraverser vectorTraverser = new VectorTraverser(optionalTraverser, optionalTraverser.type());
+        VectorTraverser vectorTraverser = new VectorTraverser(optionalTraverser);
         System.out.println(vectorTraverser);
         byte[] bytes = HexUtils.hexToByteArray("0x020001200f30a41872208c6324fa842889315b14f9be6f3dd0d5050686317adfdd0cda60");
         printTraverse(vectorTraverser, bytes);
@@ -35,7 +36,7 @@ public class BCSTraverserTests {
         System.out.println(toObjectForPrint(valueGetter_1.getTargetValue()));
         byte[] expectedBytes = new byte[]{15, 48, -92, 24, 114, 32, -116, 99, 36, -6, -124, 40, -119, 49, 91, 20, -7, -66, 111, 61, -48, -43, 5, 6, -122, 49, 122, -33, -35, 12, -38, 96};
         Assertions.assertTrue(valueGetter_1.getTargetValue() instanceof Optional<?>);
-        Assertions.assertArrayEquals(expectedBytes, ((Optional<byte[]>)valueGetter_1.getTargetValue()).get());
+        Assertions.assertArrayEquals(expectedBytes, ((Optional<byte[]>) valueGetter_1.getTargetValue()).get());
     }
 
     @Test
@@ -106,6 +107,46 @@ public class BCSTraverserTests {
         AccountAddressTraverser.INSTANCE.traverse(deserializer, valueGetter);
         System.out.println(toObjectForPrint(valueGetter.getTargetValue()));
         Assertions.assertArrayEquals(bytes, (byte[]) valueGetter.getTargetValue());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void testEnumTraverse_1() throws DeserializationError {
+        byte[] bytes = HexUtils.hexToByteArray("07e498d62f5d1f469d2f72eb3e9dc8f2301143726f7373436861696e4d616e616765720f43726f7373436861696e4576656e7400");
+        EnumTraverser enumTraverser = new EnumTraverser(Arrays.asList(
+                //pub enum TypeTag {
+                NoOperationTraverser.INSTANCE,//Bool,
+                NoOperationTraverser.INSTANCE,//U8,
+                NoOperationTraverser.INSTANCE,//U64,
+                NoOperationTraverser.INSTANCE,//U128,
+                NoOperationTraverser.INSTANCE,//Address,
+                NoOperationTraverser.INSTANCE,//Signer,
+                UnsupportedOperationTraverser.INSTANCE, //Vector(Box<TypeTag>),
+                new StructTraverser(Arrays.asList( //Struct(StructTag),
+                        //pub struct StructTag {
+                        //    pub address: AccountAddress,
+                        //    pub module: Identifier,
+                        //    pub name: Identifier,
+                        //    pub type_params: Vec<TypeTag>,
+                        //}
+                        AccountAddressTraverser.INSTANCE,
+                        StringTraverser.INSTANCE,
+                        StringTraverser.INSTANCE,
+                        new VectorTraverser(UnsupportedOperationTraverser.INSTANCE)
+                ))
+                //}
+        ));
+        printTraverse(enumTraverser, bytes);
+
+        BcsDeserializer deserializer = new BcsDeserializer(bytes);
+        GetValueByIndexesHandler valueGetter = new GetValueByIndexesHandler(GetValueByIndexesHandler.ROOT_INDEXES);
+        enumTraverser.traverse(deserializer, valueGetter);
+        System.out.println(toObjectForPrint(valueGetter.getTargetValue()));
+        BCSTraverser.Enum enumObj = (BCSTraverser.Enum) valueGetter.getTargetValue();
+        Assertions.assertEquals(7, enumObj.getVariantIndex());
+        Assertions.assertTrue(enumObj.getValue() instanceof List);
+        List<Object> listObj = (List<Object>) enumObj.getValue();
+        Assertions.assertEquals("CrossChainManager", listObj.get(1));
     }
 
 

@@ -6,7 +6,7 @@ import com.novi.serde.DeserializationError;
 import java.util.Collections;
 
 public class OptionalTraverser extends AbstractContainerTraverser {
-    private BCSTraverser innerTraverser;
+    private final BCSTraverser innerTraverser;
 
     /**
      * @param innerTraverser Inner BCS traverser.
@@ -22,7 +22,7 @@ public class OptionalTraverser extends AbstractContainerTraverser {
     }
 
     @Override
-    public Iterable<BCSTraverser> elementTraversers(BcsDeserializer deserializer) throws DeserializationError {
+    public Iterable<BCSTraverser> elementTraversers(BcsDeserializer deserializer, ContentHandler contentHandler) throws DeserializationError {
         boolean tag = deserializer.deserialize_option_tag();
         if (!tag) {
             return Collections.emptyList();

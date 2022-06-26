@@ -18,7 +18,7 @@ public class GetValueByIndexesHandler implements ContentHandler {
     private final List<Integer> currentIndexes;
 
     /**
-     * Current containers at depth offsets(relative to target depth).
+     * Current values at depth offsets(relative to target depth).
      */
     private final List<Object> currentValues;
 
@@ -41,6 +41,24 @@ public class GetValueByIndexesHandler implements ContentHandler {
         this.currentValues = new ArrayList<>();
     }
 
+    /**
+     * Add element to container and return container.
+     */
+    @SuppressWarnings("unchecked")
+    private static Object addElementToContainerValue(Object element, Object container) {
+        if (container instanceof List) {
+            ((List<Object>) container).add(element);
+            return container;
+        } else if (container instanceof Optional) {
+            return element != null ? Optional.of(element) : Optional.empty();
+        } else if (container instanceof BCSTraverser.Enum) {
+            BCSTraverser.Enum o = ((BCSTraverser.Enum) container);
+            return new BCSTraverser.Enum(o.getVariantIndex(), element);
+        } else {
+            throw new IllegalArgumentException("container: " + container);
+        }
+    }
+
     public Object getTargetValue() {
         return targetValue;
     }
@@ -50,6 +68,8 @@ public class GetValueByIndexesHandler implements ContentHandler {
         increaseCurrentIndexAtCurrentDepth();
         if (this.targetReached) {
             setCurrentValueAtCurrentDepth(val);
+            // non-container value is complete
+            addCurrentValueToParentContainer();
         }
         return shouldBreakTraversal();
     }
@@ -63,13 +83,25 @@ public class GetValueByIndexesHandler implements ContentHandler {
         increaseCurrentDepth();
     }
 
+    @Override
+    public void variantIndex(int value) {
+        // ---------------------------------------------
+        // It is here after received startContainer...
+        //System.out.println("Variant Index: " + value);
+        if (this.targetReached) {
+            setCurrentParentEnumVariantIndex(value);
+        }
+    }
 
     @Override
     public boolean endContainer(String containerType, String elementType) {
         decreaseCurrentDepth();
+        if (this.targetReached) {
+            // current container value is complete, add to parent
+            addCurrentValueToParentContainer();
+        }
         return shouldBreakTraversal();
     }
-
 
     private void increaseCurrentDepth() {
         this.currentDepth++;
@@ -89,20 +121,43 @@ public class GetValueByIndexesHandler implements ContentHandler {
         }
         this.currentIndexes.set(this.currentDepth, -1);
         System.out.println("-- clearCurrentIndex, Current indexes: " + this.currentIndexes);
-
     }
 
-    private void addCurrentValueToContainer() {
+    /**
+     * Add current value at current depth to parent container.
+     */
+    private void addCurrentValueToParentContainer() {
         if (!targetReached) {
             throw new IllegalStateException("!this.targetReached");
         }
-        int idx = depthIndexOfCurrentValues();
+        int idx = currentDepthIndexOfCurrentValues();
         if (idx >= 1) {
             Object elementVal = this.currentValues.get(idx);
-            this.currentValues.set(idx, null);
+            // this.currentValues.set(idx, null);// can set to null.
             Object containerVal = this.currentValues.get(idx - 1);
-            this.currentValues.set(idx - 1, addElementToContainerValue(containerVal, elementVal));
-            System.out.println("-- addCurrentValueToContainer, Current values: " + this.currentValues);
+            this.currentValues.set(idx - 1, addElementToContainerValue(elementVal, containerVal));
+            System.out.println("-- addCurrentValueToParentContainer, Current values: " + this.currentValues);
+        }
+    }
+
+    /**
+     * Set variant index of current parent enum of value at current depth.
+     *
+     * @param variantIndex variant index
+     */
+    private void setCurrentParentEnumVariantIndex(int variantIndex) {
+        if (!targetReached) {
+            throw new IllegalStateException("!this.targetReached");
+        }
+        int idx = currentDepthIndexOfCurrentValues();
+        if (idx >= 1) {
+            Object containerVal = this.currentValues.get(idx - 1);
+            if (!(containerVal instanceof BCSTraverser.Enum)) {
+                throw new IllegalStateException("Current parent container is not an enum.");
+            }
+            //BCSTraverser.Enum enumVal = (BCSTraverser.Enum)containerVal;
+            this.currentValues.set(idx - 1, new BCSTraverser.Enum(variantIndex));
+            System.out.println("-- setCurrentEnumVariantIndex, Current values: " + this.currentValues);
         }
     }
 
@@ -111,6 +166,8 @@ public class GetValueByIndexesHandler implements ContentHandler {
             ensureCurrentIndexesSize();
             this.currentIndexes.set(this.currentDepth, this.currentIndexes.get(this.currentDepth) + 1);
             System.out.println("-- increaseCurrentIndexAtCurrentDepth, Current indexes: " + this.currentIndexes);
+            System.out.println("-- current depth: " + this.currentDepth);
+            System.out.println("-- Current values: " + this.currentValues);
         }
         if (!this.targetReached && checkIfTargetReached()) {
             this.targetReached = true;
@@ -127,17 +184,17 @@ public class GetValueByIndexesHandler implements ContentHandler {
         if (!this.targetReached) {
             throw new IllegalStateException("!this.targetReached");
         }
-        int idx = depthIndexOfCurrentValues();
+        int idx = currentDepthIndexOfCurrentValues();
         if (idx >= this.currentValues.size()) {
             this.currentValues.add(idx, null);
         }
         this.currentValues.set(idx, val);
 
-        addCurrentValueToContainer();
+        System.out.println("-- current depth: " + this.currentDepth);
         System.out.println("-- setCurrentValue, Current values: " + this.currentValues);
     }
 
-    private int depthIndexOfCurrentValues() {
+    private int currentDepthIndexOfCurrentValues() {
         return this.currentDepth - this.targetIndexes.length + 1;
     }
 
@@ -151,7 +208,7 @@ public class GetValueByIndexesHandler implements ContentHandler {
                 // && checkIfTargetReached()
                 && this.currentDepth == this.targetIndexes.length - 1;
         if (b) {
-            this.targetValue = this.currentValues.get(depthIndexOfCurrentValues());
+            this.targetValue = this.currentValues.get(currentDepthIndexOfCurrentValues());
         }
         return b;
     }
@@ -174,24 +231,11 @@ public class GetValueByIndexesHandler implements ContentHandler {
             container = new ArrayList<>();
         } else if (TYPE_OPTIONAL.equals(containerType)) {
             container = Optional.empty();
+        } else if (TYPE_ENUM.equals(containerType)) {
+            container = BCSTraverser.Enum.EMPTY;
         } else {
             throw new IllegalArgumentException("containerType: " + containerType);
         }
         return container;
-    }
-
-    /**
-     * Add element to container and return container.
-     */
-    @SuppressWarnings("unchecked")
-    private Object addElementToContainerValue(Object container, Object element) {
-        if (container instanceof List) {
-            ((List<Object>) container).add(element);
-            return container;
-        } else if (container instanceof Optional) {
-            return element != null ? Optional.of(element) : Optional.empty();
-        } else {
-            throw new IllegalArgumentException("container: " + container);
-        }
     }
 }

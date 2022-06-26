@@ -3,7 +3,7 @@ package org.starcoin.bcs;
 public interface ContentHandler {
     /**
      * Receive notification of value.
-     * Only sent by non-container traversers.
+     * Sent only by non-container traversers.
      *
      * @param val Value
      * @return Returns true if it is necessary to break the traversal to the next element.
@@ -30,5 +30,13 @@ public interface ContentHandler {
 //    void startOptional(String valueType);
 //
 //    void endOptional(String valueType);
+
+    /**
+     * Receive notification of variant index.
+     * Sent by enum traversers.
+     *
+     * @param value Variant index value.
+     */
+    void variantIndex(int value);
 
 }

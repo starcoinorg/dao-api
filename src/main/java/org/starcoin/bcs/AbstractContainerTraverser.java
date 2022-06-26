@@ -25,7 +25,7 @@ public abstract class AbstractContainerTraverser implements BCSTraverser {
     public boolean traverse(BcsDeserializer deserializer, ContentHandler contentHandler) throws DeserializationError {
         boolean b = false;
         contentHandler.startContainer(containerType, elementType);
-        for (BCSTraverser t : elementTraversers(deserializer)) {
+        for (BCSTraverser t : elementTraversers(deserializer, contentHandler)) {
             b = t.traverse(deserializer, contentHandler);
             if (b) {
                 break;
@@ -35,7 +35,7 @@ public abstract class AbstractContainerTraverser implements BCSTraverser {
     }
 
     @Override
-    public abstract Iterable<BCSTraverser> elementTraversers(BcsDeserializer deserializer) throws DeserializationError;
+    public abstract Iterable<BCSTraverser> elementTraversers(BcsDeserializer deserializer, ContentHandler contentHandler) throws DeserializationError;
 
     @Override
     public String type() {

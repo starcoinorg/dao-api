@@ -9,8 +9,8 @@ public class VectorTraverser extends AbstractContainerTraverser {
 
     private final BCSTraverser elementTraverser;
 
-    public VectorTraverser(BCSTraverser elementTraverser, String elementType) {
-        super(TYPE_VECTOR, elementType);
+    public VectorTraverser(BCSTraverser elementTraverser) {
+        super(TYPE_VECTOR, elementTraverser.type());
         this.elementTraverser = elementTraverser;
     }
 
@@ -36,7 +36,7 @@ public class VectorTraverser extends AbstractContainerTraverser {
     }
 
     @Override
-    public Iterable<BCSTraverser> elementTraversers(BcsDeserializer deserializer) throws DeserializationError {
+    public Iterable<BCSTraverser> elementTraversers(BcsDeserializer deserializer, ContentHandler contentHandler) throws DeserializationError {
         long length = deserializer.deserialize_len();
         //        BCSTraverser[] elementTraversers = new BCSTraverser[(int) length];
         //        Arrays.fill(elementTraversers, 0, elementTraversers.length, elementTraverser);

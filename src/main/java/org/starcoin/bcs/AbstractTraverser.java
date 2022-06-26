@@ -13,7 +13,7 @@ public abstract class AbstractTraverser implements BCSTraverser {
     }
 
     @Override
-    public Iterable<BCSTraverser> elementTraversers(BcsDeserializer deserializer) {
+    public Iterable<BCSTraverser> elementTraversers(BcsDeserializer deserializer, ContentHandler contentHandler) {
         return Collections.emptyList();
     }
 

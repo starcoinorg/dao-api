@@ -48,4 +48,9 @@ public class PrintContentHandler implements ContentHandler {
 //        System.out.println(indentSpaces() + "End optional, value type: " + valueType);
 //    }
 
+
+    @Override
+    public void variantIndex(int value) {
+        System.out.println(indentSpaces() + "Variant Index: " + value);
+    }
 }
