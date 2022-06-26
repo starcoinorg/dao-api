@@ -55,6 +55,12 @@ public class BCSTraverserTests {
         byte[] bytes = HexUtils.hexToByteArray("0xfa0000000000000040a072afa3020000000000000000000000000000000000000000000000000000");
         printTraverse(structTraverser, bytes);
 
+        BcsDeserializer deserializer_0 = new BcsDeserializer(bytes);
+        GetValueByIndexesHandler valueGetter_0 = new GetValueByIndexesHandler(new int[]{0});
+        structTraverser.traverse(deserializer_0, valueGetter_0);
+        System.out.println(toObjectForPrint(valueGetter_0.getTargetValue()));
+        Assertions.assertEquals(250L, valueGetter_0.getTargetValue());
+
         BcsDeserializer deserializer_1 = new BcsDeserializer(bytes);
         GetValueByIndexesHandler valueGetter_1 = new GetValueByIndexesHandler(new int[]{1, 0, 0});
         structTraverser.traverse(deserializer_1, valueGetter_1);
