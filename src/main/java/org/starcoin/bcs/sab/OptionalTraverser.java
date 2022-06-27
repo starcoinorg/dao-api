@@ -1,4 +1,4 @@
-package org.starcoin.bcs;
+package org.starcoin.bcs.sab;
 
 import com.novi.bcs.BcsDeserializer;
 import com.novi.serde.DeserializationError;
@@ -11,8 +11,8 @@ public class OptionalTraverser extends AbstractContainerTraverser {
     /**
      * @param innerTraverser Inner BCS traverser.
      */
-    public OptionalTraverser(BCSTraverser innerTraverser, String elementType) {
-        super(TYPE_OPTIONAL, elementType);
+    public OptionalTraverser(BCSTraverser innerTraverser) {
+        super(TYPE_OPTIONAL, innerTraverser.type());
         this.innerTraverser = innerTraverser;
     }
 

@@ -1,22 +1,24 @@
-package org.starcoin.bcs;
+package org.starcoin.bcs.sab;
 
 import com.novi.bcs.BcsDeserializer;
+import com.novi.serde.Bytes;
 import com.novi.serde.DeserializationError;
 
-public class StringTraverser extends AbstractTraverser {
-    public static StringTraverser INSTANCE = new StringTraverser();
+public class BytesTraverser extends AbstractTraverser {
+    public static BytesTraverser INSTANCE = new BytesTraverser();
 
-    public StringTraverser() {
+    public BytesTraverser() {
     }
 
     @Override
     protected Object doTraverse(BcsDeserializer deserializer) throws DeserializationError {
-        return deserializer.deserialize_str();
+        Bytes bytes = deserializer.deserialize_bytes();
+        return bytes.content();
     }
 
     @Override
     public String type() {
-        return TYPE_STRING;
+        return TYPE_BYTES;
     }
 
     @Override

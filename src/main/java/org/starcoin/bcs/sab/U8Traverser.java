@@ -1,27 +1,27 @@
-package org.starcoin.bcs;
+package org.starcoin.bcs.sab;
 
 import com.novi.bcs.BcsDeserializer;
 import com.novi.serde.DeserializationError;
 
-public class BoolTraverser extends AbstractTraverser {
-    public static BoolTraverser INSTANCE = new BoolTraverser();
+public class U8Traverser extends AbstractTraverser {
+    public static U8Traverser INSTANCE = new U8Traverser();
 
-    public BoolTraverser() {
+    public U8Traverser() {
     }
 
     @Override
     protected Object doTraverse(BcsDeserializer deserializer) throws DeserializationError {
-        return deserializer.deserialize_u128();
+        return deserializer.deserialize_u64();
     }
 
     @Override
     public String type() {
-        return TYPE_BOOL;
+        return TYPE_U8;
     }
 
     @Override
     public String toString() {
-        return "BoolTraverser{" +
+        return "U8Traverser{" +
                 '}';
     }
 }

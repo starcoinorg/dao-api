@@ -1,4 +1,4 @@
-package org.starcoin.bcs;
+package org.starcoin.bcs.sab;
 
 public interface ContentHandler {
     /**

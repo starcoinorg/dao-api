@@ -1,4 +1,4 @@
-package org.starcoin.bcs;
+package org.starcoin.bcs.sab;
 
 public class VectorU8Traverser extends BytesTraverser {
     public static VectorU8Traverser INSTANCE = new VectorU8Traverser();

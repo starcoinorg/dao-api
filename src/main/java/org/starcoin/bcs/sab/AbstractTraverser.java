@@ -1,4 +1,4 @@
-package org.starcoin.bcs;
+package org.starcoin.bcs.sab;
 
 import com.novi.bcs.BcsDeserializer;
 import com.novi.serde.DeserializationError;

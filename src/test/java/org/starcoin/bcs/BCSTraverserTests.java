@@ -4,6 +4,7 @@ import com.novi.bcs.BcsDeserializer;
 import com.novi.serde.DeserializationError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.starcoin.bcs.sab.*;
 import org.starcoin.utils.HexUtils;
 
 import java.math.BigInteger;
@@ -12,13 +13,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.starcoin.bcs.PrintContentHandler.toObjectForPrint;
+import static org.starcoin.bcs.sab.PrintContentHandler.toObjectForPrint;
 
 public class BCSTraverserTests {
     @Test
     void testOptionalBytesVectorTraverse() throws DeserializationError {
         BytesTraverser bytesTraverser = new VectorU8Traverser();
-        OptionalTraverser optionalTraverser = new OptionalTraverser(bytesTraverser, bytesTraverser.type());
+        OptionalTraverser optionalTraverser = new OptionalTraverser(bytesTraverser);
         VectorTraverser vectorTraverser = new VectorTraverser(optionalTraverser);
         System.out.println(vectorTraverser);
         byte[] bytes = HexUtils.hexToByteArray("0x020001200f30a41872208c6324fa842889315b14f9be6f3dd0d5050686317adfdd0cda60");
