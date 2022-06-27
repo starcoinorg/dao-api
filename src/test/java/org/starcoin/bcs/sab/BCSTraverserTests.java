@@ -1,10 +1,9 @@
-package org.starcoin.bcs;
+package org.starcoin.bcs.sab;
 
 import com.novi.bcs.BcsDeserializer;
 import com.novi.serde.DeserializationError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.starcoin.bcs.sab.*;
 import org.starcoin.utils.HexUtils;
 
 import java.math.BigInteger;
