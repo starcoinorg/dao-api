@@ -24,4 +24,9 @@ public class U8Traverser extends AbstractTraverser {
         return "U8Traverser{" +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof U8Traverser;
+    }
 }

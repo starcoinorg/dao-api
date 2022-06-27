@@ -1,0 +1,163 @@
+options {
+    STATIC = false;
+    LOOKAHEAD = 2;
+    FORCE_LA_CHECK = true;
+}
+PARSER_BEGIN(TypeParser)
+package org.starcoin.bcs.sab;
+
+import java.util.*;
+
+public class TypeParser {
+	public static void main(String[] args) throws ParseException, TokenMgrError {
+            TypeParser parser = new TypeParser(System.in);
+            parser.typeAndPath();
+	}
+
+    public TypeParser(String input) {
+      this(new java.io.ByteArrayInputStream(input.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+    }public void typeAndPath() {
+    }
+
+    public static class Pair<T1, T2> {
+        private T1 item1;
+        private T2 item2;
+        public Pair(T1 item1, T2 item2) { this.item1 = item1; this.item2 = item2; }
+        public T1 getItem1() { return item1; }
+        public T2 getItem2() { return item2; }
+    }
+}}
+}
+PARSER_END(TypeParser)
+
+SKIP : {
+    " "
+|   "\r"
+|   "\t"
+|   "\n"
+}
+TOKEN : {
+    < LT: "<" >
+|   < GT: ">" >
+}
+TOKEN : {
+    < LPAREN: "(" >
+|   < RPAREN: ")" >
+|   < LBRACE: "{" >
+|   < RBRACE: "}" >
+|   < LBRACKET: "[" >
+|   < RBRACKET: "]" >
+|   < COMMA: "," >
+|   < DOT: "." >
+|   < UNDERSCORE: "_" >
+}
+TOKEN : {
+    < UINTEGER: (<DIGIT>)+ >
+|   < DIGIT: ["0"-"9"] >
+}
+TOKEN : {
+    < VECTOR : "vector" >
+|   < STRUCT: "struct" >
+|   < OPTIONAL: "option" >
+|   < ENUM: "enum" >
+|   < BYTES: "bytes" >
+|   < STRING: "string" >
+|   < U128: "u128" >
+|   < U64: "u64" >
+|   < U8: "u8" >
+|   < BOOL: "bool" >
+|   < ADDRESS: "address" >
+}
+
+
+Pair<BCSTraverser, List<Integer>> typeAndPath():
+{
+    BCSTraverser t;
+    List<Integer> p;
+}
+{
+    t = type() p = path()
+    { return new Pair<>(t, p); }
+}
+
+List<Integer> path():
+{
+    Token t;
+}
+{
+    { List<Integer> indexes = new ArrayList<>(); }
+    (<LBRACKET> t = <UINTEGER> { indexes.add(Integer.parseInt(t.image)); } <RBRACKET>)*
+    {
+        return indexes;
+    }
+}
+
+BCSTraverser type() :
+{
+    BCSTraverser t;
+}
+{
+    <BYTES> { return BytesTraverser.INSTANCE; }
+|   <STRING> { return StringTraverser.INSTANCE; }
+|   <U128> { return U128Traverser.INSTANCE; }
+|   <U64> { return U64Traverser.INSTANCE; }
+|   <U8> { return U8Traverser.INSTANCE; }
+|   <BOOL> { return BoolTraverser.INSTANCE; }
+|   <ADDRESS> { return AccountAddressTraverser.INSTANCE; }
+|   t = struct() { return t; }
+|   t = _enum() { return t; }
+|   t = vector() { return t; }
+|   t = optional() { return t; }
+|   <UNDERSCORE> { return NoOperationTraverser.INSTANCE; }
+}
+
+BCSTraverser struct():
+{
+    List<BCSTraverser> tl;
+}
+{
+        <LBRACE><RBRACE> { return new StructTraverser(Collections.emptyList()); }
+|       <LBRACE> tl = notEmptyTypeList() <RBRACE> { return new StructTraverser(tl); }
+}
+
+BCSTraverser _enum():
+{
+    List<BCSTraverser> tl;
+}
+{
+    <ENUM> <LBRACE> tl = notEmptyTypeList() <RBRACE> { return new EnumTraverser(tl); }
+}
+
+
+List<BCSTraverser> notEmptyTypeList():
+{
+    List<BCSTraverser> tl = new ArrayList<>();
+    BCSTraverser t;
+}
+{
+    t = type() { tl.add(t); } (<COMMA> t = type() { tl.add(t); } )*
+    { return tl; }
+}
+
+BCSTraverser vector():
+{
+    BCSTraverser t;
+}
+{
+    <VECTOR> <LT> t = type() <GT>
+    {
+        if (Objects.equals(t, U8Traverser.INSTANCE)) {
+            return VectorU8Traverser.INSTANCE;
+        } else {
+            return new VectorTraverser(t);
+        }
+    }
+}
+
+BCSTraverser optional():
+{
+    BCSTraverser t;
+}
+{
+    <OPTIONAL> <LT> t = type() <GT> {return new OptionalTraverser(t); }
+}
