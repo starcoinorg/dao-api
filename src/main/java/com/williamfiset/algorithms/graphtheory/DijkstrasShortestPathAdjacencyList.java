@@ -15,36 +15,10 @@ public class DijkstrasShortestPathAdjacencyList {
 
     // Small epsilon value to comparing double values.
     private static final double EPS = 1e-6;
-
-    // An edge class to represent a directed edge
-    // between two nodes with a certain cost.
-    public static class Edge {
-        double cost;
-        int from, to;
-
-        public Edge(int from, int to, double cost) {
-            this.from = from;
-            this.to = to;
-            this.cost = cost;
-        }
-    }
-
-    // Node class to track the nodes to visit while running Dijkstra's
-    public static class Node {
-        int id;
-        double value;
-
-        public Node(int id, double value) {
-            this.id = id;
-            this.value = value;
-        }
-    }
-
     private int n;
     private double[] dist;
     private Integer[] prev;
     private List<List<Edge>> graph;
-
     private Comparator<Node> comparator =
             new Comparator<Node>() {
                 @Override
@@ -53,7 +27,6 @@ public class DijkstrasShortestPathAdjacencyList {
                     return (node1.value - node2.value) > 0 ? +1 : -1;
                 }
             };
-
     /**
      * Initialize the solver by providing the graph size and a starting node. Use the {@link #addEdge}
      * method to actually add edges to the graph.
@@ -75,7 +48,7 @@ public class DijkstrasShortestPathAdjacencyList {
      * Adds a directed edge to the graph.
      *
      * @param from - The index of the node the directed edge starts at.
-     * @param to - The index of the node the directed edge end at.
+     * @param to   - The index of the node the directed edge end at.
      * @param cost - The cost of the edge.
      */
     public void addEdge(int from, int to, int cost) {
@@ -92,7 +65,7 @@ public class DijkstrasShortestPathAdjacencyList {
      * Reconstructs the shortest path (of nodes) from 'start' to 'end' inclusive.
      *
      * @return An array of nodes indexes of the shortest path from 'start' to 'end'. If 'start' and
-     *     'end' are not connected then an empty array is returned.
+     * 'end' are not connected then an empty array is returned.
      */
     public List<Integer> reconstructPath(int start, int end) {
         if (end < 0 || end >= n) throw new IllegalArgumentException("Invalid node index");
@@ -160,5 +133,29 @@ public class DijkstrasShortestPathAdjacencyList {
     private void createEmptyGraph() {
         graph = new ArrayList<>(n);
         for (int i = 0; i < n; i++) graph.add(new ArrayList<>());
+    }
+
+    // An edge class to represent a directed edge
+    // between two nodes with a certain cost.
+    public static class Edge {
+        double cost;
+        int from, to;
+
+        public Edge(int from, int to, double cost) {
+            this.from = from;
+            this.to = to;
+            this.cost = cost;
+        }
+    }
+
+    // Node class to track the nodes to visit while running Dijkstra's
+    public static class Node {
+        int id;
+        double value;
+
+        public Node(int id, double value) {
+            this.id = id;
+            this.value = value;
+        }
     }
 }

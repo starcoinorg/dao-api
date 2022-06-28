@@ -120,7 +120,7 @@ public class GetValueByIndexesHandler implements ContentHandler {
             throw new IllegalStateException("this.currentDepth >= this.currentIndexes.size()");
         }
         this.currentIndexes.set(this.currentDepth, -1);
-        System.out.println("-- clearCurrentIndex, Current indexes: " + this.currentIndexes);
+        //System.out.println("-- clearCurrentIndex, Current indexes: " + this.currentIndexes);
     }
 
     /**
@@ -136,7 +136,7 @@ public class GetValueByIndexesHandler implements ContentHandler {
             // this.currentValues.set(idx, null);// can set to null.
             Object containerVal = this.currentValues.get(idx - 1);
             this.currentValues.set(idx - 1, addElementToContainerValue(elementVal, containerVal));
-            System.out.println("-- addCurrentValueToParentContainer, Current values: " + this.currentValues);
+            //System.out.println("-- addCurrentValueToParentContainer, Current values: " + this.currentValues);
         }
     }
 
@@ -157,7 +157,7 @@ public class GetValueByIndexesHandler implements ContentHandler {
             }
             //BCSTraverser.Enum enumVal = (BCSTraverser.Enum)containerVal;
             this.currentValues.set(idx - 1, new BCSTraverser.Enum(variantIndex));
-            System.out.println("-- setCurrentEnumVariantIndex, Current values: " + this.currentValues);
+            //System.out.println("-- setCurrentEnumVariantIndex, Current values: " + this.currentValues);
         }
     }
 
@@ -165,9 +165,9 @@ public class GetValueByIndexesHandler implements ContentHandler {
         if (this.currentDepth >= 0) {
             ensureCurrentIndexesSize();
             this.currentIndexes.set(this.currentDepth, this.currentIndexes.get(this.currentDepth) + 1);
-            System.out.println("-- increaseCurrentIndexAtCurrentDepth, Current indexes: " + this.currentIndexes);
-            System.out.println("-- current depth: " + this.currentDepth);
-            System.out.println("-- Current values: " + this.currentValues);
+            //System.out.println("-- increaseCurrentIndexAtCurrentDepth, Current indexes: " + this.currentIndexes);
+            //System.out.println("-- current depth: " + this.currentDepth);
+            //System.out.println("-- Current values: " + this.currentValues);
         }
         if (!this.targetReached && checkIfTargetReached()) {
             this.targetReached = true;
@@ -190,8 +190,8 @@ public class GetValueByIndexesHandler implements ContentHandler {
         }
         this.currentValues.set(idx, val);
 
-        System.out.println("-- current depth: " + this.currentDepth);
-        System.out.println("-- setCurrentValue, Current values: " + this.currentValues);
+        //System.out.println("-- current depth: " + this.currentDepth);
+        //System.out.println("-- setCurrentValue, Current values: " + this.currentValues);
     }
 
     private int currentDepthIndexOfCurrentValues() {

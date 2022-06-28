@@ -32,7 +32,7 @@ public final class Tuple6<T0, T1, T2, T3, T4, T5> {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        Tuple6<?,?,?,?,?,?> other = (Tuple6) obj;
+        Tuple6<?, ?, ?, ?, ?, ?> other = (Tuple6) obj;
         if (!Objects.equals(this.field0, other.field0)) {
             return false;
         }
@@ -48,10 +48,7 @@ public final class Tuple6<T0, T1, T2, T3, T4, T5> {
         if (!Objects.equals(this.field4, other.field4)) {
             return false;
         }
-        if (!Objects.equals(this.field5, other.field5)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.field5, other.field5);
     }
 
     public int hashCode() {

@@ -3,8 +3,6 @@ package org.starcoin.dao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.starcoin.dao.vo.CastVoteRequest;
 import org.starcoin.dao.vo.CastVoteVO;
 import org.starcoin.utils.HexUtils;
 

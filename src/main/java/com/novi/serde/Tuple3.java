@@ -23,17 +23,14 @@ public final class Tuple3<T0, T1, T2> {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        Tuple3<?,?,?> other = (Tuple3) obj;
+        Tuple3<?, ?, ?> other = (Tuple3) obj;
         if (!Objects.equals(this.field0, other.field0)) {
             return false;
         }
         if (!Objects.equals(this.field1, other.field1)) {
             return false;
         }
-        if (!Objects.equals(this.field2, other.field2)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.field2, other.field2);
     }
 
     public int hashCode() {
