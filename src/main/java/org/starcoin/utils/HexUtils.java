@@ -84,5 +84,13 @@ public class HexUtils {
         }
         return result.toString();
     }
+
+    public static byte[] decode(String h) {
+        return hexToByteArray(h);
+    }
+
+    public static String encode(byte[] bytes) {
+        return byteArrayToHexWithPrefix(bytes);
+    }
 }
 
