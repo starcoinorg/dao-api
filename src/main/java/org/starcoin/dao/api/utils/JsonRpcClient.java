@@ -1,14 +1,19 @@
 package org.starcoin.dao.api.utils;
 
+import com.novi.serde.DeserializationError;
 import org.starcoin.bean.Event;
 import org.starcoin.bean.RpcStateWithProof;
 import org.starcoin.jsonrpc.client.JSONRPC2Session;
+import org.starcoin.types.AccountResource;
 import org.starcoin.utils.JsonRpcClientUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+/**
+ * Starcoin JSON RPC client.
+ */
 public class JsonRpcClient {
     public static final String ACCESS_PATH_DATA_TYPE_RESOURCE = "1";
 
@@ -36,5 +41,9 @@ public class JsonRpcClient {
 
     public RpcStateWithProof getStateWithProofByRoot(String accessPath, String stateRoot) {
         return JsonRpcClientUtils.getStateWithProofByRoot(this.jsonRpcSession, accessPath, stateRoot);
+    }
+
+    public AccountResource getAccountResource(String accountAddress) throws DeserializationError {
+        return JsonRpcClientUtils.getAccountResource(this.jsonRpcSession, accountAddress);
     }
 }

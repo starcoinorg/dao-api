@@ -2,17 +2,22 @@ package org.starcoin.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.novi.serde.DeserializationError;
 import org.starcoin.bean.Event;
 import org.starcoin.bean.RpcStateWithProof;
 import org.starcoin.jsonrpc.JSONRPC2Request;
 import org.starcoin.jsonrpc.JSONRPC2Response;
 import org.starcoin.jsonrpc.client.JSONRPC2Session;
 import org.starcoin.jsonrpc.client.JSONRPC2SessionException;
+import org.starcoin.types.AccountResource;
 
 import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * Starcoin JSON RPC client utils.
+ */
 public class JsonRpcClientUtils {
     private JsonRpcClientUtils() {
     }
@@ -32,12 +37,24 @@ public class JsonRpcClientUtils {
         return events == null ? new Event[0] : events;
     }
 
-    // public fun scaling_factor<TokenType: store>(): u128
-    public static BigInteger tokenGetScalingFactor(JSONRPC2Session jsonRpcSession, String token) {
+    public static BigInteger getTokenScalingFactor(JSONRPC2Session jsonRpcSession, String token) {
+        // Move code:
+        // public fun scaling_factor<TokenType: store>(): u128
+        //
         List<BigInteger> resultFields = contractCallV2(jsonRpcSession, "0x1::Token::scaling_factor",
                 Arrays.asList(token), Collections.emptyList(), new TypeReference<List<BigInteger>>() {
                 });
         return resultFields.get(0);
+    }
+
+
+    public static AccountResource getAccountResource(JSONRPC2Session jsonrpcSession, String accountAddress) throws DeserializationError {
+        String resourceType = "0x00000000000000000000000000000001::Account::Account";
+        Map<String, Object> rst = callForObject(jsonrpcSession, "state.get_resource",
+                Arrays.asList(accountAddress, resourceType), new TypeReference<Map<String, Object>>() {
+                });
+        String rawHex = (String) rst.get("raw");
+        return AccountResource.bcsDeserialize(HexUtils.decode(rawHex));
     }
 
     /**
