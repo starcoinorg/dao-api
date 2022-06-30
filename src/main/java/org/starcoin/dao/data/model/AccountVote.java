@@ -8,13 +8,14 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import java.io.Serializable;
 import java.math.BigInteger;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
-public class AccountVote {
+public class AccountVote implements Serializable {
 
     @EmbeddedId
     @AttributeOverride(name = "accountAddress", column = @Column(name = "account_address", length = 100, nullable = false))
@@ -27,6 +28,9 @@ public class AccountVote {
 
     @Column(precision = 50, scale = 0, nullable = false)
     private BigInteger votingPower;
+
+    @Column
+    private Long createdAt;
 
     public AccountVoteId getAccountVoteId() {
         return accountVoteId;
@@ -50,5 +54,13 @@ public class AccountVote {
 
     public void setVotingPower(BigInteger votingPower) {
         this.votingPower = votingPower;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
     }
 }

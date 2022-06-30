@@ -27,7 +27,8 @@ public class SignMessageTests {
         SignedMessage message = SignedMessage.bcsDeserialize(HexUtils.decode(messageBytes));
         boolean checked = SignatureUtils.signedMessageCheckSignature(message);
         assertTrue(checked);
-        checked = SignatureUtils.signedMessageCheckAccount(message, new ChainId((byte) 255), null);
+        System.out.println(message.account.toString());
+        checked = SignatureUtils.signedMessageCheckAccount(message, new ChainId((byte) 255), (AccountResource) null);
         assertTrue(checked);
         byte[] msgBytes = HexUtils.toPrimitive(message.message.value.toArray(new Byte[0]));
         System.out.println(new String(msgBytes, StandardCharsets.UTF_8));

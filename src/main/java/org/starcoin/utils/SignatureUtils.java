@@ -26,6 +26,7 @@ import org.starcoin.types.TransactionAuthenticator.Ed25519;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.starcoin.utils.HashUtils.hashStarcoinSignedUserTransaction;
 
@@ -110,18 +111,22 @@ public class SignatureUtils {
         return HexUtils.encode(signRst);
     }
 
-
     public static boolean signedMessageCheckAccount(SignedMessage signedMessage, ChainId chainId, AccountResource accountResource) throws DeserializationError, SerializationError {
-        AuthenticationKey authenticationKeyInMessage = TransactionAuthenticator.authenticationKey(signedMessage.authenticator);
-        AuthenticationKey authenticationKeyOnChain;
-        if (accountResource == null) {
-            return signedMessage.account.equals(authenticationKeyInMessage.derivedAddress());
+        return signedMessageCheckAccount(signedMessage, chainId,
+                accountResource == null ? null : accountResource.authentication_key);
+    }
+
+    public static boolean signedMessageCheckAccount(SignedMessage signedMessage, ChainId chainId, List<Byte> authenticationKeyOnChain) throws DeserializationError, SerializationError {
+        AuthenticationKey authKeyInMsg = TransactionAuthenticator.authenticationKey(signedMessage.authenticator);
+        AuthenticationKey authKeyOnChain;
+        if (authenticationKeyOnChain == null) {
+            return signedMessage.account.equals(authKeyInMsg.derivedAddress());
         } else {
             if (signedMessage.chain_id.equals(chainId)) {
-                Bytes serdeBytes = Bytes.fromList(accountResource.authentication_key);
+                Bytes serdeBytes = Bytes.fromList(authenticationKeyOnChain);
                 if (serdeBytes != null) {
-                    authenticationKeyOnChain = new AuthenticationKey(serdeBytes);
-                    return authenticationKeyOnChain.equals(authenticationKeyInMessage);
+                    authKeyOnChain = new AuthenticationKey(serdeBytes);
+                    return authKeyOnChain.equals(authKeyInMsg);
                 }
             }
         }

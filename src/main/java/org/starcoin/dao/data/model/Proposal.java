@@ -8,12 +8,13 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import java.io.Serializable;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
-public class Proposal {
+public class Proposal implements Serializable {
 
     @EmbeddedId
     @AttributeOverride(name = "daoId", column = @Column(name = "dao_id", length = 100, nullable = false))

@@ -36,3 +36,4 @@ spring:
 
 starcoin:
   json-rpc-url: ${STARCOIN_JSON_RPC_URL}
+  chain-id: {STARCOIN_CHAIN_ID}

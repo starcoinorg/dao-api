@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novi.serde.DeserializationError;
 import com.novi.serde.SerializationError;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -157,6 +158,15 @@ class DaoApiApplicationTests {
 
     @Test
     void testCastVote() throws JsonProcessingException, DeserializationError, SerializationError {
+        String signedMessageHex = "0x4e241dcb1955fdc4811ac3c4abb90f146f7b2264616f4964223a22746573745f64616f5f6964222c2270726f706f73616c4e756d626572223a2231222c226163636f756e7441646472657373223a2230783031222c22766f74696e67506f776572223a313131313131312c2263686f69636553657175656e63654964223a317d00206f1a656de7c85d5d1e936dc80c8f3a8ba16e014003090bb20c207196b4fbab2440e8053432ead6bc1b1063fa986f4626e627556fd6c918e9e46dcc3414ee2a504f7baff920796c69f460399c3887eecf97da0b944baa21ebd68271351551e78e0f01";
+        //SignedMessage message = SignedMessage.bcsDeserialize(HexUtils.decode(signedMessageHex));
+        CastVoteRequest castVoteRequest = new CastVoteRequest();//getTestCastVoteRequest();
+        castVoteRequest.setSignedMessageHex(signedMessageHex);
+        castVoteService.castVote(castVoteRequest);
+    }
+
+    @NotNull
+    private CastVoteRequest getTestCastVoteRequest() throws JsonProcessingException, DeserializationError, SerializationError {
         CastVoteVO castVoteVO = new CastVoteVO();
         castVoteVO.setChoiceSequenceId(0);
         castVoteVO.setAccountAddress("0x8c109349c6bd91411d6bc962e080c4a3");
@@ -183,7 +193,6 @@ class DaoApiApplicationTests {
 
         CastVoteRequest castVoteRequest = new CastVoteRequest();
         castVoteRequest.setSignedMessageHex(HexUtils.byteArrayToHex(signedMessage.bcsSerialize()));
-
-        castVoteService.castVote(castVoteRequest);
+        return castVoteRequest;
     }
 }
