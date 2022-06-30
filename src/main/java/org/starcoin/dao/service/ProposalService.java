@@ -1,5 +1,7 @@
 package org.starcoin.dao.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,7 @@ import org.starcoin.dao.data.repo.ProposalRepository;
 
 @Service
 public class ProposalService {
+    private static final Logger LOG = LoggerFactory.getLogger(ProposalService.class);
 
     @Autowired
     private ProposalRepository proposalRepository;

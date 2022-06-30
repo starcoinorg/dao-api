@@ -31,8 +31,9 @@ public class RootController {
         final String rootUri = request.getRequestURL()
                 .toString();
         final StringJoiner linkHeader = new StringJoiner(", ");
-        linkHeader.add(getLinkToCollection(rootUri, "accountVotes"));
+        linkHeader.add(getLinkToCollection(rootUri, "daos"));
         linkHeader.add(getLinkToCollection(rootUri, "proposals"));
+        linkHeader.add(getLinkToCollection(rootUri, "accountVotes"));
         response.addHeader(HttpHeaders.LINK, linkHeader.toString());
     }
 

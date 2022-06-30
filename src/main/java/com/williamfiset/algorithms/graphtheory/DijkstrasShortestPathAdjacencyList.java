@@ -27,6 +27,7 @@ public class DijkstrasShortestPathAdjacencyList {
                     return (node1.value - node2.value) > 0 ? +1 : -1;
                 }
             };
+
     /**
      * Initialize the solver by providing the graph size and a starting node. Use the {@link #addEdge}
      * method to actually add edges to the graph.

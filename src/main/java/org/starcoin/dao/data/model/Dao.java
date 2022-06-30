@@ -3,9 +3,10 @@ package org.starcoin.dao.data.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 @Entity
-public class Dao {
+public class Dao implements Serializable {
 
     @Id
     @Column(length = 100, nullable = false)

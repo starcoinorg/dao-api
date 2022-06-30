@@ -80,3 +80,18 @@ VALUES
 UPDATE `proposal` SET `block_state_root` = '0x5ee196ac92839743e79db7e6a7d75acdd4afe02b3c89c036e498f66df996c0cf' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '1');
 UPDATE `proposal` SET `block_state_root` = '0x5ee196ac92839743e79db7e6a7d75acdd4afe02b3c89c036e498f66df996c0cf' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '2');
 
+-- ---------------- 2022/06/30 ----------------- --
+
+UPDATE `dao_voting_resource` SET `voting_power_bcs_path` = '{{{u128}}}[0][0][0]' WHERE (`dao_id` = 'test_dao_id') and (`sequence_id` = '1');
+UPDATE `dao_voting_resource` SET `voting_power_bcs_path` = '{u64,{{u128}},u128}[1][0][0]' WHERE (`dao_id` = 'test_dao_id') and (`sequence_id` = '2');
+
+UPDATE `proposal` SET `block_state_root` = '0xffa6e0c0d4aa79020ee0f799ff4919637237e153accc30d782f652fc56f1a005', `block_height` = '6545885' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '1');
+UPDATE `proposal` SET `block_state_root` = '0xffa6e0c0d4aa79020ee0f799ff4919637237e153accc30d782f652fc56f1a005', `block_height` = '6545885' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '2');
+
+UPDATE `proposal` SET `voting_period_start` = '1956583272665' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '1');
+UPDATE `proposal` SET `voting_period_start` = '1956583272720' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '2');
+
+SELECT
+    FROM_UNIXTIME(p.voting_period_end / 1000), p.*
+FROM
+    dao_api.proposal p;

@@ -1,8 +1,8 @@
 package org.starcoin.dao.api.hateoas.event;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.context.ApplicationEvent;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class SingleResourceRetrievedEvent extends ApplicationEvent {
     private final HttpServletResponse response;

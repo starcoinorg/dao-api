@@ -13,7 +13,7 @@ import org.starcoin.dao.data.repo.*;
 import org.starcoin.dao.service.AccountVoteService;
 import org.starcoin.dao.service.CastVoteService;
 import org.starcoin.dao.service.ProposalService;
-import org.starcoin.dao.service.VotingPowerService;
+import org.starcoin.dao.service.VotingPowerQueryService;
 import org.starcoin.dao.vo.CastVoteRequest;
 import org.starcoin.dao.vo.DaoVO;
 import org.starcoin.dao.vo.GetVotingPowerResponse;
@@ -56,7 +56,7 @@ public class DaoController {
     private AccountVoteService accountVoteService;
 
     @Resource
-    private VotingPowerService votingPowerService;
+    private VotingPowerQueryService votingPowerQueryService;
 
     @Resource
     private CastVoteService castVoteService;
@@ -70,8 +70,13 @@ public class DaoController {
     }
 
     @GetMapping("daos")
-    public List<Dao> getDaos() {
-        return daoRepository.findAll();
+    public List<Dao> getDaos(@RequestParam("page") final int page, @RequestParam("size") final int size,
+                             final UriComponentsBuilder uriBuilder, final HttpServletResponse response) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Dao> p = daoRepository.findAll(pageable);
+        eventPublisher.publishEvent(new PaginatedResultsRetrievedEvent<>(Dao.class, uriBuilder, response, page,
+                p.getTotalPages(), size));
+        return p.getContent();
     }
 
     @GetMapping("daos/{daoId}")
@@ -131,7 +136,7 @@ public class DaoController {
             @RequestParam(required = true) String accountAddress,
             @RequestParam(required = true) String daoId,
             @RequestParam(required = true) String proposalNumber) {
-        return votingPowerService.getAccountVotingPower(accountAddress, daoId, proposalNumber);
+        return votingPowerQueryService.getAccountVotingPower(accountAddress, daoId, proposalNumber);
     }
 
     @PostMapping("castVote")

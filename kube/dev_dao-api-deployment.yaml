@@ -35,7 +35,9 @@ spec:
                   key: password
             - name: STARCOIN_NETWORK
               value: "dev"
+            - name: STARCOIN_CHAIN_ID
+              value: 1
             - name: STARCOIN_SEEDS
-              value: "barnard4.seed.starcoin.org,barnard5.seed.starcoin.org"
+              value: "main4.seed.starcoin.org,main5.seed.starcoin.org"
             - name: STARCOIN_JSON_RPC_URL
-              value: "https://barnard-seed.starcoin.org"
+              value: "https://main-seed.starcoin.org"

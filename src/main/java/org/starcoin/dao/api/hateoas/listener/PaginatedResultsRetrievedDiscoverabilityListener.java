@@ -24,6 +24,10 @@ class PaginatedResultsRetrievedDiscoverabilityListener implements ApplicationLis
 
     // API
 
+    private static String toCamelCase(String s) {
+        return s.substring(0, 1).toLowerCase() + s.substring(1);
+    }
+
     @Override
     public final void onApplicationEvent(final PaginatedResultsRetrievedEvent ev) {
         Preconditions.checkNotNull(ev);
@@ -104,18 +108,17 @@ class PaginatedResultsRetrievedDiscoverabilityListener implements ApplicationLis
         return hasPreviousPage(page);
     }
 
+    // template
+
     final boolean hasLastPage(final int page, final int totalPages) {
         return (totalPages > 1) && hasNextPage(page, totalPages);
     }
-
-    // template
 
     protected void plural(final UriComponentsBuilder uriBuilder, final Class clazz) {
         // - the URI is transformed into plural (added `s`) in a hardcoded way
         //final String resourceName = clazz.getSimpleName().toLowerCase() + "s";
         //
-        final String resourceName = English.plural(clazz.getSimpleName().toLowerCase());
+        final String resourceName = English.plural(toCamelCase(clazz.getSimpleName()));
         uriBuilder.path("/v1").path("/" + resourceName);
     }
-
 }

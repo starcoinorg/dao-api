@@ -1,7 +1,12 @@
 package org.starcoin.dao.service;
 
+import com.novi.serde.DeserializationError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.starcoin.bcs.sab.BCSPath;
+import org.starcoin.bcs.sab.ParseException;
 import org.starcoin.bean.RpcStateWithProof;
 import org.starcoin.dao.api.utils.JsonRpcClient;
 import org.starcoin.dao.data.model.DaoVotingResource;
@@ -10,6 +15,7 @@ import org.starcoin.dao.data.model.ProposalId;
 import org.starcoin.dao.data.repo.DaoVotingResourceRepository;
 import org.starcoin.dao.data.repo.ProposalRepository;
 import org.starcoin.dao.vo.GetVotingPowerResponse;
+import org.starcoin.utils.HexUtils;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -17,7 +23,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class VotingPowerService {
+public class VotingPowerQueryService {
+    private static final Logger LOG = LoggerFactory.getLogger(VotingPowerQueryService.class);
+
     @Autowired
     private JsonRpcClient jsonRpcClient;
 
@@ -45,7 +53,21 @@ public class VotingPowerService {
             RpcStateWithProof stateWithProof = jsonRpcClient.getStateWithProofByRoot(
                     JsonRpcClient.getAccountResourceAccessPath(accountAddress, daoVotingResource.getResourceStructTag()),
                     stateRoot);
-            BigInteger detailVotingPower = BigInteger.ONE;//todo get this from stateWithProof
+            BigInteger detailVotingPower = BigInteger.ZERO;
+            if (stateWithProof.getState() != null) {
+                byte[] state = HexUtils.hexToByteArray(stateWithProof.getState());
+                if (state.length > 0) {
+                    Object amount = null;
+                    try {
+                        amount = BCSPath.select(state, daoVotingResource.getVotingPowerBcsPath());
+                    } catch (DeserializationError e) {
+                        throw new IllegalStateException("BCSPath.select DeserializationError.", e);
+                    } catch (ParseException e) {
+                        throw new IllegalStateException("BCSPath.select ParseException.", e);
+                    }
+                    detailVotingPower = (BigInteger) amount;
+                }
+            }
             detail.setSequenceId(daoVotingResource.getDaoVotingResourceId().getSequenceId());
             detail.setResourceStructTag(daoVotingResource.getResourceStructTag());
             detail.setPower(detailVotingPower);

@@ -3,16 +3,21 @@ package org.starcoin.dao.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novi.serde.DeserializationError;
 import com.novi.serde.SerializationError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.starcoin.dao.api.utils.JsonRpcClient;
 import org.starcoin.dao.data.model.AccountVote;
 import org.starcoin.dao.data.model.AccountVoteId;
+import org.starcoin.dao.data.model.Proposal;
 import org.starcoin.dao.data.model.ProposalId;
 import org.starcoin.dao.data.repo.AccountVoteRepository;
+import org.starcoin.dao.data.repo.ProposalRepository;
 import org.starcoin.dao.vo.CastVoteRequest;
 import org.starcoin.dao.vo.CastVoteVO;
+import org.starcoin.dao.vo.GetVotingPowerResponse;
 import org.starcoin.types.ChainId;
 import org.starcoin.types.SignedMessage;
 import org.starcoin.utils.HexUtils;
@@ -23,12 +28,7 @@ import java.util.List;
 
 @Service
 public class CastVoteService {
-
-    @Autowired
-    private AccountVoteRepository accountVoteRepository;
-
-    @Autowired
-    private JsonRpcClient jsonRpcClient;
+    private static final Logger LOG = LoggerFactory.getLogger(CastVoteService.class);
 
     //    STARCOIN_CHAIN_ID_MAIN    int = 1
     //    STARCOIN_CHAIN_ID_BARNARD int = 251
@@ -37,6 +37,19 @@ public class CastVoteService {
 
     @Value("${starcoin.chain-id}")
     private Integer chainId;
+
+    @Autowired
+    private JsonRpcClient jsonRpcClient;
+
+    @Autowired
+    private AccountVoteRepository accountVoteRepository;
+
+    @Autowired
+    private ProposalRepository proposalRepository;
+
+
+    @Autowired
+    private VotingPowerQueryService votingPowerQueryService;
 
     public void castVote(CastVoteRequest castVoteRequest) {
         byte[] signedMessageBytes = HexUtils.hexToByteArray(castVoteRequest.getSignedMessageHex());
@@ -53,32 +66,32 @@ public class CastVoteService {
         try {
             checked = SignatureUtils.signedMessageCheckSignature(signedMessage);
         } catch (SerializationError e) {
-            throw new IllegalArgumentException("signedMessageCheckSignature SerializationError.");
+            throw new IllegalArgumentException("signedMessageCheckSignature SerializationError.", e);
         } catch (DeserializationError e) {
-            throw new IllegalArgumentException("signedMessageCheckSignature DeserializationError.");
+            throw new IllegalArgumentException("signedMessageCheckSignature DeserializationError.", e);
         }
         if (!checked) {
-            throw new IllegalArgumentException("signedMessageCheckSignature error.");
+            throw new IllegalArgumentException("signedMessageCheckSignature failed.");
         }
         String accountAddress = HexUtils.byteListToHexWithPrefix(signedMessage.account.value);
         //
         // check auth key in account resource
         //
-        List<Byte> authKeyOnChain = null;
+        List<Byte> authKeyOnChain;
         try {
             authKeyOnChain = jsonRpcClient.getAccountResource(accountAddress).authentication_key;
         } catch (DeserializationError e) {
-            throw new IllegalArgumentException("getAccountResource DeserializationError.");
+            throw new IllegalArgumentException("getAccountResource DeserializationError.", e);
         }
         try {
             checked = SignatureUtils.signedMessageCheckAccount(signedMessage, new ChainId((byte) this.chainId.intValue()), authKeyOnChain);
         } catch (DeserializationError e) {
-            throw new IllegalArgumentException("signedMessageCheckAccount DeserializationError.");
+            throw new IllegalArgumentException("signedMessageCheckAccount DeserializationError.", e);
         } catch (SerializationError e) {
-            throw new IllegalArgumentException("signedMessageCheckAccount SerializationError.");
+            throw new IllegalArgumentException("signedMessageCheckAccount SerializationError.", e);
         }
         if (!checked) {
-            throw new IllegalArgumentException("signedMessageCheckAccount error.");
+            throw new IllegalArgumentException("signedMessageCheckAccount failed.");
         }
         //
         // deserialize to CastVoteVO
@@ -95,15 +108,41 @@ public class CastVoteService {
             throw new IllegalArgumentException("Account in signedMessage signed different account address in CastVote request.");
         }
 
-        //todo: check proposal is not expired
-        //todo: check vote power
-        AccountVoteId accountVoteId = new AccountVoteId(castVoteVO.getAccountAddress(),
-                new ProposalId(castVoteVO.getDaoId(), castVoteVO.getProposalNumber()));
-        //todo find by id first.
-        AccountVote accountVote = new AccountVote();
-        accountVote.setAccountVoteId(accountVoteId);
-        accountVote.setVotingPower(castVoteVO.getVotingPower());
-        accountVote.setChoiceSequenceId(castVoteVO.getChoiceSequenceId());
-        accountVoteRepository.save(accountVote);
+        //
+        // check voting power
+        //
+        GetVotingPowerResponse getVotingPowerResponse = votingPowerQueryService.getAccountVotingPower(accountAddress,
+                castVoteVO.getDaoId(), castVoteVO.getProposalNumber());
+        if (castVoteVO.getVotingPower().compareTo(getVotingPowerResponse.getTotalVotingPower()) != 0) {
+            throw new IllegalArgumentException("castVoteVO.votingPower("
+                    + castVoteVO.getVotingPower() + ") is incorrect. Got voting power on-chain: "
+                    + getVotingPowerResponse.getTotalVotingPower());
+        }
+
+        //
+        // check if proposal is started and not expired
+        //
+        ProposalId proposalId = new ProposalId(castVoteVO.getDaoId(), castVoteVO.getProposalNumber());
+        Proposal proposal = proposalRepository.findById(proposalId).orElseThrow(
+                () -> new IllegalArgumentException("Proposal is NOT present: " + proposalId)
+        );
+        long currentMills = System.currentTimeMillis();
+        if (currentMills < proposal.getVotingPeriodStart()) {
+            throw new IllegalArgumentException("Proposal is NOT started: " + proposalId);
+        }
+        if (currentMills > proposal.getVotingPeriodEnd()) {
+            throw new IllegalArgumentException("Proposal is ended: " + proposalId);
+        }
+
+        AccountVoteId accountVoteId = new AccountVoteId(castVoteVO.getAccountAddress(), proposalId);
+        if (!accountVoteRepository.findById(accountVoteId).isPresent()) {
+            AccountVote accountVote = new AccountVote();
+            accountVote.setAccountVoteId(accountVoteId);
+            accountVote.setVotingPower(castVoteVO.getVotingPower());
+            accountVote.setChoiceSequenceId(castVoteVO.getChoiceSequenceId());
+            accountVoteRepository.save(accountVote);
+        } else {
+            LOG.info("Account has casted vote: " + accountVoteId);
+        }
     }
 }
