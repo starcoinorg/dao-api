@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: dao-api-dev
-          image: ghcr.io/starcoinorg/starcoin_dao_api:sha-ea05074
+          image: ghcr.io/starcoinorg/starcoin_dao_api:sha-22ffa48
           ports:
             - containerPort: 8600
           env:
@@ -36,7 +36,7 @@ spec:
             - name: STARCOIN_NETWORK
               value: "dev"
             - name: STARCOIN_CHAIN_ID
-              value: 1
+              value: "1"
             - name: STARCOIN_SEEDS
               value: "main4.seed.starcoin.org,main5.seed.starcoin.org"
             - name: STARCOIN_JSON_RPC_URL

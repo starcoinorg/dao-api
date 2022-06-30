@@ -91,7 +91,22 @@ UPDATE `proposal` SET `block_state_root` = '0xffa6e0c0d4aa79020ee0f799ff49196372
 UPDATE `proposal` SET `voting_period_start` = '1956583272665' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '1');
 UPDATE `proposal` SET `voting_period_start` = '1956583272720' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '2');
 
-SELECT
-    FROM_UNIXTIME(p.voting_period_end / 1000), p.*
-FROM
-    dao_api.proposal p;
+-- SELECT
+--    FROM_UNIXTIME(p.voting_period_end / 1000), p.*
+-- FROM
+--    dao_api.proposal p;
+
+INSERT INTO `dao`
+(`dao_id`,
+`community_links_discord`,
+`community_links_telegram`,
+`community_links_twitter`,
+`description`,
+`long_description`,
+`name`,
+`purpose_id`,
+`tags`)
+VALUES
+('test_dao_id2', 'http://test_dao2_community_links_discord', 'http://test_dao2_community_links_telegram', 'http://test_dao2_community_links_twitter', 'test_dao2_description', NULL, 'test_dao2_name', 'test_dao_purpose_id', 'test_dao_tags,blockchain,dao'
+);
+
