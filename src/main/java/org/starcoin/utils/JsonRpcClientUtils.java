@@ -47,7 +47,14 @@ public class JsonRpcClientUtils {
         return resultFields.get(0);
     }
 
-
+    /**
+     * Get state of struct '0x01::Account::Account' in the accountAddress.
+     *
+     * @param jsonrpcSession JSON RPC session
+     * @param accountAddress account address
+     * @return state of struct '0x01::Account::Account'
+     * @throws DeserializationError
+     */
     public static AccountResource getAccountResource(JSONRPC2Session jsonrpcSession, String accountAddress) throws DeserializationError {
         String resourceType = "0x00000000000000000000000000000001::Account::Account";
         Map<String, Object> rst = callForObject(jsonrpcSession, "state.get_resource",
@@ -58,9 +65,9 @@ public class JsonRpcClientUtils {
     }
 
     /**
-     * JSON RPC call method 'contract.call_v2'.
+     * Call JSON RPC method 'contract.call_v2'.
      *
-     * @param functionId function Id.
+     * @param functionId function ID.
      * @param typeArgs   type arguments.
      * @param args       arguments.
      * @return JSON RPC response body.
@@ -71,6 +78,14 @@ public class JsonRpcClientUtils {
         return callForObject(jsonRpcSession, method, params, String.class);
     }
 
+    /**
+     * Call JSON RPC method 'contract.call_v2', and get result of type 'T'.
+     *
+     * @param functionId function ID.
+     * @param typeArgs   type arguments.
+     * @param args       arguments.
+     * @return method result of type 'T'.
+     */
     public static <T> T contractCallV2(JSONRPC2Session jsonRpcSession, String functionId, List<String> typeArgs, List<Object> args, TypeReference<T> typeReference) {
         String method = "contract.call_v2";
         List<Object> params = getContractCallV2Params(functionId, typeArgs, args);
@@ -86,12 +101,25 @@ public class JsonRpcClientUtils {
         return params;
     }
 
+    /**
+     * Call RPC method and get result of type 'T'.
+     *
+     * @param jsonRpcSession JSON RPC session
+     * @param method         method name.
+     * @param params         method params.
+     * @param typeRef        result type reference
+     * @param <T>            result type
+     * @return method result
+     */
     public static <T> T callForObject(JSONRPC2Session jsonRpcSession, String method, List<Object> params, TypeReference<T> typeRef) {
         return callForObject(jsonRpcSession, method, params, (result) -> {
             return getObjectMapper().convertValue(result, typeRef);
         });
     }
 
+    /**
+     * Call RPC method and get result of type 'T'.
+     **/
     @SuppressWarnings("unchecked")
     public static <T> T callForObject(JSONRPC2Session jsonRpcSession, String method, List<Object> params, Class<T> objectClass) {
         return callForObject(jsonRpcSession, method, params, (result) -> {

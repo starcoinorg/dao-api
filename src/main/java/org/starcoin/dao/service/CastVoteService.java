@@ -30,11 +30,6 @@ import java.util.List;
 public class CastVoteService {
     private static final Logger LOG = LoggerFactory.getLogger(CastVoteService.class);
 
-    //    STARCOIN_CHAIN_ID_MAIN    int = 1
-    //    STARCOIN_CHAIN_ID_BARNARD int = 251
-    //    STARCOIN_CHAIN_ID_PROXIMA int = 252
-    //    STARCOIN_CHAIN_ID_HALLEY  int = 253
-
     @Value("${starcoin.chain-id}")
     private Integer chainId;
 

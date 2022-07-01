@@ -15,7 +15,7 @@ import java.util.Map;
  * Starcoin JSON RPC client.
  */
 public class JsonRpcClient {
-    public static final String ACCESS_PATH_DATA_TYPE_RESOURCE = "1";
+    public static final String STATE_ACCESS_PATH_TYPE_RESOURCE = "1";
 
     private final JSONRPC2Session jsonRpcSession;
 
@@ -27,8 +27,8 @@ public class JsonRpcClient {
 
     }
 
-    public static String getAccountResourceAccessPath(String accountAddress, String resourceStructTag) {
-        return accountAddress + "/" + ACCESS_PATH_DATA_TYPE_RESOURCE + "/" + resourceStructTag;
+    public static String getResourceStateAccessPath(String accountAddress, String resourceStructTag) {
+        return accountAddress + "/" + STATE_ACCESS_PATH_TYPE_RESOURCE + "/" + resourceStructTag;
     }
 
     public String getJsonRpcUrl() {

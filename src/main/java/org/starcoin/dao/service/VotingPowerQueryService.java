@@ -51,7 +51,7 @@ public class VotingPowerQueryService {
         for (DaoVotingResource daoVotingResource : daoVotingResources) {
             GetVotingPowerResponse.VotingPowerDetail detail = new GetVotingPowerResponse.VotingPowerDetail();
             RpcStateWithProof stateWithProof = jsonRpcClient.getStateWithProofByRoot(
-                    JsonRpcClient.getAccountResourceAccessPath(accountAddress, daoVotingResource.getResourceStructTag()),
+                    JsonRpcClient.getResourceStateAccessPath(accountAddress, daoVotingResource.getResourceStructTag()),
                     stateRoot);
             BigInteger detailVotingPower = BigInteger.ZERO;
             if (stateWithProof.getState() != null) {
