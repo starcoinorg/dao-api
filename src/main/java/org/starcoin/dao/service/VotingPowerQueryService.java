@@ -15,6 +15,8 @@ import org.starcoin.dao.data.model.ProposalId;
 import org.starcoin.dao.data.repo.DaoVotingResourceRepository;
 import org.starcoin.dao.data.repo.ProposalRepository;
 import org.starcoin.dao.vo.GetVotingPowerResponse;
+import org.starcoin.types.AccountAddress;
+import org.starcoin.utils.AccountAddressUtils;
 import org.starcoin.utils.HexUtils;
 
 import java.math.BigInteger;
@@ -36,14 +38,15 @@ public class VotingPowerQueryService {
     private DaoVotingResourceRepository daoVotingResourceRepository;
 
     public GetVotingPowerResponse getAccountVotingPower(String accountAddress, String daoId, String proposalNumber) {
+        AccountAddress addressObj = AccountAddressUtils.create(accountAddress);// make sure it is illegal
         Optional<Proposal> proposal = proposalRepository.findById(new ProposalId(daoId, proposalNumber));
         if (!proposal.isPresent()) {
             return null;
         }
-        return getAccountVotingPowerByStateRoot(accountAddress, daoId, proposal.get().getBlockStateRoot());
+        return getAccountVotingPowerByStateRoot(addressObj, daoId, proposal.get().getBlockStateRoot());
     }
 
-    public GetVotingPowerResponse getAccountVotingPowerByStateRoot(String accountAddress, String daoId, String stateRoot) {
+    private GetVotingPowerResponse getAccountVotingPowerByStateRoot(AccountAddress accountAddress, String daoId, String stateRoot) {
         BigInteger totalVotingPower = BigInteger.ZERO;
         GetVotingPowerResponse r = new GetVotingPowerResponse();
         List<DaoVotingResource> daoVotingResources = daoVotingResourceRepository.findByDaoVotingResourceId_DaoId(daoId);
@@ -51,7 +54,8 @@ public class VotingPowerQueryService {
         for (DaoVotingResource daoVotingResource : daoVotingResources) {
             GetVotingPowerResponse.VotingPowerDetail detail = new GetVotingPowerResponse.VotingPowerDetail();
             RpcStateWithProof stateWithProof = jsonRpcClient.getStateWithProofByRoot(
-                    JsonRpcClient.getResourceStateAccessPath(accountAddress, daoVotingResource.getResourceStructTag()),
+                    JsonRpcClient.getResourceStateAccessPath(
+                            AccountAddressUtils.hex(accountAddress), daoVotingResource.getResourceStructTag()),
                     stateRoot);
             BigInteger detailVotingPower = BigInteger.ZERO;
             if (stateWithProof.getState() != null) {

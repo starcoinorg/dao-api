@@ -92,5 +92,9 @@ public class HexUtils {
     public static String encode(byte[] bytes) {
         return byteArrayToHexWithPrefix(bytes);
     }
+
+    public static String encode(List<Byte> value) {
+        return byteListToHexWithPrefix(value);
+    }
 }
 
