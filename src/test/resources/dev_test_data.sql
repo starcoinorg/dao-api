@@ -110,3 +110,15 @@ VALUES
 ('test_dao_id2', 'http://test_dao2_community_links_discord', 'http://test_dao2_community_links_telegram', 'http://test_dao2_community_links_twitter', 'test_dao2_description', NULL, 'test_dao2_name', 'test_dao_purpose_id', 'test_dao_tags,blockchain,dao'
 );
 
+
+INSERT INTO `dao_voting_resource`
+(`dao_id`,
+`sequence_id`,
+`resource_struct_tag`,
+`voting_power_bcs_path`)
+VALUES
+('test_dao_id','3','0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapFarmBoost::UserInfo<0x00000000000000000000000000000001::STC::STC, 0x4ffcc98f43ce74668264a0cf6eebe42b::FAI::FAI>','{u64,{{u128}},u128}[1][0][0]'
+),
+('test_dao_id','4','0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapFarmBoost::UserInfo<0x00000000000000000000000000000001::STC::STC, 0xbf60b00855c92fe725296a436101c8c6::WEN::WEN>','{u64,{{u128}},u128}[1][0][0]'
+);
+
