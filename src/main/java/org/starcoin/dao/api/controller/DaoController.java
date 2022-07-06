@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.starcoin.dao.api.hateoas.event.PaginatedResultsRetrievedEvent;
@@ -72,7 +73,7 @@ public class DaoController {
     @GetMapping("daos")
     public List<Dao> getDaos(@RequestParam("page") final int page, @RequestParam("size") final int size,
                              final UriComponentsBuilder uriBuilder, final HttpServletResponse response) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("sequenceId").ascending());
         Page<Dao> p = daoRepository.findAll(pageable);
         eventPublisher.publishEvent(new PaginatedResultsRetrievedEvent<>(Dao.class, uriBuilder, response, page,
                 p.getTotalPages(), size));

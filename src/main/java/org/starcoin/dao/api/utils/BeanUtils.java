@@ -30,7 +30,9 @@ public class BeanUtils {
     public static ProposalVO convertToProposalVO(Proposal proposal, ProposalVotingChoiceRepository proposalVotingChoiceRepository, AccountVoteRepository accountVoteRepository) {
         ProposalVO proposalVO = new ProposalVO();
         org.springframework.beans.BeanUtils.copyProperties(proposal, proposalVO);
-        if (VotingType.YES_NO.equals(proposalVO.getVotingType())) {
+        if (VotingType.STANDARD.equals(proposalVO.getVotingType())) {
+            proposalVO.setProposalVotingChoices(ProposalVO.getStandardVotingChoices());
+        } else if (VotingType.YES_NO.equals(proposalVO.getVotingType())) {
             proposalVO.setProposalVotingChoices(ProposalVO.getYesNoChoices());
         } else if (VotingType.SINGLE_CHOICE.equals(proposalVO.getVotingType())) {
             List<ProposalVO.ProposalVotingChoice> choices = new ArrayList<>();

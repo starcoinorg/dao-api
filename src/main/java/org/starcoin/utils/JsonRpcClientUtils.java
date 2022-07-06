@@ -19,6 +19,8 @@ import java.util.function.Function;
  * Starcoin JSON RPC client utils.
  */
 public class JsonRpcClientUtils {
+    public static final String STC_ACCOUNT_BALANCE_RESOURCE_STRUCT_TAG = "0x00000000000000000000000000000001::Account::Balance<0x00000000000000000000000000000001::STC::STC>";
+
     private JsonRpcClientUtils() {
     }
 

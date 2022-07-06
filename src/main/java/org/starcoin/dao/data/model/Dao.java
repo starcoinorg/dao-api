@@ -42,6 +42,14 @@ public class Dao implements Serializable {
     @Column(length = 500)
     private String moreTags;
 
+    @Column
+    private Integer sequenceId;
+
+    /**
+     * Move(Starcoin) DAO type tag.
+     */
+    @Column(length = 200)
+    private String daoTypeTag;
 
     public String getDaoId() {
         return daoId;
@@ -129,5 +137,22 @@ public class Dao implements Serializable {
 
     public void setMoreTags(String moreTags) {
         this.moreTags = moreTags;
+    }
+
+
+    public Integer getSequenceId() {
+        return sequenceId;
+    }
+
+    public void setSequenceId(Integer sequenceId) {
+        this.sequenceId = sequenceId;
+    }
+
+    public String getDaoTypeTag() {
+        return daoTypeTag;
+    }
+
+    public void setDaoTypeTag(String daoTypeTag) {
+        this.daoTypeTag = daoTypeTag;
     }
 }

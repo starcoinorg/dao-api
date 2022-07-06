@@ -37,7 +37,7 @@ public class ProposalVotingChoiceId implements Serializable {
         proposalId.setProposalNumber(proposalNumber);
     }
 
-    @Column(length = 100)
+    @Column//(length = 100)
     public Integer getSequenceId() {
         return sequenceId;
     }

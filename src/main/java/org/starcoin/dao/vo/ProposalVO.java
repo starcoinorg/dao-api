@@ -6,8 +6,7 @@ import org.starcoin.dao.data.model.Proposal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.starcoin.dao.data.model.VotingType.CHOICE_TITLE_NO;
-import static org.starcoin.dao.data.model.VotingType.CHOICE_TITLE_YES;
+import static org.starcoin.dao.data.model.VotingType.*;
 
 public class ProposalVO extends Proposal {
     private List<ProposalVotingChoice> proposalVotingChoices;
@@ -18,6 +17,15 @@ public class ProposalVO extends Proposal {
         List<ProposalVotingChoice> choices = new ArrayList<>();
         choices.add(new ProposalVotingChoice(0, CHOICE_TITLE_YES));
         choices.add(new ProposalVotingChoice(1, CHOICE_TITLE_NO));
+        return choices;
+    }
+
+    public static List<ProposalVotingChoice> getStandardVotingChoices() {
+        List<ProposalVotingChoice> choices = new ArrayList<>();
+        choices.add(new ProposalVotingChoice((int) STANDARD_VOTING_CHOICE_ID_YES, STANDARD_VOTING_CHOICE_TITLE_YES));
+        choices.add(new ProposalVotingChoice((int) STANDARD_VOTING_CHOICE_ID_NO, STANDARD_VOTING_CHOICE_TITLE_NO));
+        choices.add(new ProposalVotingChoice((int) STANDARD_VOTING_CHOICE_ID_NO_WITH_VETO, STANDARD_VOTING_CHOICE_TITLE_NO_WITH_VETO));
+        choices.add(new ProposalVotingChoice((int) STANDARD_VOTING_CHOICE_ID_ABSTAIN, STANDARD_VOTING_CHOICE_TITLE_ABSTAIN));
         return choices;
     }
 

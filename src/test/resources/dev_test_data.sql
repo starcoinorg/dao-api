@@ -122,3 +122,88 @@ VALUES
 ('test_dao_id','4','0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapFarmBoost::UserInfo<0x00000000000000000000000000000001::STC::STC, 0xbf60b00855c92fe725296a436101c8c6::WEN::WEN>','{u64,{{u128}},u128}[1][0][0]'
 );
 
+
+
+-- ----------------------- 2022-07-06 -----------------------
+
+-- Insert or update DAOs:
+INSERT INTO `dao`
+(`dao_id`,
+`community_links_discord`,
+`community_links_telegram`,
+`community_links_twitter`,
+`description`,
+`long_description`,
+`name`,
+`purpose_id`,
+`tags`,
+`sequence_id`,
+`dao_type_tag`)
+VALUES
+('starcoin_dao',
+'https://discord.gg/CJhpNfW8',
+'https://t.me/Starcoin_STC',
+'https://twitter.com/StarcoinSTC',
+'Starcoin DAO',
+'Starcoin DAO',
+'Starcoin DAO',
+null,
+'Starcoin,STC,blockchain,dao',
+1,
+'0x8c109349c6bd91411d6bc962e080c4a3::TestStarcoinDaoModule::StarcoinDao'
+);
+
+UPDATE `dao` SET `sequence_id` = '11' WHERE (`dao_id` = 'test_dao_id');
+UPDATE `dao` SET `sequence_id` = '12' WHERE (`dao_id` = 'test_dao_id2');
+
+
+-- Insert dao_voting_resource:
+INSERT INTO `dao_voting_resource`
+(`dao_id`,
+`sequence_id`,
+`resource_struct_tag`,
+`voting_power_bcs_path`)
+VALUES
+('starcoin_dao',
+'1',
+'0x00000000000000000000000000000001::Account::Balance<0x00000000000000000000000000000001::STC::STC>',
+'{{u128}}[0][0]'
+);
+
+/*
+curl --location --request POST 'https://main-seed.starcoin.org' --header 'Content-Type: application/json' --data-raw '{
+ "id":101,
+ "jsonrpc":"2.0",
+ "method":"chain.info",
+ "params":[]
+}'
+*/
+
+-- Insert proposal:
+
+INSERT INTO `proposal`
+(`dao_id`,
+`proposal_number`,
+`block_state_root`,
+`block_height`,
+`category_id`,
+`description`,
+`discussion`,
+`title`,
+`voting_period_end`,
+`voting_period_start`,
+`voting_type`)
+VALUES
+('starcoin_dao',
+'1',
+'0xa49034c16844103645331b6b61b0c9af7c19b7a003c0c4eb6169b8aa45087bc6',
+'6649322',
+null,
+'This is a TEST proposal#1',
+'https://github.com/starcoinorg/starcoin-cookbook/issues/137',
+'This is a TEST proposal#1',
+(UNIX_TIMESTAMP() + 365 * 24 * 60 * 60) * 1000, -- one year from now
+unix_timestamp() * 1000,
+'STANDARD'
+);
+
