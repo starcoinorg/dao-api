@@ -38,7 +38,7 @@ public class VotingPowerQueryService {
     private DaoVotingResourceRepository daoVotingResourceRepository;
 
     public GetVotingPowerResponse getAccountVotingPower(String accountAddress, String daoId, String proposalNumber) {
-        AccountAddress addressObj = AccountAddressUtils.create(accountAddress);// make sure it is illegal
+        AccountAddress addressObj = AccountAddressUtils.create(accountAddress);// make sure it is legal
         Optional<Proposal> proposal = proposalRepository.findById(new ProposalId(daoId, proposalNumber));
         if (!proposal.isPresent()) {
             return null;

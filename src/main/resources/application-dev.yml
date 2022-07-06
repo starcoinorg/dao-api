@@ -28,3 +28,5 @@ logging:
           hbm2ddl: DEBUG
           # 输出数据库模型（开发阶段）
 
+starcoin:
+  dao-sbt-resource-struct-tag-format: "0x00000000000000000000000000000001::IdentifierNFT::IdentifierNFT<0x6bfb460477adf9dd0455d3de2fc7f211::SBTModule::DaoMember<%1$s>, 0x6bfb460477adf9dd0455d3de2fc7f211::SBTModule::DaoMemberBody<%1$s>>"

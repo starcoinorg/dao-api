@@ -186,6 +186,16 @@ public class BCSTraverserTests {
     }
 
 
+    private static final String IDENTIFIER_NFT_SBT_VALUE_BCS_PATH = "{option<{address,u64,{bytes,bytes,bytes,bytes},{u64},{{u128}}}>}[0][0][4][0][0]";
+
+    @Test
+    void testSbtValueSelect() throws DeserializationError, ParseException {
+        byte[] bytes = HexUtils.hexToByteArray("0x016bfb460477adf9dd0455d3de2fc7f21101000000000000000664616f313031000a69616d67655f6461746100570400000000000064000000000000000000000000000000");
+        Object sbtValue = BCSPath.select(bytes, IDENTIFIER_NFT_SBT_VALUE_BCS_PATH);
+        System.out.println(sbtValue);
+        Assertions.assertEquals(BigInteger.valueOf(100), sbtValue);
+    }
+
     private void printTraverse(BCSTraverser traverser, byte[] bytes) throws DeserializationError {
         BcsDeserializer deserializer = new BcsDeserializer(bytes);
         ContentHandler printContentHandler = new PrintContentHandler();
