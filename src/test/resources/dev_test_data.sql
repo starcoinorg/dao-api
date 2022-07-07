@@ -263,3 +263,19 @@ INSERT INTO `proposal` (
 UPDATE `dao` SET `dao_type_tag` = '0x8c109349c6bd91411d6bc962e080c4a3::TestStarcoinDaoModule::TestDao2'
   WHERE (`dao_id` = 'test_dao_id2');
 
+INSERT INTO `proposal`(
+`dao_id`, `proposal_number`, `block_state_root`, `block_height`,
+`description`, `discussion`, `title`,
+`voting_period_end`, `voting_period_start`, `voting_type`
+) VALUES (
+'starswap_dao', '1', '0xa49034c16844103645331b6b61b0c9af7c19b7a003c0c4eb6169b8aa45087bc6', '6649322',
+'This is a TEST Starswap proposal#1', 'https://github.com/starcoinorg/starcoin-cookbook/issues/137', 'This is a TEST Starswap proposal#1',
+'1688645961000', '1657109961000', 'STANDARD'
+);
+
+UPDATE `proposal` SET
+`block_state_root` = '0xffa6e0c0d4aa79020ee0f799ff4919637237e153accc30d782f652fc56f1a005',
+`block_height` = '6545885'
+WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+
+
