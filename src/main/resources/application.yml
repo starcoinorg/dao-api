@@ -38,4 +38,5 @@ starcoin:
   json-rpc-url: ${STARCOIN_JSON_RPC_URL}
   chain-id: {STARCOIN_CHAIN_ID}
   dao-sbt-resource-struct-tag-format: ${STARCOIN_DAO_SBT_RESOURCE_STRUCT_TAG_FORMAT}
+  identifier-nft-sbt-value-bcs-path: ${STARCOIN_IDENTIFIER_NFT_SBT_VALUE_BCS_PATH}
   

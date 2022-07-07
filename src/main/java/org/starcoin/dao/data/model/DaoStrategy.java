@@ -15,10 +15,24 @@ import javax.persistence.Entity;
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class DaoStrategy {
 
+    /**
+     * Using SBT value as voting power.
+     */
+    public static final String STRATEGY_ID_SBT = "SBT";
+
+    /**
+     * Use a set of numeric fields in voting-resources as voting power.
+     */
+    public static final String STRATEGY_ID_VOTING_RESOURCES = "RESOURCES";
+
     @EmbeddedId
     @AttributeOverride(name = "daoId", column = @Column(name = "dao_id", length = 100, nullable = false))
     @AttributeOverride(name = "strategyId", column = @Column(name = "strategy_id", length = 100, nullable = false))
     private DaoStrategyId daoStrategyId;
+
+
+    @Column
+    private Integer sequenceId;
 
     public DaoStrategyId getDaoStrategyId() {
         return daoStrategyId;
@@ -28,4 +42,11 @@ public class DaoStrategy {
         this.daoStrategyId = daoStrategyId;
     }
 
+    public Integer getSequenceId() {
+        return sequenceId;
+    }
+
+    public void setSequenceId(Integer sequenceId) {
+        this.sequenceId = sequenceId;
+    }
 }

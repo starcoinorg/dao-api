@@ -207,3 +207,59 @@ unix_timestamp() * 1000,
 'STANDARD'
 );
 
+-- ----------------------- 2022-07-07 -----------------------
+
+-- Insert or update DAOs:
+INSERT INTO `dao`
+(`dao_id`,
+`community_links_discord`,
+`community_links_telegram`,
+`community_links_twitter`,
+`description`,
+`long_description`,
+`name`,
+`purpose_id`,
+`tags`,
+`sequence_id`,
+`dao_type_tag`)
+VALUES
+('starswap_dao',
+'https://discord.com/channels/822159062475997194/922700202891153428',
+'https://t.me/StarswapEN',
+'https://twitter.com/StarswapEN',
+'Starswap DAO',
+'Starswap DAO',
+'Starswap DAO',
+null,
+'DEX,AMM,Starcoin,STC,swap,dao',
+1,
+'0x8c109349c6bd91411d6bc962e080c4a3::TestStarcoinDaoModule::StarswapDao'
+);
+
+INSERT INTO `dao_strategy` (`dao_id`, `strategy_id`, `sequence_id`) VALUES ('starcoin_dao', 'RESOURCES', '0');
+INSERT INTO `dao_strategy` (`dao_id`, `strategy_id`, `sequence_id`) VALUES ('starswap_dao', 'RESOURCES', '0');
+INSERT INTO `dao_strategy` (`dao_id`, `strategy_id`, `sequence_id`) VALUES ('test_dao_id2', 'SBT', '0');
+INSERT INTO `dao_strategy` (`dao_id`, `strategy_id`, `sequence_id`) VALUES ('test_dao_id', 'RESOURCES', '0');
+
+INSERT INTO `dao_voting_resource` (`dao_id`, `sequence_id`, `resource_struct_tag`, `voting_power_bcs_path`)
+  VALUES ('starswap_dao', '1', '0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapVestarMinter::Treasury', '{{{u128}}}[0][0][0]');
+INSERT INTO `dao_voting_resource` (`dao_id`, `sequence_id`, `resource_struct_tag`, `voting_power_bcs_path`)
+  VALUES ('starswap_dao', '2', '0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapFarmBoost::UserInfo<0x00000000000000000000000000000001::STC::STC, 0x8c109349c6bd91411d6bc962e080c4a3::STAR::STAR>', '{u64,{{u128}},u128}[1][0][0]');
+INSERT INTO `dao_voting_resource` (`dao_id`, `sequence_id`, `resource_struct_tag`, `voting_power_bcs_path`)
+  VALUES ('starswap_dao', '3', '0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapFarmBoost::UserInfo<0x00000000000000000000000000000001::STC::STC, 0x4ffcc98f43ce74668264a0cf6eebe42b::FAI::FAI>', '{u64,{{u128}},u128}[1][0][0]');
+INSERT INTO `dao_voting_resource` (`dao_id`, `sequence_id`, `resource_struct_tag`, `voting_power_bcs_path`)
+  VALUES ('starswap_dao', '4', '0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapFarmBoost::UserInfo<0x00000000000000000000000000000001::STC::STC, 0xbf60b00855c92fe725296a436101c8c6::WEN::WEN>', '{u64,{{u128}},u128}[1][0][0]');
+
+
+INSERT INTO `proposal` (
+`dao_id`, `proposal_number`, `block_state_root`, `block_height`, `category_id`, `description`,
+`discussion`, `title`, `voting_period_end`, `voting_period_start`, `voting_type`
+) VALUES (
+'test_dao_id2', '1', '0xffa6e0c0d4aa79020ee0f799ff4919637237e153accc30d782f652fc56f1a005', '6545885', 'category1', 'description1',
+'https://github.com/starcoinorg/discussion2', 'A Test proposal', '1657188072720', '1856583272720', 'YES_NO'
+);
+
+
+UPDATE `dao` SET `dao_type_tag` = '0x8c109349c6bd91411d6bc962e080c4a3::TestStarcoinDaoModule::TestDao2'
+  WHERE (`dao_id` = 'test_dao_id2');
+
