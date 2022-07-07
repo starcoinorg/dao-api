@@ -15,6 +15,14 @@ import java.io.Serializable;
 @DynamicUpdate
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class Proposal implements Serializable {
+    // Proposal state
+    public static final byte PROPOSAL_STATE_PENDING = 1;
+    public static final byte PROPOSAL_STATE_ACTIVE = 2;
+    public static final byte PROPOSAL_STATE_DEFEATED = 3;
+    public static final byte PROPOSAL_STATE_AGREED = 4;
+    public static final byte PROPOSAL_STATE_QUEUED = 5;
+    public static final byte PROPOSAL_STATE_EXECUTABLE = 6;
+    public static final byte PROPOSAL_STATE_EXTRACTED = 7;
 
     @EmbeddedId
     @AttributeOverride(name = "daoId", column = @Column(name = "dao_id", length = 100, nullable = false))
@@ -57,6 +65,17 @@ public class Proposal implements Serializable {
     @Column
     private Long submittedAt;
 
+    @Column(length = 200)
+    private String pluginTypeTag;
+
+    @Column(length = 200)
+    private String actionTypeTag;
+
+    @Column(length = 1000)
+    private String action;
+
+    @Column(length = 20)
+    private String status;
 
     public ProposalId getProposalId() {
         return proposalId;
@@ -152,5 +171,37 @@ public class Proposal implements Serializable {
 
     public void setSubmittedAt(Long submittedAt) {
         this.submittedAt = submittedAt;
+    }
+
+    public String getPluginTypeTag() {
+        return pluginTypeTag;
+    }
+
+    public void setPluginTypeTag(String pluginTypeTag) {
+        this.pluginTypeTag = pluginTypeTag;
+    }
+
+    public String getActionTypeTag() {
+        return actionTypeTag;
+    }
+
+    public void setActionTypeTag(String actionTypeTag) {
+        this.actionTypeTag = actionTypeTag;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
