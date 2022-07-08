@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.starcoin.dao.service.HandleEventService;
+import org.starcoin.dao.service.StarcoinHandleEventService;
 import org.starcoin.dao.service.StarcoinEventFilter;
 import org.starcoin.dao.subscribe.StarcoinEventSubscribeHandler;
 
@@ -26,7 +26,7 @@ public class DaoApiApplication {
     private String starcoinNetwork;
 
     @Autowired
-    private HandleEventService handleEventService;
+    private StarcoinHandleEventService starcoinHandleEventService;
 
     @Autowired
     private StarcoinEventFilter starcoinEventFilter;
@@ -41,7 +41,7 @@ public class DaoApiApplication {
         //LOG.info("es url is " + esUrl);
         for (String seed : starcoinSeeds) {
             Thread handlerThread = new Thread(new StarcoinEventSubscribeHandler(seed,
-                    handleEventService, starcoinEventFilter));
+                    starcoinHandleEventService, starcoinEventFilter));
             handlerThread.start();
         }
     }

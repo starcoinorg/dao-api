@@ -9,7 +9,7 @@ import org.starcoin.bean.Event;
 import org.starcoin.dao.api.utils.JsonRpcClient;
 import org.starcoin.dao.data.model.PullingEventTask;
 import org.starcoin.dao.data.repo.NodeHeartbeatRepository;
-import org.starcoin.dao.service.HandleEventService;
+import org.starcoin.dao.service.StarcoinHandleEventService;
 import org.starcoin.dao.service.NodeHeartbeatService;
 import org.starcoin.dao.service.PullingEventTaskService;
 import org.starcoin.dao.service.StarcoinEventFilter;
@@ -26,7 +26,7 @@ public class PullingEventTaskExecuteTaskService {
     private static final Logger LOG = LoggerFactory.getLogger(PullingEventTaskExecuteTaskService.class);
 
     private final PullingEventTaskService pullingEventTaskService;
-    private final HandleEventService handleEventService;
+    private final StarcoinHandleEventService starcoinHandleEventService;
     private final JsonRpcClient jsonRpcClient;
     private final NodeHeartbeatRepository nodeHeartbeatRepository;
     private final StarcoinEventFilter starcoinEventFilter;
@@ -34,12 +34,12 @@ public class PullingEventTaskExecuteTaskService {
     public PullingEventTaskExecuteTaskService(
             @Autowired JsonRpcClient jsonRpcClient,
             @Autowired PullingEventTaskService pullingEventTaskService,
-            @Autowired HandleEventService handleEventService,
+            @Autowired StarcoinHandleEventService starcoinHandleEventService,
             @Autowired NodeHeartbeatRepository nodeHeartbeatRepository,
             @Autowired StarcoinEventFilter starcoinEventFilter) {
         this.jsonRpcClient = jsonRpcClient;
         this.pullingEventTaskService = pullingEventTaskService;
-        this.handleEventService = handleEventService;
+        this.starcoinHandleEventService = starcoinHandleEventService;
         this.nodeHeartbeatRepository = nodeHeartbeatRepository;
         this.starcoinEventFilter = starcoinEventFilter;
     }
@@ -77,7 +77,7 @@ public class PullingEventTaskExecuteTaskService {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Processing a event: " + e);
                 }
-                handleEventService.handleEvent(e);//note：Get address from eventKey?
+                starcoinHandleEventService.handleEvent(e);//note：Get address from eventKey?
             }
             fromBlockNumber = toBlockNumber.add(BigInteger.ONE);
         }

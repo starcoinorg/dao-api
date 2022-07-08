@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.starcoin.bean.Event;
 import org.starcoin.bean.EventNotification;
-import org.starcoin.dao.service.HandleEventService;
+import org.starcoin.dao.service.StarcoinHandleEventService;
 import org.starcoin.dao.service.StarcoinEventFilter;
 import org.web3j.protocol.websocket.WebSocketService;
 
@@ -20,16 +20,16 @@ public class StarcoinEventSubscribeHandler implements Runnable {
 
     //private final String network;
 
-    private final HandleEventService handleEventService;
+    private final StarcoinHandleEventService starcoinHandleEventService;
 
     private final StarcoinEventFilter starcoinEventFilter;
 
     public StarcoinEventSubscribeHandler(String seed, //String network,
-                                         HandleEventService handleEventService,
+                                         StarcoinHandleEventService starcoinHandleEventService,
                                          StarcoinEventFilter starcoinEventFilter) {
         this.webSocketSeed = seed;
         //this.network = network;
-        this.handleEventService = handleEventService;
+        this.starcoinHandleEventService = starcoinHandleEventService;
         this.starcoinEventFilter = starcoinEventFilter;
     }
 
@@ -62,7 +62,7 @@ public class StarcoinEventSubscribeHandler implements Runnable {
                     }
                     Event event = notification.getParams().getResult();
                     if (LOG.isDebugEnabled()) LOG.debug("Received event: " + event);
-                    handleEventService.handleEvent(event);
+                    starcoinHandleEventService.handleEvent(event);
                 }
             });
         } catch (ConnectException e) {

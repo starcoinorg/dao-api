@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-public class EmptyStarcoinEventFilter implements StarcoinEventFilter {
+public class StarcoinEventFilterImpl implements StarcoinEventFilter {
     @Override
     public List<String> getAddresses() {
         return Collections.emptyList();

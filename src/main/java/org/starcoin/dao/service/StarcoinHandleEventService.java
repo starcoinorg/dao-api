@@ -2,6 +2,6 @@ package org.starcoin.dao.service;
 
 import org.starcoin.bean.Event;
 
-public interface HandleEventService {
+public interface StarcoinHandleEventService {
     void handleEvent(Event e);
 }
