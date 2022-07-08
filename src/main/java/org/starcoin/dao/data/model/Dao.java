@@ -36,6 +36,9 @@ public class Dao implements Serializable {
     @Column(length = 200)
     private String communityLinksTelegram;
 
+    /**
+     * Logo URL of this organization.
+     */
     @Column(length = 500)
     private String logoUrl;
 

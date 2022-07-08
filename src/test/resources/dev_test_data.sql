@@ -278,4 +278,10 @@ UPDATE `proposal` SET
 `block_height` = '6545885'
 WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
 
+-- ----------- 2020-07-08 -----------
+UPDATE `proposal` SET `description` = 'This is a TEST proposal#1', `discussion` = 'https://github.com/starcoinorg/starcoin-cookbook/issues/137', `title` = 'A Test proposal#1', `voting_period_end` = '1657246438000', `voting_period_start` = '1659838422000', `submitted_at` = '1657246438000', `submitted_by` = '0xd117638e105403784bf6A92AA1276Ec1' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '1');
+UPDATE `proposal` SET `description` = 'This is a TEST proposal#1', `discussion` = 'https://github.com/starcoinorg/starcoin-cookbook/issues/137', `title` = 'A Test proposal#1', `voting_period_end` = '1657246438000', `voting_period_start` = '1659838422000', `submitted_at` = '1657246438000', `submitted_by` = '0xd117638e105403784bf6A92AA1276Ec1' WHERE (`dao_id` = 'test_dao_id2') and (`proposal_number` = '1');
+UPDATE `proposal` SET `description` = 'This is a TEST proposal#2', `discussion` = 'https://github.com/starcoinorg/starcoin-cookbook/issues/137', `title` = 'A Test proposal#2', `voting_period_end` = '1657246438000', `voting_period_start` = '1659838422000', `submitted_at` = '1657246438000', `submitted_by` = '0xd117638e105403784bf6A92AA1276Ec1' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '2');
+UPDATE `proposal` SET `submitted_at` = '1657246438000', `submitted_by` = '0xd117638e105403784bf6A92AA1276Ec1' WHERE (`dao_id` = 'starcoin_dao') and (`proposal_number` = '1');
+UPDATE `proposal` SET `submitted_at` = '1657246438000', `submitted_by` = '0xd117638e105403784bf6A92AA1276Ec1' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
 
