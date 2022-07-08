@@ -39,4 +39,7 @@ starcoin:
   chain-id: {STARCOIN_CHAIN_ID}
   dao-sbt-resource-struct-tag-format: ${STARCOIN_DAO_SBT_RESOURCE_STRUCT_TAG_FORMAT}
   identifier-nft-sbt-value-bcs-path: ${STARCOIN_IDENTIFIER_NFT_SBT_VALUE_BCS_PATH}
-  
+  pulling-event-task-execute:
+    fixed-delay: 20000
+  pulling-event-task-auto-create:
+    fixed-delay: 60000
