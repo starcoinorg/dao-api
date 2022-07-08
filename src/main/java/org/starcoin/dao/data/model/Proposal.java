@@ -15,7 +15,7 @@ import java.io.Serializable;
 @DynamicUpdate
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class Proposal implements Serializable {
-    // Proposal state
+    // Proposal states
     public static final byte PROPOSAL_STATE_PENDING = 1;
     public static final byte PROPOSAL_STATE_ACTIVE = 2;
     public static final byte PROPOSAL_STATE_DEFEATED = 3;
@@ -23,6 +23,10 @@ public class Proposal implements Serializable {
     public static final byte PROPOSAL_STATE_QUEUED = 5;
     public static final byte PROPOSAL_STATE_EXECUTABLE = 6;
     public static final byte PROPOSAL_STATE_EXTRACTED = 7;
+
+    // Voting methods
+    public static final String VOTING_METHOD_ON_CHAIN = "ON_CHAIN";
+    public static final String VOTING_METHOD_OFF_CHAIN = "OFF_CHAIN";
 
     @EmbeddedId
     @AttributeOverride(name = "daoId", column = @Column(name = "dao_id", length = 100, nullable = false))
@@ -76,6 +80,9 @@ public class Proposal implements Serializable {
 
     @Column(length = 20)
     private String status;
+
+    @Column(length = 20)
+    private String votingMethod;
 
     public ProposalId getProposalId() {
         return proposalId;
@@ -203,5 +210,13 @@ public class Proposal implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getVotingMethod() {
+        return votingMethod;
+    }
+
+    public void setVotingMethod(String votingMethod) {
+        this.votingMethod = votingMethod;
     }
 }
