@@ -38,7 +38,15 @@ public class StarcoinEventSubscriber {
         }).collect(Collectors.toList());
     }
 
-    public List<Flowable<EventNotification>> eventNotificationFlowableList() {
+    public Flowable<EventNotification> eventNotificationFlowable() {
+        List<Flowable<EventNotification>> flowableList = eventNotificationFlowableList();
+        if (flowableList.size() == 0) {
+            return Flowable.empty();
+        }
+        return flowableList.stream().reduce(Flowable::mergeWith).get();
+    }
+
+    private List<Flowable<EventNotification>> eventNotificationFlowableList() {
         return createEventFilterList().stream().map(eventFilter ->
                 web3jService.subscribe(
                         new Request<>(

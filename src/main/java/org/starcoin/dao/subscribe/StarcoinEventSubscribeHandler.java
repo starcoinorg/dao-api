@@ -5,12 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.starcoin.bean.Event;
 import org.starcoin.bean.EventNotification;
-import org.starcoin.dao.service.StarcoinHandleEventService;
 import org.starcoin.dao.service.StarcoinEventFilter;
+import org.starcoin.dao.service.StarcoinHandleEventService;
 import org.web3j.protocol.websocket.WebSocketService;
 
 import java.net.ConnectException;
-import java.util.List;
 
 public class StarcoinEventSubscribeHandler implements Runnable {
 
@@ -54,17 +53,15 @@ public class StarcoinEventSubscribeHandler implements Runnable {
             service.connect();
             LOG.info("WebSocket connected. " + this.getWebSocketSeed());
             StarcoinEventSubscriber subscriber = new StarcoinEventSubscriber(service, starcoinEventFilter);
-            List<Flowable<EventNotification>> evtNotificationFlowableList = subscriber.eventNotificationFlowableList();
-            evtNotificationFlowableList.forEach(evtNotifications -> {
-                for (EventNotification notification : evtNotifications.blockingIterable()) {
-                    if (notification.getParams() == null || notification.getParams().getResult() == null) {
-                        continue;
-                    }
-                    Event event = notification.getParams().getResult();
-                    if (LOG.isDebugEnabled()) LOG.debug("Received event: " + event);
-                    starcoinHandleEventService.handleEvent(event);
+            Flowable<EventNotification> evtNotificationFlowable = subscriber.eventNotificationFlowable();
+            for (EventNotification notification : evtNotificationFlowable.blockingIterable()) {
+                if (notification.getParams() == null || notification.getParams().getResult() == null) {
+                    continue;
                 }
-            });
+                Event event = notification.getParams().getResult();
+                if (LOG.isDebugEnabled()) LOG.debug("Received event: " + event);
+                starcoinHandleEventService.handleEvent(event);
+            }
         } catch (ConnectException e) {
             LOG.info("WebSocketService connection exception", e);
         }
