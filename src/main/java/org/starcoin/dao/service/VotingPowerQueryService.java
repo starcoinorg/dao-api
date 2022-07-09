@@ -52,13 +52,16 @@ public class VotingPowerQueryService {
         if (!proposal.isPresent()) {
             return null;
         }
-        return getAccountVotingPowerByStateRoot(addressObj, daoId, proposal.get().getBlockStateRoot());
+        return getAccountVotingPowerByStateRoot(addressObj, daoId, proposalNumber, proposal.get().getBlockStateRoot());
     }
 
-    private GetVotingPowerResponse getAccountVotingPowerByStateRoot(AccountAddress accountAddress, String daoId, String stateRoot) {
+    private GetVotingPowerResponse getAccountVotingPowerByStateRoot(AccountAddress accountAddress,
+                                                                    String daoId,
+                                                                    String proposalNumber,
+                                                                    String stateRoot) {
         BigInteger totalVotingPower = BigInteger.ZERO;
         GetVotingPowerResponse r = new GetVotingPowerResponse();
-        List<DaoVotingResource> daoVotingResources = getDaoVotingResources(daoId);
+        List<DaoVotingResource> daoVotingResources = getDaoVotingResources(daoId, proposalNumber);
         List<GetVotingPowerResponse.VotingPowerDetail> details = new ArrayList<>();
         for (DaoVotingResource daoVotingResource : daoVotingResources) {
             GetVotingPowerResponse.VotingPowerDetail detail = new GetVotingPowerResponse.VotingPowerDetail();
@@ -92,23 +95,42 @@ public class VotingPowerQueryService {
         return r;
     }
 
-    private List<DaoVotingResource> getDaoVotingResources(String daoId) {
+    private List<DaoVotingResource> getDaoVotingResources(String daoId,
+                                                          String proposalNumber// ignored proposalNumber!
+    ) {
+        Dao dao = daoRepository.findById(daoId).orElseThrow(() -> new IllegalStateException("Dao not found."));
         DaoStrategy daoStrategy = daoStrategyService.getPrimaryDaoStrategy(daoId);
-        if (daoStrategy != null) {
-            if (DaoStrategy.STRATEGY_ID_SBT.equals(daoStrategy.getDaoStrategyId().getStrategyId())) {
-                Dao dao = daoRepository.findById(daoId).orElseThrow(() -> new IllegalStateException("Dao not found."));
+        String strategyId = daoStrategy != null ? daoStrategy.getDaoStrategyId().getStrategyId() : null;
+        return getDaoVotingResources(daoId, dao.getDaoTypeTag(), strategyId);
+    }
+
+
+    public List<DaoVotingResource> getDaoVotingResources(String daoId, String daoTypeTag, String strategyId) {
+        return getDaoVotingResources(daoId, daoTypeTag, strategyId, daoVotingResourceRepository, daoSbtSettings);
+    }
+
+    public static List<DaoVotingResource> getDaoVotingResources(String daoId, String daoTypeTag,
+                                                                String strategyId,
+                                                                DaoVotingResourceRepository daoVotingResourceRepository,
+                                                                DaoSbtSettings daoSbtSettings) {
+        List<DaoVotingResource> daoVotingResources;
+        if (strategyId != null) {
+            if (Strategy.STRATEGY_ID_SBT.equals(strategyId)) {
                 DaoVotingResource daoVotingResource = new DaoVotingResource();
                 daoVotingResource.setDaoVotingResourceId(new DaoVotingResourceId(daoId, "0"));
-                daoVotingResource.setResourceStructTag(String.format(daoSbtSettings.getDaoSbtResourceStructTagFormat(), dao.getDaoTypeTag()));
+                daoVotingResource.setResourceStructTag(String.format(daoSbtSettings.getDaoSbtResourceStructTagFormat(), daoTypeTag));
                 daoVotingResource.setVotingPowerBcsPath(daoSbtSettings.getIdentifierNftSbtValueBcsPath());
-                return Collections.singletonList(daoVotingResource);
-            } else if (DaoStrategy.STRATEGY_ID_VOTING_RESOURCES.equals(daoStrategy.getDaoStrategyId().getStrategyId())) {
-                //
+                daoVotingResources = Collections.singletonList(daoVotingResource);
+            } else if (Strategy.STRATEGY_ID_VOTING_RESOURCES.equals(strategyId)) {
+                daoVotingResources = daoVotingResourceRepository.findByDaoVotingResourceId_DaoId(daoId);
             } else {
                 throw new IllegalStateException("Unsupported DaoStrategy.");
             }
+        } else {
+            // no strategy, is this ok?
+            daoVotingResources = Collections.emptyList();
         }
-        List<DaoVotingResource> daoVotingResources = daoVotingResourceRepository.findByDaoVotingResourceId_DaoId(daoId);
+
         return daoVotingResources;
     }
 

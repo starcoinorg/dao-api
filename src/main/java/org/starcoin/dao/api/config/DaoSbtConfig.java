@@ -9,10 +9,11 @@ import org.starcoin.dao.service.DaoSbtSettings;
 public class DaoSbtConfig {
 
     @Bean
-    public DaoSbtSettings daoSbtSettings(@Value("${starcoin.dao-sbt-resource-struct-tag-format}") String sbtResourceStructTagFormat,
-                                         @Value("${starcoin.identifier-nft-sbt-value-bcs-path}") String identifierNftSbtValueBcsPath) {
+    public DaoSbtSettings daoSbtSettings(
+            @Value("${starcoin.dao-sbt-resource-struct-tag-format}") String daoSbtResourceStructTagFormat,
+            @Value("${starcoin.identifier-nft-sbt-value-bcs-path}") String identifierNftSbtValueBcsPath) {
         DaoSbtSettings settings = new DaoSbtSettings();
-        settings.setDaoSbtResourceStructTagFormat(sbtResourceStructTagFormat);
+        settings.setDaoSbtResourceStructTagFormat(daoSbtResourceStructTagFormat);
         settings.setIdentifierNftSbtValueBcsPath(identifierNftSbtValueBcsPath);
         return settings;
     }

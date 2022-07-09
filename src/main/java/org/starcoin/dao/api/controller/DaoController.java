@@ -11,10 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.starcoin.dao.api.hateoas.event.PaginatedResultsRetrievedEvent;
 import org.starcoin.dao.data.model.*;
 import org.starcoin.dao.data.repo.*;
-import org.starcoin.dao.service.AccountVoteService;
-import org.starcoin.dao.service.CastVoteService;
-import org.starcoin.dao.service.ProposalService;
-import org.starcoin.dao.service.VotingPowerQueryService;
+import org.starcoin.dao.service.*;
 import org.starcoin.dao.vo.CastVoteRequest;
 import org.starcoin.dao.vo.DaoVO;
 import org.starcoin.dao.vo.GetVotingPowerResponse;
@@ -60,6 +57,9 @@ public class DaoController {
     private VotingPowerQueryService votingPowerQueryService;
 
     @Resource
+    private DaoStrategyService daoStrategyService;
+
+    @Resource
     private CastVoteService castVoteService;
 
     private static String[] splitByComma(String str, int expectedCount) {
@@ -83,7 +83,7 @@ public class DaoController {
     @GetMapping("daos/{daoId}")
     public DaoVO getDao(@PathVariable("daoId") String daoId) {
         Optional<Dao> dao = daoRepository.findById(daoId);
-        return dao.map(d -> convertToDaoVO(d, daoVotingResourceRepository)).orElse(null);
+        return dao.map(d -> convertToDaoVO(d, daoStrategyService, votingPowerQueryService)).orElse(null);
     }
 
     @GetMapping("proposals")
