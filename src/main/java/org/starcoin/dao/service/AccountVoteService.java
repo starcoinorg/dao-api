@@ -27,7 +27,6 @@ public class AccountVoteService {
         //                predicates.add(criteriaBuilder.equal(root.get("accountVoteId.daoId"),daoId));
         //                predicates.add(criteriaBuilder.equal(root.get("accountVoteId.proposalNumber"),proposalNumber));
         //                //predicates.add(criteriaBuilder.notEqual(root.get("accountVoteId.accountAddress"), "0x01"));
-        //                query.orderBy(criteriaBuilder.asc(root.get("createdAt")));
         //                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         //            }
         //        };
