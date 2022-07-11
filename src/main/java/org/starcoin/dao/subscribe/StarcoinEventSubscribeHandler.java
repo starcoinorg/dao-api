@@ -17,22 +17,19 @@ public class StarcoinEventSubscribeHandler implements Runnable {
 
     private final String webSocketSeed;
 
-    //private final String network;
-
     private final StarcoinHandleEventService starcoinHandleEventService;
 
     private final StarcoinEventFilter starcoinEventFilter;
 
-    public StarcoinEventSubscribeHandler(String seed, //String network,
+    public StarcoinEventSubscribeHandler(String seed,
                                          StarcoinHandleEventService starcoinHandleEventService,
                                          StarcoinEventFilter starcoinEventFilter) {
         this.webSocketSeed = seed;
-        //this.network = network;
         this.starcoinHandleEventService = starcoinHandleEventService;
         this.starcoinEventFilter = starcoinEventFilter;
     }
 
-    private String getWebSocketSeed() {
+    private String getWebSocketServerUrl() {
         String wsUrl = webSocketSeed;
         String wsPrefix1 = "ws://";
         String wsPrefix2 = "wss://";
@@ -42,16 +39,16 @@ public class StarcoinEventSubscribeHandler implements Runnable {
         if (wsUrl.lastIndexOf(":") == wsUrl.indexOf(":") && wsUrl.startsWith(wsPrefix1)) {
             wsUrl = wsUrl + ":9870";
         }
-        LOG.debug("Get WebSocket URL: " + wsUrl);
+        LOG.debug("Get WebSocket server URL: " + wsUrl);
         return wsUrl;
     }
 
     @Override
     public void run() {
         try {
-            WebSocketService service = new WebSocketService(getWebSocketSeed(), true);
+            WebSocketService service = new WebSocketService(getWebSocketServerUrl(), true);
             service.connect();
-            LOG.info("WebSocket connected. " + this.getWebSocketSeed());
+            LOG.info("WebSocket connected. " + this.getWebSocketServerUrl());
             StarcoinEventSubscriber subscriber = new StarcoinEventSubscriber(service, starcoinEventFilter);
             Flowable<EventNotification> evtNotificationFlowable = subscriber.eventNotificationFlowable();
             for (EventNotification notification : evtNotificationFlowable.blockingIterable()) {
