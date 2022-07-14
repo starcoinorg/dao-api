@@ -41,3 +41,9 @@ spec:
               value: "main4.seed.starcoin.org,main5.seed.starcoin.org"
             - name: STARCOIN_JSON_RPC_URL
               value: "https://main-seed.starcoin.org"
+            - name: SPRING_SECURITY_HTPASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: http-basic-auth
+                  key: auth
+

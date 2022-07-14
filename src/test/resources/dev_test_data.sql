@@ -285,3 +285,9 @@ UPDATE `proposal` SET `description` = 'This is a TEST proposal#2', `discussion` 
 UPDATE `proposal` SET `submitted_at` = '1657246438000', `submitted_by` = '0xd117638e105403784bf6A92AA1276Ec1' WHERE (`dao_id` = 'starcoin_dao') and (`proposal_number` = '1');
 UPDATE `proposal` SET `submitted_at` = '1657246438000', `submitted_by` = '0xd117638e105403784bf6A92AA1276Ec1' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
 
+-- update proposal block_state_root and block_height
+UPDATE `proposal` SET `block_state_root` = '0xcc190378418d98388e0e3bb674a884ad33318e972a51b147e4367aa91a987286', `block_height` = '6750388' WHERE (`dao_id` = 'starcoin_dao') and (`proposal_number` = '1');
+UPDATE `proposal` SET `block_state_root` = '0xcc190378418d98388e0e3bb674a884ad33318e972a51b147e4367aa91a987286', `block_height` = '6750388' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+UPDATE `proposal` SET `block_state_root` = '0xcc190378418d98388e0e3bb674a884ad33318e972a51b147e4367aa91a987286', `block_height` = '6750388' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '1');
+UPDATE `proposal` SET `block_state_root` = '0xcc190378418d98388e0e3bb674a884ad33318e972a51b147e4367aa91a987286', `block_height` = '6750388' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '2');
+UPDATE `proposal` SET `block_state_root` = '0xcc190378418d98388e0e3bb674a884ad33318e972a51b147e4367aa91a987286', `block_height` = '6750388' WHERE (`dao_id` = 'test_dao_id2') and (`proposal_number` = '1');
