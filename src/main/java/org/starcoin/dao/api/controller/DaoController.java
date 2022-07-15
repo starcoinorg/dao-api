@@ -62,6 +62,12 @@ public class DaoController {
     @Resource
     private CastVoteService castVoteService;
 
+    @Resource
+    private DaoService daoService;
+
+    @Resource
+    private DaoVotingResourceService daoVotingResourceService;
+
     private static String[] splitByComma(String str, int expectedCount) {
         String[] a = str.split(",");
         if (a.length != expectedCount) {
@@ -145,5 +151,27 @@ public class DaoController {
         castVoteService.castVote(request);
     }
 
+    @PutMapping("daos/{daoId}")
+    public void putDao(@PathVariable("daoId") String daoId, @RequestBody Dao dao) {
+        dao.setDaoId(daoId);
+        daoService.addOrUpdateDao(dao);
+    }
 
+    @PutMapping("daos/{daoId}/daoStrategies/{strategyId}")
+    public void putDaoStrategy(@PathVariable("daoId") String daoId,
+                               @PathVariable("strategyId") String strategyId,
+                               @RequestBody DaoStrategy daoStrategy) {
+        DaoStrategyId daoStrategyId = new DaoStrategyId(daoId, strategyId);
+        daoStrategy.setDaoStrategyId(daoStrategyId);
+        daoStrategyService.addOrUpdateDaoStrategy(daoStrategy);
+    }
+
+    @PutMapping("daos/{daoId}/daoVotingResource/{sequenceId}")
+    public void putDaoVotingResource(@PathVariable("daoId") String daoId,
+                                     @PathVariable("sequenceId") String sequenceId,
+                                     @RequestBody DaoVotingResource daoVotingResource) {
+        DaoVotingResourceId daoVotingResourceId = new DaoVotingResourceId(daoId, sequenceId);
+        daoVotingResource.setDaoVotingResourceId(daoVotingResourceId);
+        daoVotingResourceService.addOrUpdateDaoVotingResource(daoVotingResource);
+    }
 }
