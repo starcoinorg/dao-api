@@ -65,9 +65,6 @@ public class DaoController {
     @Resource
     private DaoService daoService;
 
-    @Resource
-    private DaoVotingResourceService daoVotingResourceService;
-
     private static String[] splitByComma(String str, int expectedCount) {
         String[] a = str.split(",");
         if (a.length != expectedCount) {
@@ -172,6 +169,27 @@ public class DaoController {
                                      @RequestBody DaoVotingResource daoVotingResource) {
         DaoVotingResourceId daoVotingResourceId = new DaoVotingResourceId(daoId, sequenceId);
         daoVotingResource.setDaoVotingResourceId(daoVotingResourceId);
-        daoVotingResourceService.addOrUpdateDaoVotingResource(daoVotingResource);
+        daoService.addOrUpdateDaoVotingResource(daoVotingResource);
     }
+
+    @PutMapping("daos/{daoId}/proposals/{proposalNumber}")
+    public void putProposal(@PathVariable("daoId") String daoId,
+                            @PathVariable("proposalNumber") String proposalNumber,
+                            @RequestBody Proposal proposal) {
+        ProposalId proposalId = new ProposalId(daoId, proposalNumber);
+        proposal.setProposalId(proposalId);
+        proposalService.addOrUpdateProposal(proposal);
+    }
+
+    @PutMapping("daos/{daoId}/proposals/{proposalNumber}/proposalVotingChoices/{choiceSequenceId}")
+    public void putProposalVotingChoice(@PathVariable("daoId") String daoId,
+                                        @PathVariable("proposalNumber") String proposalNumber,
+                                        @PathVariable("choiceSequenceId") Integer choiceSequenceId,
+                                        @RequestBody ProposalVotingChoice proposalVotingChoice) {
+        ProposalVotingChoiceId proposalVotingChoiceId = new ProposalVotingChoiceId(
+                new ProposalId(daoId, proposalNumber), choiceSequenceId);
+        proposalVotingChoice.setProposalVotingChoiceId(proposalVotingChoiceId);
+        proposalService.addOrUpdateProposalVotingChoice(proposalVotingChoice);
+    }
+
 }
