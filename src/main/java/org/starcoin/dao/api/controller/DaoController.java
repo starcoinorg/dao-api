@@ -1,6 +1,8 @@
 package org.starcoin.dao.api.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -101,7 +103,8 @@ public class DaoController {
     }
 
     @GetMapping("proposals/{proposalId}")
-    public ProposalVO getProposal(@PathVariable(name = "proposalId") String proposalId) {
+    public ProposalVO getProposal(@ApiParam("ProposalId consists of a comma-separated daoId and proposalNumber")
+                                  @PathVariable(name = "proposalId") String proposalId) {
         String[] a = splitByComma(proposalId, 2);
         ProposalId id = new ProposalId(a[0], a[1]);
         Optional<Proposal> proposal = proposalRepository.findById(id);
@@ -128,7 +131,8 @@ public class DaoController {
     }
 
     @GetMapping("accountVotes/{accountVoteId}")
-    public AccountVote getAccountVote(@PathVariable(name = "accountVoteId") String accountVoteId) {
+    public AccountVote getAccountVote(@ApiParam("accountVoteId consists of a comma-separated accountAddress, daoId and proposalNumber")
+                                      @PathVariable(name = "accountVoteId") String accountVoteId) {
         String[] a = splitByComma(accountVoteId, 3);
         AccountVoteId id = new AccountVoteId(a[0], new ProposalId(a[1], a[2]));
         Optional<AccountVote> accountVote = accountVoteRepository.findById(id);
@@ -148,12 +152,14 @@ public class DaoController {
         castVoteService.castVote(request);
     }
 
+    @ApiOperation("Add or update a DAO")
     @PutMapping("daos/{daoId}")
     public void putDao(@PathVariable("daoId") String daoId, @RequestBody Dao dao) {
         dao.setDaoId(daoId);
         daoService.addOrUpdateDao(dao);
     }
 
+    @ApiOperation("Add or update a DAO strategy")
     @PutMapping("daos/{daoId}/daoStrategies/{strategyId}")
     public void putDaoStrategy(@PathVariable("daoId") String daoId,
                                @PathVariable("strategyId") String strategyId,
@@ -163,6 +169,7 @@ public class DaoController {
         daoStrategyService.addOrUpdateDaoStrategy(daoStrategy);
     }
 
+    @ApiOperation("Add or update a DAO voting resource")
     @PutMapping("daos/{daoId}/daoVotingResource/{sequenceId}")
     public void putDaoVotingResource(@PathVariable("daoId") String daoId,
                                      @PathVariable("sequenceId") String sequenceId,
@@ -174,11 +181,12 @@ public class DaoController {
 
     @DeleteMapping("daos/{daoId}/daoVotingResource/{sequenceId}")
     public void deleteDaoVotingResource(@PathVariable("daoId") String daoId,
-                                     @PathVariable("sequenceId") String sequenceId) {
+                                        @PathVariable("sequenceId") String sequenceId) {
         DaoVotingResourceId daoVotingResourceId = new DaoVotingResourceId(daoId, sequenceId);
         daoService.removeDaoVotingResource(daoVotingResourceId);
     }
 
+    @ApiOperation("Add or update a proposal")
     @PutMapping("daos/{daoId}/proposals/{proposalNumber}")
     public void putProposal(@PathVariable("daoId") String daoId,
                             @PathVariable("proposalNumber") String proposalNumber,
@@ -188,6 +196,7 @@ public class DaoController {
         proposalService.addOrUpdateProposal(proposal);
     }
 
+    @ApiOperation("Add or update a proposal voting choice")
     @PutMapping("daos/{daoId}/proposals/{proposalNumber}/proposalVotingChoices/{choiceSequenceId}")
     public void putProposalVotingChoice(@PathVariable("daoId") String daoId,
                                         @PathVariable("proposalNumber") String proposalNumber,
@@ -202,8 +211,8 @@ public class DaoController {
 
     @DeleteMapping("daos/{daoId}/proposals/{proposalNumber}/proposalVotingChoices/{choiceSequenceId}")
     public void deleteProposalVotingChoice(@PathVariable("daoId") String daoId,
-                                        @PathVariable("proposalNumber") String proposalNumber,
-                                        @PathVariable("choiceSequenceId") Integer choiceSequenceId) {
+                                           @PathVariable("proposalNumber") String proposalNumber,
+                                           @PathVariable("choiceSequenceId") Integer choiceSequenceId) {
         ProposalVotingChoiceId proposalVotingChoiceId = new ProposalVotingChoiceId(
                 new ProposalId(daoId, proposalNumber), choiceSequenceId);
         proposalService.removeProposalVotingChoice(proposalVotingChoiceId);
