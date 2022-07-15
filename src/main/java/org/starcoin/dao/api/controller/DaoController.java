@@ -172,6 +172,13 @@ public class DaoController {
         daoService.addOrUpdateDaoVotingResource(daoVotingResource);
     }
 
+    @DeleteMapping("daos/{daoId}/daoVotingResource/{sequenceId}")
+    public void deleteDaoVotingResource(@PathVariable("daoId") String daoId,
+                                     @PathVariable("sequenceId") String sequenceId) {
+        DaoVotingResourceId daoVotingResourceId = new DaoVotingResourceId(daoId, sequenceId);
+        daoService.removeDaoVotingResource(daoVotingResourceId);
+    }
+
     @PutMapping("daos/{daoId}/proposals/{proposalNumber}")
     public void putProposal(@PathVariable("daoId") String daoId,
                             @PathVariable("proposalNumber") String proposalNumber,
@@ -190,6 +197,16 @@ public class DaoController {
                 new ProposalId(daoId, proposalNumber), choiceSequenceId);
         proposalVotingChoice.setProposalVotingChoiceId(proposalVotingChoiceId);
         proposalService.addOrUpdateProposalVotingChoice(proposalVotingChoice);
+    }
+
+
+    @DeleteMapping("daos/{daoId}/proposals/{proposalNumber}/proposalVotingChoices/{choiceSequenceId}")
+    public void deleteProposalVotingChoice(@PathVariable("daoId") String daoId,
+                                        @PathVariable("proposalNumber") String proposalNumber,
+                                        @PathVariable("choiceSequenceId") Integer choiceSequenceId) {
+        ProposalVotingChoiceId proposalVotingChoiceId = new ProposalVotingChoiceId(
+                new ProposalId(daoId, proposalNumber), choiceSequenceId);
+        proposalService.removeProposalVotingChoice(proposalVotingChoiceId);
     }
 
 }

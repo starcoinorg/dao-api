@@ -54,4 +54,11 @@ public class ProposalService {
             proposalVotingChoiceRepository.save(p);
         }
     }
+
+    public void removeProposalVotingChoice(ProposalVotingChoiceId proposalVotingChoiceId) {
+        ProposalVotingChoice p = proposalVotingChoiceRepository.findById(proposalVotingChoiceId).orElse(null);
+        if (p != null) {
+            proposalVotingChoiceRepository.delete(p);
+        }
+    }
 }

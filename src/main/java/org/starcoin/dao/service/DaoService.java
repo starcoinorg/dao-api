@@ -39,4 +39,11 @@ public class DaoService {
             daoVotingResourceRepository.save(d);
         }
     }
+
+    public void removeDaoVotingResource(DaoVotingResourceId daoVotingResourceId) {
+        DaoVotingResource d = daoVotingResourceRepository.findById(daoVotingResourceId).orElse(null);
+        if (d != null) {
+            daoVotingResourceRepository.delete(d);
+        }
+    }
 }
