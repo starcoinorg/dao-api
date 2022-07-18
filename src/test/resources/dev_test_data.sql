@@ -291,3 +291,51 @@ UPDATE `proposal` SET `block_state_root` = '0xcc190378418d98388e0e3bb674a884ad33
 UPDATE `proposal` SET `block_state_root` = '0xcc190378418d98388e0e3bb674a884ad33318e972a51b147e4367aa91a987286', `block_height` = '6750388' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '1');
 UPDATE `proposal` SET `block_state_root` = '0xcc190378418d98388e0e3bb674a884ad33318e972a51b147e4367aa91a987286', `block_height` = '6750388' WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '2');
 UPDATE `proposal` SET `block_state_root` = '0xcc190378418d98388e0e3bb674a884ad33318e972a51b147e4367aa91a987286', `block_height` = '6750388' WHERE (`dao_id` = 'test_dao_id2') and (`proposal_number` = '1');
+
+-- ----------- 2020-07-18 -----------
+
+INSERT INTO `dao_voting_resource`
+(
+  `dao_id`, `sequence_id`, `resource_struct_tag`, `voting_power_bcs_path`
+) VALUES (
+  'starswap_dao', '5', '0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapFarmBoost::UserInfo<0x00000000000000000000000000000001::STC::STC, 0xe52552637c5897a2d499fbf08216f73e::XUSDT::XUSDT>', '{u64,{{u128}},u128}[1][0][0]'
+);
+
+UPDATE `proposal` SET `description` = 'We\'re proposing an update to the #Starswap farm rewards:  - Increase rewards to key farms  | Pair     | Current Multiplier | Proposed New Multiplier | Change | | -------- | ------------------ | ----------------------- | ------ | | STC/STAR | 30                 | 50                      | +20    |',
+  `discussion` = ''
+  WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+
+UPDATE `proposal` SET `title` = 'Starswap Farm Weighting Adjustments',
+  `voting_type` = 'SINGLE_CHOICE',
+  `voting_method` = 'OFF_CHAIN'
+  WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+
+
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`)
+  VALUES ('starswap_dao', '1', '0', 'Yes');
+
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`)
+  VALUES ('starswap_dao', '1', '1', 'No');
+
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`)
+  VALUES ('starswap_dao', '1', '2', 'Abstain');
+
+UPDATE `proposal` SET
+  `block_state_root` = '0x15d2ba9603fd3163fa0f986bbcdec50922b5044b7ef9ea289501d2e358433865',
+  `block_height` = '6852206'
+  WHERE (`dao_id` = 'starcoin_dao') and (`proposal_number` = '1');
+
+UPDATE `proposal` SET
+  `block_state_root` = '0x15d2ba9603fd3163fa0f986bbcdec50922b5044b7ef9ea289501d2e358433865',
+  `block_height` = '6852206'
+  WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+
+
+UPDATE `dao_strategy` SET `voting_power_decimals` = '9'
+  WHERE (`dao_id` = 'starcoin_dao') and (`strategy_id` = 'RESOURCES');
+
+UPDATE `dao_strategy` SET `voting_power_decimals` = '9'
+  WHERE (`dao_id` = 'starswap_dao') and (`strategy_id` = 'RESOURCES');
+
+
+
