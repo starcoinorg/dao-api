@@ -337,5 +337,7 @@ UPDATE `dao_strategy` SET `voting_power_decimals` = '9'
 UPDATE `dao_strategy` SET `voting_power_decimals` = '9'
   WHERE (`dao_id` = 'starswap_dao') and (`strategy_id` = 'RESOURCES');
 
-
+UPDATE `proposal` SET
+  `description` = 'We\'re proposing an update to the #Starswap farm rewards:\n\n- Increase rewards to key farms\n\n| Pair     | Current Multiplier | Proposed New Multiplier | Change |\n| -------- | ------------------ | ----------------------- | ------ |\n| STC/STAR | 30                 | 50                      | +20    |\n\n'
+  WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
 
