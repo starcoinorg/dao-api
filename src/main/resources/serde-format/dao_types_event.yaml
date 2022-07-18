@@ -1,0 +1,35 @@
+---
+# import types from:
+# starcoin_types.yml
+# onchain_events.yml
+
+DaoCreatedEvent:
+  STRUCT:
+    - id: U64
+    - name: BYTES
+    - dao_address:
+        TYPENAME: AccountAddress
+
+
+MemberJoinEvent:
+  STRUCT:
+    - id: U64
+    - address:
+        TYPENAME: AccountAddress
+    - sbt: U128
+
+
+ProposalCreatedEvent:
+  STRUCT:
+    - proposal_id: U64
+    - proposer:
+        TYPENAME: AccountAddress
+
+
+VotedEvent:
+  STRUCT:
+    - proposal_id: U64
+    - voter:
+        TYPENAME: AccountAddress
+    - choice: U8
+    - vote_weight: U128
