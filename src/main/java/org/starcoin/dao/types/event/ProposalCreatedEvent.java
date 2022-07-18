@@ -1,4 +1,4 @@
-package org.starcoin.types.event;
+package org.starcoin.dao.types.event;
 
 
 import org.starcoin.types.AccountAddress;

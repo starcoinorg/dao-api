@@ -40,7 +40,7 @@ spring:
 
 starcoin:
   json-rpc-url: ${STARCOIN_JSON_RPC_URL}
-  chain-id: {STARCOIN_CHAIN_ID}
+  chain-id: ${STARCOIN_CHAIN_ID}
   seeds: ${STARCOIN_SEEDS}
   network: ${STARCOIN_NETWORK}
   dao-sbt-resource-struct-tag-format: ${STARCOIN_DAO_SBT_RESOURCE_STRUCT_TAG_FORMAT}
@@ -49,3 +49,10 @@ starcoin:
     fixed-delay: 20000
   pulling-event-task-auto-create:
     fixed-delay: 60000
+  event-filter:
+    addresses: 0x00000000000000000000000000000001
+  dao:
+    dao-created-event-type-tag: "0x00000000000000000000000000000001::GenesisDao::DaoCreatedEvent"
+    member-join-event-type-tag: "0x00000000000000000000000000000001::GenesisDao::MemberJoinEvent"
+    proposal-created-event-type-tag: "0x00000000000000000000000000000001::GenesisDao::ProposalCreatedEvent"
+    voted-event-type-tag: "0x00000000000000000000000000000001::GenesisDao::VotedEvent"
