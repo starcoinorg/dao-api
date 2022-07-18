@@ -24,6 +24,9 @@ public class DaoStrategy {
     @Column
     private Integer sequenceId;
 
+    @Column
+    private Integer votingPowerDecimals;
+
     public DaoStrategyId getDaoStrategyId() {
         return daoStrategyId;
     }
@@ -38,5 +41,13 @@ public class DaoStrategy {
 
     public void setSequenceId(Integer sequenceId) {
         this.sequenceId = sequenceId;
+    }
+
+    public Integer getVotingPowerDecimals() {
+        return votingPowerDecimals;
+    }
+
+    public void setVotingPowerDecimals(Integer votingPowerDecimals) {
+        this.votingPowerDecimals = votingPowerDecimals;
     }
 }

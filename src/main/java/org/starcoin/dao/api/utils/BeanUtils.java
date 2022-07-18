@@ -31,6 +31,7 @@ public class BeanUtils {
         String strategyId = daoStrategy != null ? daoStrategy.getDaoStrategyId().getStrategyId() : null;
         daoStrategy2.setStrategyId(strategyId);
         daoStrategy2.setSequenceId(daoStrategy != null ? daoStrategy.getSequenceId() : null);
+        daoStrategy2.setVotingPowerDecimals(daoStrategy != null ? daoStrategy.getVotingPowerDecimals() : null);
         if (Strategy.STRATEGY_ID_SBT.equals(strategyId)) {
             daoStrategy2.setDescription(Strategy.SBT.getDescription());
         } else if (Strategy.STRATEGY_ID_VOTING_RESOURCES.equals(strategyId)) {
