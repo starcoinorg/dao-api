@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: dao-api
-          image: ghcr.io/starcoinorg/starcoin_dao_api:sha-2fd2df5
+          image: ghcr.io/starcoinorg/starcoin_dao_api:sha-e486c75
           ports:
             - containerPort: 8600
           env:
