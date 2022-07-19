@@ -347,3 +347,38 @@ UPDATE `dao_strategy` SET `voting_power_name` = 'STC'
 UPDATE `dao_strategy` SET `voting_power_name` = 'veStar'
   WHERE (`dao_id` = 'starswap_dao') and (`strategy_id` = 'RESOURCES');
 
+
+-- --------------------- delete test data -----------------------
+
+DELETE FROM `dao` WHERE (`dao_id` = 'test_dao_id');
+DELETE FROM `dao` WHERE (`dao_id` = 'test_dao_id2');
+DELETE FROM `dao` WHERE (`dao_id` = 'test_dao_id3');
+
+DELETE FROM `dao_strategy` WHERE (`dao_id` = 'test_dao_id') and (`strategy_id` = 'RESOURCES');
+DELETE FROM `dao_strategy` WHERE (`dao_id` = 'test_dao_id2') and (`strategy_id` = 'SBT');
+DELETE FROM `dao_strategy` WHERE (`dao_id` = 'test_dao_id3') and (`strategy_id` = 'SBT');
+
+DELETE FROM `dao_voting_resource` WHERE (`dao_id` = 'test_dao_id') and (`sequence_id` = '1');
+DELETE FROM `dao_voting_resource` WHERE (`dao_id` = 'test_dao_id') and (`sequence_id` = '2');
+DELETE FROM `dao_voting_resource` WHERE (`dao_id` = 'test_dao_id') and (`sequence_id` = '3');
+DELETE FROM `dao_voting_resource` WHERE (`dao_id` = 'test_dao_id') and (`sequence_id` = '4');
+DELETE FROM `dao_voting_resource` WHERE (`dao_id` = 'test_dao_id3') and (`sequence_id` = '1');
+
+DELETE FROM `proposal` WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '1');
+DELETE FROM `proposal` WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '2');
+DELETE FROM `proposal` WHERE (`dao_id` = 'test_dao_id2') and (`proposal_number` = '1');
+DELETE FROM `proposal` WHERE (`dao_id` = 'test_dao_id3') and (`proposal_number` = '1');
+
+DELETE FROM `proposal_voting_choice` WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '1') and (`sequence_id` = '0');
+DELETE FROM `proposal_voting_choice` WHERE (`dao_id` = 'test_dao_id') and (`proposal_number` = '1') and (`sequence_id` = '1');
+DELETE FROM `proposal_voting_choice` WHERE (`dao_id` = 'test_dao_id3') and (`proposal_number` = '1') and (`sequence_id` = '1');
+DELETE FROM `proposal_voting_choice` WHERE (`dao_id` = 'test_dao_id3') and (`proposal_number` = '1') and (`sequence_id` = '2');
+
+
+-- --------------------- update proposal voting end time -----------------------
+
+UPDATE proposal SET voting_period_end = UNIX_TIMESTAMP('2022-07-25 18:00:00') * 1000 WHERE dao_id = 'starcoin_dao' AND proposal_number = 1;
+UPDATE proposal SET voting_period_end = UNIX_TIMESTAMP('2022-07-25 18:00:00') * 1000 WHERE dao_id = 'starswap_dao' AND proposal_number = 1;
+-- SELECT FROM_UNIXTIME(p.voting_period_end / 1000), p.* FROM proposal p;
+
+
