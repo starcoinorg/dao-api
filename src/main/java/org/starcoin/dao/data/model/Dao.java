@@ -8,6 +8,18 @@ import java.io.Serializable;
 @Entity
 public class Dao implements Serializable {
 
+    public static final String OFF_CHAIN_DAO_ID_PREFIX = "o_";
+
+    /**
+     * Add Off-chain prefix to the dao id.
+     *
+     * @param id Raw dao id without prefix.
+     * @return Dao id with off-chain prefix.
+     */
+    public static String offChainDaoIdWithPrefix(String id) {
+        return OFF_CHAIN_DAO_ID_PREFIX + id;
+    }
+
     @Id
     @Column(length = 100, nullable = false)
     private String daoId;
@@ -53,6 +65,9 @@ public class Dao implements Serializable {
      */
     @Column(length = 200)
     private String daoTypeTag;
+
+    @Column(length = 100)
+    private String onChainAddress;
 
     public String getDaoId() {
         return daoId;
@@ -157,5 +172,13 @@ public class Dao implements Serializable {
 
     public void setDaoTypeTag(String daoTypeTag) {
         this.daoTypeTag = daoTypeTag;
+    }
+
+    public String getOnChainAddress() {
+        return onChainAddress;
+    }
+
+    public void setOnChainAddress(String onChainAddress) {
+        this.onChainAddress = onChainAddress;
     }
 }

@@ -29,6 +29,14 @@ public class DaoService {
         }
     }
 
+    public void addIfNotExists(Dao dao) {
+        String daoId = dao.getDaoId();
+        Dao d = daoRepository.findById(daoId).orElse(null);
+        if (d == null) {
+            daoRepository.save(dao);
+        }
+    }
+
     public void addOrUpdateDaoVotingResource(DaoVotingResource daoVotingResource) {
         DaoVotingResourceId daoVotingResourceId = daoVotingResource.getDaoVotingResourceId();
         DaoVotingResource d = daoVotingResourceRepository.findById(daoVotingResourceId).orElse(null);

@@ -39,4 +39,12 @@ public class AccountVoteService {
         return accountVoteRepository.findAll(accountVoteExample, pageable);
     }
 
+    public void addIfNotExists(AccountVote accountVote) {
+        AccountVoteId accountVoteId = accountVote.getAccountVoteId();
+        AccountVote p = accountVoteRepository.findById(accountVoteId).orElse(null);
+        if (p == null) {
+            accountVoteRepository.save(accountVote);
+        }
+    }
+
 }

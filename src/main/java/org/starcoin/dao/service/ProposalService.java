@@ -44,6 +44,14 @@ public class ProposalService {
         }
     }
 
+    public void addIfNotExists(Proposal proposal) {
+        ProposalId proposalId = proposal.getProposalId();
+        Proposal p = proposalRepository.findById(proposalId).orElse(null);
+        if (p == null) {
+            proposalRepository.save(proposal);
+        }
+    }
+
     public void addOrUpdateProposalVotingChoice(ProposalVotingChoice proposalVotingChoice) {
         ProposalVotingChoiceId proposalVotingChoiceId = proposalVotingChoice.getProposalVotingChoiceId();
         ProposalVotingChoice p = proposalVotingChoiceRepository.findById(proposalVotingChoiceId).orElse(null);

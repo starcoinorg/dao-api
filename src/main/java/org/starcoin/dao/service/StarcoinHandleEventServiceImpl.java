@@ -4,10 +4,7 @@ import com.novi.serde.DeserializationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.starcoin.bean.Event;
-import org.starcoin.dao.types.event.DaoCreatedEvent;
-import org.starcoin.dao.types.event.MemberJoinEvent;
-import org.starcoin.dao.types.event.ProposalCreatedEventV2;
-import org.starcoin.dao.types.event.VotedEvent;
+import org.starcoin.dao.types.event.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +14,12 @@ public class StarcoinHandleEventServiceImpl extends AbstractStarcoinHandleEventS
 
     private final Map<String, EventHandler<?>> eventHandlerMap;
 
-    public StarcoinHandleEventServiceImpl(@Autowired StarcoinEventFilterImpl starcoinEventFilter) {
+
+    public StarcoinHandleEventServiceImpl(@Autowired StarcoinEventFilterImpl starcoinEventFilter,
+                                          @Autowired DaoService daoService,
+                                          @Autowired DaoMemberService daoMemberService,
+                                          @Autowired ProposalService proposalService,
+                                          @Autowired AccountVoteService accountVoteService) {
 
         Map<String, EventHandler<?>> eventHandlerMap = new HashMap<>();
 
@@ -29,7 +31,7 @@ public class StarcoinHandleEventServiceImpl extends AbstractStarcoinHandleEventS
 
             @Override
             public void handle(Event event, DaoCreatedEvent eventData) {
-                //todo
+                daoService.addIfNotExists(EventUtils.toDao(eventData));
             }
         });
 
@@ -41,7 +43,7 @@ public class StarcoinHandleEventServiceImpl extends AbstractStarcoinHandleEventS
 
             @Override
             public void handle(Event event, MemberJoinEvent eventData) {
-                //todo
+                daoMemberService.addIfNotExists(EventUtils.toDaoMember(eventData));
             }
         });
 
@@ -53,7 +55,7 @@ public class StarcoinHandleEventServiceImpl extends AbstractStarcoinHandleEventS
 
             @Override
             public void handle(Event event, ProposalCreatedEventV2 eventData) {
-                //todo
+                proposalService.addIfNotExists(EventUtils.toProposal(eventData));
             }
         });
 
@@ -65,7 +67,7 @@ public class StarcoinHandleEventServiceImpl extends AbstractStarcoinHandleEventS
 
             @Override
             public void handle(Event event, VotedEvent eventData) {
-                //todo
+                accountVoteService.addIfNotExists(EventUtils.toAccountVote(eventData));
             }
         });
 
