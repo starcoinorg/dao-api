@@ -32,10 +32,17 @@ public class BeanUtils {
         daoStrategy2.setStrategyId(strategyId);
         daoStrategy2.setSequenceId(daoStrategy != null ? daoStrategy.getSequenceId() : null);
         daoStrategy2.setVotingPowerDecimals(daoStrategy != null ? daoStrategy.getVotingPowerDecimals() : null);
+        daoStrategy2.setVotingPowerName(daoStrategy != null ? daoStrategy.getVotingPowerName() : null);
         if (Strategy.STRATEGY_ID_SBT.equals(strategyId)) {
+            // default description
             daoStrategy2.setDescription(Strategy.SBT.getDescription());
         } else if (Strategy.STRATEGY_ID_VOTING_RESOURCES.equals(strategyId)) {
+            // default description
             daoStrategy2.setDescription(Strategy.VOTING_RESOURCES.getDescription());
+        }
+        // override the description
+        if (daoStrategy != null && daoStrategy.getDescription() != null && !daoStrategy.getDescription().trim().isEmpty()) {
+            daoStrategy2.setDescription(daoStrategy.getDescription());
         }
         List<DaoVotingResourceVO> resourceList = new ArrayList<>();
         for (DaoVotingResource r : votingPowerQueryService.getDaoVotingResources(dao.getDaoId(), dao.getDaoTypeTag(),

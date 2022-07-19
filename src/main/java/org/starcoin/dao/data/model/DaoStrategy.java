@@ -27,6 +27,12 @@ public class DaoStrategy {
     @Column
     private Integer votingPowerDecimals;
 
+    @Column(length = 100)
+    private String votingPowerName;
+
+    @Column(length = 500)
+    private String description;
+
     public DaoStrategyId getDaoStrategyId() {
         return daoStrategyId;
     }
@@ -49,5 +55,21 @@ public class DaoStrategy {
 
     public void setVotingPowerDecimals(Integer votingPowerDecimals) {
         this.votingPowerDecimals = votingPowerDecimals;
+    }
+
+    public String getVotingPowerName() {
+        return votingPowerName;
+    }
+
+    public void setVotingPowerName(String votingPowerName) {
+        this.votingPowerName = votingPowerName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

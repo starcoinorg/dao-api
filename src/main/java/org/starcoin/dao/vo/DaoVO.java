@@ -24,6 +24,8 @@ public class DaoVO extends Dao {
 
         private Integer votingPowerDecimals;
 
+        private String votingPowerName;
+
         public String getStrategyId() {
             return strategyId;
         }
@@ -64,6 +66,14 @@ public class DaoVO extends Dao {
 
         public void setVotingPowerDecimals(Integer votingPowerDecimals) {
             this.votingPowerDecimals = votingPowerDecimals;
+        }
+
+        public String getVotingPowerName() {
+            return votingPowerName;
+        }
+
+        public void setVotingPowerName(String votingPowerName) {
+            this.votingPowerName = votingPowerName;
         }
     }
 }
