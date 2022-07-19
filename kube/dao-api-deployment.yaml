@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dao-api-deployment
+  labels:
+    app: dao-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dao-api
+  template:
+    metadata:
+      labels:
+        app: dao-api
+    spec:
+      containers:
+        - name: dao-api
+          image: ghcr.io/starcoinorg/starcoin_dao_api:sha-2fd2df5
+          ports:
+            - containerPort: 8600
+          env:
+            - name: spring_profiles_active
+              value: prod
+            - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
+              value: "true"
+            - name: STARCOIN_MYSQL_URL
+              value: "jdbc:mysql://starcoin-db-2.c0bz9kehdvnb.ap-northeast-1.rds.amazonaws.com:3306/dao_api?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC"
+            - name: STARCOIN_MYSQL_USER
+              value: "starcoin"
+            - name: STARCOIN_MYSQL_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pwd
+                  key: password
+            - name: STARCOIN_NETWORK
+              value: "main"
+            - name: STARCOIN_CHAIN_ID
+              value: "1"
+            - name: STARCOIN_SEEDS
+              value: "main1.seed.starcoin.org,main2.seed.starcoin.org"
+            - name: STARCOIN_JSON_RPC_URL
+              value: "https://main-seed.starcoin.org"
+            - name: SPRING_SECURITY_HTPASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: http-basic-auth
+                  key: auth
+

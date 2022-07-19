@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: dao-api
+  name: dao-api
+spec:
+  ports:
+    - port: 80
+      name: http
+      protocol: TCP
+      targetPort: 8600
+  selector:
+    app: dao-api
+  type: ClusterIP
+

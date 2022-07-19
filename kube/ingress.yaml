@@ -17,10 +17,10 @@ spec:
             backend:
               serviceName: "dao-api-dev"
               servicePort: 80
-#          - path: /main/*
-#            backend:
-#              serviceName: "dao-api"
-#              servicePort: 80
+          - path: /main/*
+            backend:
+              serviceName: "dao-api"
+              servicePort: 80
 #          - path: /barnard/*
 #            backend:
 #              serviceName: "dao-api-barnard"
