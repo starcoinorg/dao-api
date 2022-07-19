@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.starcoin.bean.Event;
 import org.starcoin.dao.types.event.DaoCreatedEvent;
 import org.starcoin.dao.types.event.MemberJoinEvent;
-import org.starcoin.dao.types.event.ProposalCreatedEvent;
+import org.starcoin.dao.types.event.ProposalCreatedEventV2;
 import org.starcoin.dao.types.event.VotedEvent;
 
 import java.util.HashMap;
@@ -45,14 +45,14 @@ public class StarcoinHandleEventServiceImpl extends AbstractStarcoinHandleEventS
             }
         });
 
-        eventHandlerMap.put(starcoinEventFilter.getProposalCreatedEventTypeTag(), new EventHandler<ProposalCreatedEvent>() {
+        eventHandlerMap.put(starcoinEventFilter.getProposalCreatedEventTypeTag(), new EventHandler<ProposalCreatedEventV2>() {
             @Override
-            public ProposalCreatedEvent bcsDeserializeEventData(byte[] eventData) throws DeserializationError {
-                return ProposalCreatedEvent.bcsDeserialize(eventData);
+            public ProposalCreatedEventV2 bcsDeserializeEventData(byte[] eventData) throws DeserializationError {
+                return ProposalCreatedEventV2.bcsDeserialize(eventData);
             }
 
             @Override
-            public void handle(Event event, ProposalCreatedEvent eventData) {
+            public void handle(Event event, ProposalCreatedEventV2 eventData) {
                 //todo
             }
         });

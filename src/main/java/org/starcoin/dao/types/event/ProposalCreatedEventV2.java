@@ -3,19 +3,23 @@ package org.starcoin.dao.types.event;
 
 import org.starcoin.types.AccountAddress;
 
-public final class ProposalCreatedEvent {
+public final class ProposalCreatedEventV2 {
+    public final @com.novi.serde.Unsigned Long dao_id;
     public final @com.novi.serde.Unsigned Long proposal_id;
     public final AccountAddress proposer;
 
-    public ProposalCreatedEvent(@com.novi.serde.Unsigned Long proposal_id, AccountAddress proposer) {
+    public ProposalCreatedEventV2(@com.novi.serde.Unsigned Long dao_id, @com.novi.serde.Unsigned Long proposal_id, AccountAddress proposer) {
+        java.util.Objects.requireNonNull(dao_id, "dao_id must not be null");
         java.util.Objects.requireNonNull(proposal_id, "proposal_id must not be null");
         java.util.Objects.requireNonNull(proposer, "proposer must not be null");
+        this.dao_id = dao_id;
         this.proposal_id = proposal_id;
         this.proposer = proposer;
     }
 
     public void serialize(com.novi.serde.Serializer serializer) throws com.novi.serde.SerializationError {
         serializer.increase_container_depth();
+        serializer.serialize_u64(dao_id);
         serializer.serialize_u64(proposal_id);
         proposer.serialize(serializer);
         serializer.decrease_container_depth();
@@ -27,21 +31,22 @@ public final class ProposalCreatedEvent {
         return serializer.get_bytes();
     }
 
-    public static ProposalCreatedEvent deserialize(com.novi.serde.Deserializer deserializer) throws com.novi.serde.DeserializationError {
+    public static ProposalCreatedEventV2 deserialize(com.novi.serde.Deserializer deserializer) throws com.novi.serde.DeserializationError {
         deserializer.increase_container_depth();
         Builder builder = new Builder();
+        builder.dao_id = deserializer.deserialize_u64();
         builder.proposal_id = deserializer.deserialize_u64();
         builder.proposer = AccountAddress.deserialize(deserializer);
         deserializer.decrease_container_depth();
         return builder.build();
     }
 
-    public static ProposalCreatedEvent bcsDeserialize(byte[] input) throws com.novi.serde.DeserializationError {
+    public static ProposalCreatedEventV2 bcsDeserialize(byte[] input) throws com.novi.serde.DeserializationError {
         if (input == null) {
              throw new com.novi.serde.DeserializationError("Cannot deserialize null array");
         }
         com.novi.serde.Deserializer deserializer = new com.novi.bcs.BcsDeserializer(input);
-        ProposalCreatedEvent value = deserialize(deserializer);
+        ProposalCreatedEventV2 value = deserialize(deserializer);
         if (deserializer.get_buffer_offset() < input.length) {
              throw new com.novi.serde.DeserializationError("Some input bytes were not read");
         }
@@ -52,7 +57,8 @@ public final class ProposalCreatedEvent {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        ProposalCreatedEvent other = (ProposalCreatedEvent) obj;
+        ProposalCreatedEventV2 other = (ProposalCreatedEventV2) obj;
+        if (!java.util.Objects.equals(this.dao_id, other.dao_id)) { return false; }
         if (!java.util.Objects.equals(this.proposal_id, other.proposal_id)) { return false; }
         if (!java.util.Objects.equals(this.proposer, other.proposer)) { return false; }
         return true;
@@ -60,17 +66,20 @@ public final class ProposalCreatedEvent {
 
     public int hashCode() {
         int value = 7;
+        value = 31 * value + (this.dao_id != null ? this.dao_id.hashCode() : 0);
         value = 31 * value + (this.proposal_id != null ? this.proposal_id.hashCode() : 0);
         value = 31 * value + (this.proposer != null ? this.proposer.hashCode() : 0);
         return value;
     }
 
     public static final class Builder {
+        public @com.novi.serde.Unsigned Long dao_id;
         public @com.novi.serde.Unsigned Long proposal_id;
         public AccountAddress proposer;
 
-        public ProposalCreatedEvent build() {
-            return new ProposalCreatedEvent(
+        public ProposalCreatedEventV2 build() {
+            return new ProposalCreatedEventV2(
+                dao_id,
                 proposal_id,
                 proposer
             );

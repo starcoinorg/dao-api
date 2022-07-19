@@ -22,7 +22,8 @@ MemberJoinEvent:
 #MemberRevokeEvent:
 #MemberQuitEvent:
 
-ProposalCreatedEvent:
+# DAOSpace Proposal Created Event
+ProposalCreatedEventV2:
   STRUCT:
     - dao_id: U64
     - proposal_id: U64
