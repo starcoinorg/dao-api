@@ -4,16 +4,19 @@ package org.starcoin.dao.types.event;
 import org.starcoin.types.AccountAddress;
 
 public final class VotedEvent {
+    public final @com.novi.serde.Unsigned Long dao_id;
     public final @com.novi.serde.Unsigned Long proposal_id;
     public final AccountAddress voter;
     public final @com.novi.serde.Unsigned Byte choice;
     public final java.math.@com.novi.serde.Unsigned @com.novi.serde.Int128 BigInteger vote_weight;
 
-    public VotedEvent(@com.novi.serde.Unsigned Long proposal_id, AccountAddress voter, @com.novi.serde.Unsigned Byte choice, java.math.@com.novi.serde.Unsigned @com.novi.serde.Int128 BigInteger vote_weight) {
+    public VotedEvent(@com.novi.serde.Unsigned Long dao_id, @com.novi.serde.Unsigned Long proposal_id, AccountAddress voter, @com.novi.serde.Unsigned Byte choice, java.math.@com.novi.serde.Unsigned @com.novi.serde.Int128 BigInteger vote_weight) {
+        java.util.Objects.requireNonNull(dao_id, "dao_id must not be null");
         java.util.Objects.requireNonNull(proposal_id, "proposal_id must not be null");
         java.util.Objects.requireNonNull(voter, "voter must not be null");
         java.util.Objects.requireNonNull(choice, "choice must not be null");
         java.util.Objects.requireNonNull(vote_weight, "vote_weight must not be null");
+        this.dao_id = dao_id;
         this.proposal_id = proposal_id;
         this.voter = voter;
         this.choice = choice;
@@ -22,6 +25,7 @@ public final class VotedEvent {
 
     public void serialize(com.novi.serde.Serializer serializer) throws com.novi.serde.SerializationError {
         serializer.increase_container_depth();
+        serializer.serialize_u64(dao_id);
         serializer.serialize_u64(proposal_id);
         voter.serialize(serializer);
         serializer.serialize_u8(choice);
@@ -38,6 +42,7 @@ public final class VotedEvent {
     public static VotedEvent deserialize(com.novi.serde.Deserializer deserializer) throws com.novi.serde.DeserializationError {
         deserializer.increase_container_depth();
         Builder builder = new Builder();
+        builder.dao_id = deserializer.deserialize_u64();
         builder.proposal_id = deserializer.deserialize_u64();
         builder.voter = AccountAddress.deserialize(deserializer);
         builder.choice = deserializer.deserialize_u8();
@@ -63,6 +68,7 @@ public final class VotedEvent {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         VotedEvent other = (VotedEvent) obj;
+        if (!java.util.Objects.equals(this.dao_id, other.dao_id)) { return false; }
         if (!java.util.Objects.equals(this.proposal_id, other.proposal_id)) { return false; }
         if (!java.util.Objects.equals(this.voter, other.voter)) { return false; }
         if (!java.util.Objects.equals(this.choice, other.choice)) { return false; }
@@ -72,6 +78,7 @@ public final class VotedEvent {
 
     public int hashCode() {
         int value = 7;
+        value = 31 * value + (this.dao_id != null ? this.dao_id.hashCode() : 0);
         value = 31 * value + (this.proposal_id != null ? this.proposal_id.hashCode() : 0);
         value = 31 * value + (this.voter != null ? this.voter.hashCode() : 0);
         value = 31 * value + (this.choice != null ? this.choice.hashCode() : 0);
@@ -80,6 +87,7 @@ public final class VotedEvent {
     }
 
     public static final class Builder {
+        public @com.novi.serde.Unsigned Long dao_id;
         public @com.novi.serde.Unsigned Long proposal_id;
         public AccountAddress voter;
         public @com.novi.serde.Unsigned Byte choice;
@@ -87,6 +95,7 @@ public final class VotedEvent {
 
         public VotedEvent build() {
             return new VotedEvent(
+                dao_id,
                 proposal_id,
                 voter,
                 choice,

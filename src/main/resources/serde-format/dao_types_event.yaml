@@ -13,14 +13,18 @@ DaoCreatedEvent:
 
 MemberJoinEvent:
   STRUCT:
-    - id: U64
+    - dao_id: U64
+    - member_id: U64
     - address:
         TYPENAME: AccountAddress
     - sbt: U128
 
+#MemberRevokeEvent:
+#MemberQuitEvent:
 
 ProposalCreatedEvent:
   STRUCT:
+    - dao_id: U64
     - proposal_id: U64
     - proposer:
         TYPENAME: AccountAddress
@@ -28,6 +32,7 @@ ProposalCreatedEvent:
 
 VotedEvent:
   STRUCT:
+    - dao_id: U64
     - proposal_id: U64
     - voter:
         TYPENAME: AccountAddress
