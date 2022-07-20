@@ -69,6 +69,21 @@ public class Dao implements Serializable {
     @Column(length = 100)
     private String onChainAddress;
 
+    @Column
+    private Boolean deactivated;
+
+    @Column(length = 70)
+    private String createdBy;
+
+    @Column(length = 70)
+    private String updatedBy;
+
+    @Column
+    private Long createdAt;
+
+    @Column
+    private Long updatedAt;
+
     public String getDaoId() {
         return daoId;
     }
@@ -180,5 +195,45 @@ public class Dao implements Serializable {
 
     public void setOnChainAddress(String onChainAddress) {
         this.onChainAddress = onChainAddress;
+    }
+
+    public Boolean getDeactivated() {
+        return deactivated;
+    }
+
+    public void setDeactivated(Boolean deactivated) {
+        this.deactivated = deactivated;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Long updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

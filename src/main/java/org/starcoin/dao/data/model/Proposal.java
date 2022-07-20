@@ -97,6 +97,18 @@ public class Proposal implements Serializable {
     @Column(length = 20)
     private String votingMethod;
 
+    @Column(length = 70)
+    private String createdBy;
+
+    @Column(length = 70)
+    private String updatedBy;
+
+    @Column
+    private Long createdAt;
+
+    @Column
+    private Long updatedAt;
+
     public ProposalId getProposalId() {
         return proposalId;
     }
@@ -233,6 +245,37 @@ public class Proposal implements Serializable {
         this.votingMethod = votingMethod;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Long updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
     @Column(precision = 50, scale = 0)
     private BigInteger votingTurnoutThreshold;

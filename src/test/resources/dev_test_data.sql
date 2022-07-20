@@ -410,4 +410,9 @@ UPDATE `proposal` SET
   `voting_turnout_threshold` = '38335168514376'
   WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
 
+UPDATE `proposal` SET `block_state_root` = '0x561dd037d47b6de49f913440dcb6d321f9740a7a3d006671504f3a8c74a0b9ca', `block_height` = '6888260' WHERE (`dao_id` = 'starcoin_dao') and (`proposal_number` = '1');
+UPDATE `proposal` SET `block_state_root` = '0x561dd037d47b6de49f913440dcb6d321f9740a7a3d006671504f3a8c74a0b9ca', `block_height` = '6888260' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+
+UPDATE `proposal` SET `description` = 'We\'re proposing an update to the STC/STAR farm multiplier, increase reward to this #Starswap key farm.\n\n| Choice   | Current Multiplier | Proposed New Multiplier | Change |\n| -------- | ------------------ | ----------------------- | ------ |\n| Choece 1 | 30                 | 30                      | +0     |\n| Choice 2 | 30                 | 40                      | +10    |\n| Choice 3 | 30                 | 50                      | +20    |\n\n' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+
 
