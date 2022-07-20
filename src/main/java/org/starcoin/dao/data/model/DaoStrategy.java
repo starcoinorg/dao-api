@@ -33,6 +33,7 @@ public class DaoStrategy {
     @Column(length = 500)
     private String description;
 
+
     public DaoStrategyId getDaoStrategyId() {
         return daoStrategyId;
     }
@@ -72,4 +73,5 @@ public class DaoStrategy {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

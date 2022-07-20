@@ -5,12 +5,21 @@ import java.util.List;
 
 public class VotingType {
     public static final String SINGLE_CHOICE = "SINGLE_CHOICE";
+
     public static final String YES_NO = "YES_NO";
+
+    public static final String YES_NO_ABSTAIN = "YES_NO_ABSTAIN";
 
     public static final String STANDARD = "STANDARD";
 
+    public static final int CHOICE_SEQUENCE_ID_UNKNOWN = 0;
+    public static final int CHOICE_SEQUENCE_ID_YES = 1;
+    public static final int CHOICE_SEQUENCE_ID_NO = 2;
+    public static final int CHOICE_SEQUENCE_ID_ABSTAIN = 3;
+
     public static final String CHOICE_TITLE_YES = "YES";
     public static final String CHOICE_TITLE_NO = "NO";
+    public static final String CHOICE_TITLE_ABSTAIN = "Abstain";
 
     public static final byte STANDARD_VOTING_CHOICE_ID_YES = 1;
     public static final byte STANDARD_VOTING_CHOICE_ID_NO = 2;
@@ -22,10 +31,19 @@ public class VotingType {
     public static final String STANDARD_VOTING_CHOICE_TITLE_NO_WITH_VETO = "No with veto";
     public static final String STANDARD_VOTING_CHOICE_TITLE_ABSTAIN = "Abstain";
 
+
     public static List<ProposalVotingChoice> getYesNoChoices(ProposalId proposalId) {
         List<ProposalVotingChoice> choices = new ArrayList<>();
-        choices.add(new ProposalVotingChoice(proposalId, 0, CHOICE_TITLE_YES));
-        choices.add(new ProposalVotingChoice(proposalId, 1, CHOICE_TITLE_NO));
+        choices.add(new ProposalVotingChoice(proposalId, CHOICE_SEQUENCE_ID_YES, CHOICE_TITLE_YES));
+        choices.add(new ProposalVotingChoice(proposalId, CHOICE_SEQUENCE_ID_NO, CHOICE_TITLE_NO));
+        return choices;
+    }
+
+    public static List<ProposalVotingChoice> getYesNoAbstainChoices(ProposalId proposalId) {
+        List<ProposalVotingChoice> choices = new ArrayList<>();
+        choices.add(new ProposalVotingChoice(proposalId, CHOICE_SEQUENCE_ID_YES, CHOICE_TITLE_YES));
+        choices.add(new ProposalVotingChoice(proposalId, CHOICE_SEQUENCE_ID_NO, CHOICE_TITLE_NO));
+        choices.add(new ProposalVotingChoice(proposalId, CHOICE_SEQUENCE_ID_ABSTAIN, CHOICE_TITLE_ABSTAIN));
         return choices;
     }
 

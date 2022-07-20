@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import java.io.Serializable;
+import java.math.BigInteger;
 
 @Entity
 @DynamicInsert
@@ -24,6 +25,18 @@ public class Proposal implements Serializable {
     public static final byte PROPOSAL_STATE_EXECUTABLE = 6;
     public static final byte PROPOSAL_STATE_EXTRACTED = 7;
 
+    //const ProposalStatusEnum
+    //    Unknown: 'Unknown'
+    //    InQueue: 'InQueue'
+    //    VotingPeriod: 'VotingPeriod',
+    //    GracePeriod: 'GracePeriod'
+    //    Cancelled: 'Cancelled'
+    //    Passed: 'Passed'
+    //    Failed: 'Failed'
+    //    ReadyForProcessing: 'ReadyForProcessing',
+    //    Unsponsored: 'Unsponsored'
+    //};
+
     // Voting methods
     public static final String VOTING_METHOD_ON_CHAIN = "ON_CHAIN";
     public static final String VOTING_METHOD_OFF_CHAIN = "OFF_CHAIN";
@@ -36,7 +49,7 @@ public class Proposal implements Serializable {
     @Column(length = 200, nullable = false)
     private String title;
 
-    @Column(length = 500)
+    @Column(length = 2000)
     private String description;
 
     /**
@@ -218,5 +231,28 @@ public class Proposal implements Serializable {
 
     public void setVotingMethod(String votingMethod) {
         this.votingMethod = votingMethod;
+    }
+
+
+    @Column(precision = 50, scale = 0)
+    private BigInteger votingTurnoutThreshold;
+
+    @Column(precision = 50, scale = 0)
+    private BigInteger circulatingVotingPower;
+
+    public BigInteger getVotingTurnoutThreshold() {
+        return votingTurnoutThreshold;
+    }
+
+    public void setVotingTurnoutThreshold(BigInteger votingTurnoutThreshold) {
+        this.votingTurnoutThreshold = votingTurnoutThreshold;
+    }
+
+    public BigInteger getCirculatingVotingPower() {
+        return circulatingVotingPower;
+    }
+
+    public void setCirculatingVotingPower(BigInteger circulatingVotingPower) {
+        this.circulatingVotingPower = circulatingVotingPower;
     }
 }

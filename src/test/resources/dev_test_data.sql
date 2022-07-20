@@ -382,3 +382,32 @@ UPDATE proposal SET voting_period_end = UNIX_TIMESTAMP('2022-07-25 18:00:00') * 
 -- SELECT FROM_UNIXTIME(p.voting_period_end / 1000), p.* FROM proposal p;
 
 
+-- --------------------- 2022-07-20 -----------------------
+
+UPDATE `proposal_voting_choice` SET `title` = 'New Multiplier is 30x' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1') and (`sequence_id` = '0');
+UPDATE `proposal_voting_choice` SET `title` = 'New Multiplier is 40x' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1') and (`sequence_id` = '1');
+UPDATE `proposal_voting_choice` SET `title` = 'New Multiplier is 50x' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1') and (`sequence_id` = '2');
+
+ALTER TABLE `proposal`
+  CHANGE COLUMN `description` `description` VARCHAR(2000) NULL DEFAULT NULL ;
+
+UPDATE `proposal` SET `description` = 'Starswap is a decentralized exchange (DEX) that is deployed in a smart contract network on the Starcoin blcokchain. The goal is to be the most feature-rich DEX on Starcoin network and Move ecosystem, with security and stability of assets.\n\nThe Grant will be used entirely for Starswap ecological construction, and it is planned to continuously buyback STAR in 6~12 months. The bought-back STAR will be used for ecological incentives and project construction through the governance of DAO to decide the usage. When there is no suitable ecological direction to invest in the case also does not exclude the direct burn.\n\nNote that as hosted by the DAO, no one has permission to misappropriate the grant, and the DAO is controlled by on-chain contracts and made public. To explain, before the DAO tools are perfected, a small amount of funds may be operated by manual strategies, but these operations will be communicated and confirmed by the community in advance.\n\nFor the sake of fairness and security, there is a 48-hour publicity period after the proposal is passed. This proposal will be implemented only if no proposals disputing this proposal are put on the voting process during the publicity period.\n\nThe grant\'s application link: https://grant.starcoin.org/#/vote?gid=45\n',
+  `discussion` = 'https://grant.starcoin.org/#/vote?gid=45',
+  `title` = 'Starswap Grant for ecological Construction',
+  `voting_type` = 'YES_NO_ABSTAIN', `voting_method` = 'OFF_CHAIN'
+  WHERE (`dao_id` = 'starcoin_dao') and (`proposal_number` = '1');
+
+UPDATE `proposal` SET `description` = 'We\'re proposing an update to the STC/STAR farm multiplier, increase reward to this #Starswap key farms.\n\n| Choice   | Current Multiplier | Proposed New Multiplier | Change |\n| -------- | ------------------ | ----------------------- | ------ |\n| Choece 1 | 30                 | 30                      | +0     |\n| Choice 2 | 30                 | 40                      | +10    |\n| Choice 3 | 30                 | 50                      | +20    |\n\n'
+  WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+
+UPDATE `proposal` SET
+  `circulating_voting_power` = '282837606000000000',
+  `voting_turnout_threshold` = '2828376060000000'
+  WHERE (`dao_id` = 'starcoin_dao') and (`proposal_number` = '1');
+
+UPDATE `proposal` SET
+  `circulating_voting_power` = '383351685143768',
+  `voting_turnout_threshold` = '38335168514376'
+  WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+
+

@@ -15,8 +15,17 @@ public class ProposalVO extends Proposal {
 
     public static List<ProposalVotingChoice> getYesNoChoices() {
         List<ProposalVotingChoice> choices = new ArrayList<>();
-        choices.add(new ProposalVotingChoice(0, CHOICE_TITLE_YES));
-        choices.add(new ProposalVotingChoice(1, CHOICE_TITLE_NO));
+        choices.add(new ProposalVotingChoice(CHOICE_SEQUENCE_ID_YES, CHOICE_TITLE_YES));
+        choices.add(new ProposalVotingChoice(CHOICE_SEQUENCE_ID_NO, CHOICE_TITLE_NO));
+        return choices;
+    }
+
+
+    public static List<ProposalVotingChoice> getYesNoAbstainChoices() {
+        List<ProposalVotingChoice> choices = new ArrayList<>();
+        choices.add(new ProposalVotingChoice(CHOICE_SEQUENCE_ID_YES, CHOICE_TITLE_YES));
+        choices.add(new ProposalVotingChoice(CHOICE_SEQUENCE_ID_NO, CHOICE_TITLE_NO));
+        choices.add(new ProposalVotingChoice(CHOICE_SEQUENCE_ID_ABSTAIN, CHOICE_TITLE_ABSTAIN));
         return choices;
     }
 
@@ -28,6 +37,7 @@ public class ProposalVO extends Proposal {
         choices.add(new ProposalVotingChoice((int) STANDARD_VOTING_CHOICE_ID_ABSTAIN, STANDARD_VOTING_CHOICE_TITLE_ABSTAIN));
         return choices;
     }
+
 
     public List<ProposalVotingChoice> getProposalVotingChoices() {
         return proposalVotingChoices;

@@ -64,7 +64,9 @@ public class BeanUtils {
             proposalVO.setProposalVotingChoices(ProposalVO.getStandardVotingChoices());
         } else if (VotingType.YES_NO.equals(proposalVO.getVotingType())) {
             proposalVO.setProposalVotingChoices(ProposalVO.getYesNoChoices());
-        } else if (VotingType.SINGLE_CHOICE.equals(proposalVO.getVotingType())) {
+        } else if (VotingType.YES_NO_ABSTAIN.equals(proposalVO.getVotingType())) {
+            proposalVO.setProposalVotingChoices(ProposalVO.getYesNoAbstainChoices());
+        }else if (VotingType.SINGLE_CHOICE.equals(proposalVO.getVotingType())) {
             List<ProposalVO.ProposalVotingChoice> choices = new ArrayList<>();
             for (ProposalVotingChoice c : proposalVotingChoiceRepository.findByProposalVotingChoiceId_ProposalId(proposalVO.getProposalId())) {
                 ProposalVO.ProposalVotingChoice c2 = new ProposalVO.ProposalVotingChoice(

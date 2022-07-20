@@ -85,18 +85,18 @@ class DaoApiApplicationTests {
 
         // --------------- another proposal -----------------
 
-        Proposal p_2 = new Proposal();
-        p_2.setProposalId(new ProposalId("test_dao_id", "2"));
-        p_2.setCategoryId("category2");
-        p_2.setTitle("title2");
-        p_2.setDescription("description2");
-        p_2.setDiscussion("https://github.com/starcoinorg/discussion2");
-        p_2.setBlockHeight(19999L);
-        p_2.setBlockStateRoot("0x99163c0fc319b62c3897ada8f97881e396e33b30383f47e23d93aaed07d6806d");
-        p_2.setVotingPeriodEnd(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7);
-        p_2.setVotingPeriodStart(System.currentTimeMillis());
-        p_2.setVotingType(VotingType.YES_NO);
-        proposalRepository.saveAndFlush(p_2);
+//        Proposal p_2 = new Proposal();
+//        p_2.setProposalId(new ProposalId("test_dao_id", "2"));
+//        p_2.setCategoryId("category2");
+//        p_2.setTitle("title2");
+//        p_2.setDescription("description2");
+//        p_2.setDiscussion("https://github.com/starcoinorg/discussion2");
+//        p_2.setBlockHeight(19999L);
+//        p_2.setBlockStateRoot("0x99163c0fc319b62c3897ada8f97881e396e33b30383f47e23d93aaed07d6806d");
+//        p_2.setVotingPeriodEnd(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7);
+//        p_2.setVotingPeriodStart(System.currentTimeMillis());
+//        p_2.setVotingType(VotingType.YES_NO);
+//        proposalRepository.saveAndFlush(p_2);
 
     }
 
