@@ -384,10 +384,6 @@ UPDATE proposal SET voting_period_end = UNIX_TIMESTAMP('2022-07-25 18:00:00') * 
 
 -- --------------------- 2022-07-20 -----------------------
 
-UPDATE `proposal_voting_choice` SET `title` = 'New Multiplier is 30x' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1') and (`sequence_id` = '0');
-UPDATE `proposal_voting_choice` SET `title` = 'New Multiplier is 40x' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1') and (`sequence_id` = '1');
-UPDATE `proposal_voting_choice` SET `title` = 'New Multiplier is 50x' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1') and (`sequence_id` = '2');
-
 ALTER TABLE `proposal`
   CHANGE COLUMN `description` `description` VARCHAR(2000) NULL DEFAULT NULL ;
 
@@ -396,9 +392,6 @@ UPDATE `proposal` SET `description` = 'Starswap is a decentralized exchange (DEX
   `title` = 'Starswap Grant for ecological Construction',
   `voting_type` = 'YES_NO_ABSTAIN', `voting_method` = 'OFF_CHAIN'
   WHERE (`dao_id` = 'starcoin_dao') and (`proposal_number` = '1');
-
-UPDATE `proposal` SET `description` = 'We\'re proposing an update to the STC/STAR farm multiplier, increase reward to this #Starswap key farms.\n\n| Choice   | Current Multiplier | Proposed New Multiplier | Change |\n| -------- | ------------------ | ----------------------- | ------ |\n| Choece 1 | 30                 | 30                      | +0     |\n| Choice 2 | 30                 | 40                      | +10    |\n| Choice 3 | 30                 | 50                      | +20    |\n\n'
-  WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
 
 UPDATE `proposal` SET
   `circulating_voting_power` = '282837606000000000',
@@ -413,6 +406,18 @@ UPDATE `proposal` SET
 UPDATE `proposal` SET `block_state_root` = '0x561dd037d47b6de49f913440dcb6d321f9740a7a3d006671504f3a8c74a0b9ca', `block_height` = '6888260' WHERE (`dao_id` = 'starcoin_dao') and (`proposal_number` = '1');
 UPDATE `proposal` SET `block_state_root` = '0x561dd037d47b6de49f913440dcb6d321f9740a7a3d006671504f3a8c74a0b9ca', `block_height` = '6888260' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
 
-UPDATE `proposal` SET `description` = 'We\'re proposing an update to the STC/STAR farm multiplier, increase reward to this #Starswap key farm.\n\n| Choice   | Current Multiplier | Proposed New Multiplier | Change |\n| -------- | ------------------ | ----------------------- | ------ |\n| Choece 1 | 30                 | 30                      | +0     |\n| Choice 2 | 30                 | 40                      | +10    |\n| Choice 3 | 30                 | 50                      | +20    |\n\n' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+UPDATE `proposal_voting_choice` SET `title` = 'New Multiplier should be x30' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1') and (`sequence_id` = '0');
+UPDATE `proposal_voting_choice` SET `title` = 'New Multiplier should be x40' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1') and (`sequence_id` = '1');
+UPDATE `proposal_voting_choice` SET `title` = 'New Multiplier should be x50' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1') and (`sequence_id` = '2');
 
+UPDATE `proposal` SET `title` = 'Starswap Grant for Ecological Construction' WHERE (`dao_id` = 'starcoin_dao') and (`proposal_number` = '1');
 
+UPDATE `proposal` SET `description` = 'We\'re proposing an update to the STC/STAR farm multiplier, increase reward to this #Starswap key farm.\n\n| Choice   | Current Multiplier | Proposed New Multiplier | Change |\n| -------- | ------------------ | ----------------------- | ------ |\n| Choice 1 | x30                | x30                     | +0     |\n| Choice 2 | x30                | x40                     | +10    |\n| Choice 3 | x30                | x50                     | +20    |\n\nAfter farm weighting adjustment, predict APR for each farm pool as follows. \n\nNote that the predicted APR and the actual APR may differ.\n\n**STC-STAR Multiplier** x30 (not changed) current APR(when submitting the proposal): \n\n| Token Pair | Farm TVL  | Multiplier | Farm APR         |\n| ---------- | --------- | ---------- | ---------------- |\n| STAR-STC   | 238308.50 | x30        | 55.02% ~ 137.56% |\n| FAI-STC    | 236235.83 | x10        | 17.70% ~ 44.25%  |\n| WEN-STC    | 64349.45  | x5         | 41.62% ~ 104.05% |\n| STC-USDT   | 84917.13  | x10        | 84.23% ~ 210.58% |\n\n **STC-STAR Multiplier**  x40  predicted APR: \n\n| Token Pair | Farm TVL  | New Multiplier | Predict Farm APR |\n| ---------- | --------- | -------------- | ---------------- |\n| STAR-STC   | 238308.50 | x40            | 62.06% ~ 155.16% |\n| FAI-STC    | 236235.83 | x10            | 14.97% ~ 37.44%  |\n| WEN-STC    | 64349.45  | x5             | 35.21% ~ 88.03%  |\n| STC-USDT   | 84917.13  | x10            | 71.26% ~ 178.15% |\n\n **STC-STAR Multiplier** x50 predicted APR：\n\n| Token Pair | Farm TVL  | New Multiplier | Predict Farm APR |\n| ---------- | --------- | -------------- | ---------------- |\n| STAR-STC   | 238308.50 | x50            | 67.34% ~ 168.36% |\n| FAI-STC    | 236235.83 | x10            | 12.94% ~ 32.35%  |\n| WEN-STC    | 64349.45  | x5             | 30.63% ~ 76.58%  |\n| STC-USDT   | 84917.13  | x10            | 61.57% ~ 153.93% |\n\n' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+
+UPDATE `proposal` SET `submitted_at` = voting_period_start WHERE (`dao_id` = 'starcoin_dao') and (`proposal_number` = '1');
+UPDATE `proposal` SET `submitted_at` = voting_period_start WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+
+UPDATE `proposal` SET `voting_period_end` = '1658664000000' WHERE (`dao_id` = 'starcoin_dao') and (`proposal_number` = '1');
+UPDATE `proposal` SET `voting_period_end` = '1658664000000' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
+
+UPDATE `proposal_voting_choice` SET `title` = 'Multiplier should be x30' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1') and (`sequence_id` = '0');
