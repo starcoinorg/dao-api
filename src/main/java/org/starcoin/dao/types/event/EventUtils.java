@@ -29,6 +29,8 @@ public class EventUtils {
         Proposal proposal = new Proposal();
         proposal.setProposalId(new ProposalId(e.dao_id.toString(), e.proposal_id.toString()));
         proposal.setSubmittedBy(AccountAddressUtils.hex(e.proposer));
+        proposal.setVotingType(VotingType.STANDARD);
+        proposal.setVotingMethod(Proposal.VOTING_METHOD_ON_CHAIN);
         return proposal;
     }
 

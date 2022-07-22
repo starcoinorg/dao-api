@@ -135,6 +135,7 @@ public class CastVoteService {
             accountVote.setAccountVoteId(accountVoteId);
             accountVote.setVotingPower(castVoteVO.getVotingPower());
             accountVote.setChoiceSequenceId(castVoteVO.getChoiceSequenceId());
+            accountVote.setCreatedAt(System.currentTimeMillis());
             accountVoteRepository.save(accountVote);
         } else {
             LOG.info("Account has casted vote: " + accountVoteId);

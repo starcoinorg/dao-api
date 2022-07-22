@@ -117,7 +117,7 @@ public class DaoController {
                                              @RequestParam("proposalNumber") String proposalNumber,
                                              @RequestParam("page") final int page, @RequestParam("size") final int size,
                                              final UriComponentsBuilder uriBuilder, final HttpServletResponse response) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<AccountVote> p = accountVoteService.findPaginatedByDaoIdAndProposalNumber(daoId, proposalNumber, pageable);
         eventPublisher.publishEvent(new PaginatedResultsRetrievedEvent<>(AccountVote.class, uriBuilder, response, page,
                 p.getTotalPages(), size));
