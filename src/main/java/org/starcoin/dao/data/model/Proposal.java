@@ -10,6 +10,9 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.List;
+
+import static org.starcoin.dao.data.model.AccountVoteSummary.getChoiceSubtotalVotingPower;
 
 @Entity
 @DynamicInsert
@@ -26,13 +29,22 @@ public class Proposal implements Serializable {
     public static final byte PROPOSAL_STATE_EXTRACTED = 7;
 
     //const ProposalStatusEnum
-    //    Unknown: 'Unknown'
+    /**
+     * Status is unknown.
+     */
+    public static final String PROPOSAL_STATUS_UNKNOWN = "UNKNOWN";
     //    InQueue: 'InQueue'
     //    VotingPeriod: 'VotingPeriod',
     //    GracePeriod: 'GracePeriod'
     //    Cancelled: 'Cancelled'
-    //    Passed: 'Passed'
-    //    Failed: 'Failed'
+    /**
+     * If the voting type includes then "Yes" option, then the proposal maybe in "PASSED" state.
+     */
+    public static final String PROPOSAL_STATUS_PASSED = "PASSED";
+    /**
+     * If the voting type includes then "Yes" option, then the proposal maybe in "FAILED" state.
+     */
+    public static final String PROPOSAL_STATUS_FAILED = "FAILED";
     //    ReadyForProcessing: 'ReadyForProcessing',
     //    Unsponsored: 'Unsponsored'
     //};
@@ -108,6 +120,34 @@ public class Proposal implements Serializable {
 
     @Column
     private Long updatedAt;
+
+    @Column(precision = 50, scale = 0)
+    private BigInteger votingTurnoutThreshold;
+
+    @Column(precision = 50, scale = 0)
+    private BigInteger circulatingVotingPower;
+
+    public static String getStatus(String votingType, List<AccountVoteSummary> voteSummary) {
+        // todo add turnout threshold handling logic
+        if (VotingType.YES_NO.equals(votingType) || VotingType.YES_NO_ABSTAIN.equals(votingType)) {
+            if (getChoiceSubtotalVotingPower(VotingType.CHOICE_SEQUENCE_ID_YES, voteSummary)
+                    .compareTo(getChoiceSubtotalVotingPower(VotingType.CHOICE_SEQUENCE_ID_NO, voteSummary))
+                    > 0) {
+                return PROPOSAL_STATUS_PASSED;
+            } else {
+                return PROPOSAL_STATUS_FAILED;
+            }
+        } else if (VotingType.STANDARD.equals(votingType)) {
+            if (getChoiceSubtotalVotingPower(VotingType.STANDARD_VOTING_CHOICE_ID_YES, voteSummary)
+                    .compareTo(getChoiceSubtotalVotingPower(VotingType.STANDARD_VOTING_CHOICE_ID_NO, voteSummary))
+                    > 0) {
+                return PROPOSAL_STATUS_PASSED;
+            } else {
+                return PROPOSAL_STATUS_FAILED;
+            }
+        }
+        return PROPOSAL_STATUS_UNKNOWN;
+    }
 
     public ProposalId getProposalId() {
         return proposalId;
@@ -276,12 +316,6 @@ public class Proposal implements Serializable {
     public void setUpdatedAt(Long updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-    @Column(precision = 50, scale = 0)
-    private BigInteger votingTurnoutThreshold;
-
-    @Column(precision = 50, scale = 0)
-    private BigInteger circulatingVotingPower;
 
     public BigInteger getVotingTurnoutThreshold() {
         return votingTurnoutThreshold;
