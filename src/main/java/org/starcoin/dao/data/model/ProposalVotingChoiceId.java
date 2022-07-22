@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Embeddable
 public class ProposalVotingChoiceId implements Serializable {
-    private ProposalId proposalId;
+    private ProposalId proposalId = new ProposalId();
 
     private Integer sequenceId;
 

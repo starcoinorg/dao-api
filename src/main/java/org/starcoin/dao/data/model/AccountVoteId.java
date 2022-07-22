@@ -8,7 +8,7 @@ import java.util.Objects;
 @Embeddable
 public class AccountVoteId implements Serializable {
     private String accountAddress;
-    private ProposalId proposalId;
+    private ProposalId proposalId = new ProposalId();
 
     public AccountVoteId() {
     }

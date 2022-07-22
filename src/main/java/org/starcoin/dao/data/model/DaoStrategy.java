@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import java.math.BigDecimal;
 
 @Entity
 @DynamicInsert
@@ -37,6 +41,17 @@ public class DaoStrategy {
     @Column(length = 500)
     private String description;
 
+    @Column(length = 500)
+    private String votingPowerSupplyResourceStructTag;
+
+    @Column(length = 200)
+    private String votingPowerSupplyBcsPath;
+
+    @Column(length = 100)
+    private String votingPowerSupplyAccountAddress;
+
+    @Column(precision = 51, scale = 10)
+    private BigDecimal votingTurnoutThresholdRate;
 
     public DaoStrategyId getDaoStrategyId() {
         return daoStrategyId;
@@ -78,4 +93,35 @@ public class DaoStrategy {
         this.description = description;
     }
 
+    public String getVotingPowerSupplyResourceStructTag() {
+        return votingPowerSupplyResourceStructTag;
+    }
+
+    public void setVotingPowerSupplyResourceStructTag(String votingPowerSupplyResourceStructTag) {
+        this.votingPowerSupplyResourceStructTag = votingPowerSupplyResourceStructTag;
+    }
+
+    public String getVotingPowerSupplyBcsPath() {
+        return votingPowerSupplyBcsPath;
+    }
+
+    public void setVotingPowerSupplyBcsPath(String votingPowerSupplyBcsPath) {
+        this.votingPowerSupplyBcsPath = votingPowerSupplyBcsPath;
+    }
+
+    public String getVotingPowerSupplyAccountAddress() {
+        return votingPowerSupplyAccountAddress;
+    }
+
+    public void setVotingPowerSupplyAccountAddress(String votingPowerSupplyAccountAddress) {
+        this.votingPowerSupplyAccountAddress = votingPowerSupplyAccountAddress;
+    }
+
+    public BigDecimal getVotingTurnoutThresholdRate() {
+        return votingTurnoutThresholdRate;
+    }
+
+    public void setVotingTurnoutThresholdRate(BigDecimal votingTurnoutThresholdRate) {
+        this.votingTurnoutThresholdRate = votingTurnoutThresholdRate;
+    }
 }

@@ -13,30 +13,29 @@ import javax.persistence.Entity;
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
-public class DaoVotingResource {
+public class DaoStrategyLockedVotingPower {
+
     @EmbeddedId
     @AttributeOverride(name = "daoId", column = @Column(name = "dao_id", length = 100, nullable = false))
+    @AttributeOverride(name = "strategyId", column = @Column(name = "strategy_id", length = 100, nullable = false))
     @AttributeOverride(name = "sequenceId", column = @Column(name = "sequence_id", length = 100, nullable = false))
-    private DaoVotingResourceId daoVotingResourceId;
+    private DaoStrategyLockedVotingPowerId daoStrategyLockedVotingPowerId;
 
-    /**
-     * For example: "0x8c109349c6bd91411d6bc962e080c4a3::TokenSwapFarmBoost::UserInfo<0x00000000000000000000000000000001::STC::STC, 0x8c109349c6bd91411d6bc962e080c4a3::STAR::STAR>"
-     */
     @Column(length = 500, nullable = false)
     private String resourceStructTag;
 
-    /**
-     * BCS path to get voting power.
-     */
     @Column(length = 200)
     private String votingPowerBcsPath;
 
-    public DaoVotingResourceId getDaoVotingResourceId() {
-        return daoVotingResourceId;
+    @Column(length = 100)
+    private String accountAddress;
+
+    public DaoStrategyLockedVotingPowerId getDaoStrategyLockedVotingPowerId() {
+        return daoStrategyLockedVotingPowerId;
     }
 
-    public void setDaoVotingResourceId(DaoVotingResourceId daoVotingResourceId) {
-        this.daoVotingResourceId = daoVotingResourceId;
+    public void setDaoStrategyLockedVotingPowerId(DaoStrategyLockedVotingPowerId daoStrategyLockedVotingPowerId) {
+        this.daoStrategyLockedVotingPowerId = daoStrategyLockedVotingPowerId;
     }
 
     public String getResourceStructTag() {
@@ -53,5 +52,13 @@ public class DaoVotingResource {
 
     public void setVotingPowerBcsPath(String votingPowerBcsPath) {
         this.votingPowerBcsPath = votingPowerBcsPath;
+    }
+
+    public String getAccountAddress() {
+        return accountAddress;
+    }
+
+    public void setAccountAddress(String accountAddress) {
+        this.accountAddress = accountAddress;
     }
 }
