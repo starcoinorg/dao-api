@@ -78,7 +78,7 @@ public class BeanUtils {
         List<AccountVoteSummary> accountVoteSummaries = accountVoteRepository.sumAccountVotesGroupByChoice(
                 proposal.getProposalId().getDaoId(), proposal.getProposalId().getProposalNumber());
         proposalVO.setAccountVoteSummaries(accountVoteSummaries);
-        if (proposal.getVotingPeriodEnd() > System.currentTimeMillis()) {
+        if (System.currentTimeMillis() > proposal.getVotingPeriodEnd()) {
             proposalVO.setStatus(Proposal.getStatus(proposal.getVotingType(), accountVoteSummaries));
         }
         return proposalVO;
