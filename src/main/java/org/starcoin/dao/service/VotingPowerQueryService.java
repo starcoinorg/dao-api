@@ -73,7 +73,7 @@ public class VotingPowerQueryService {
             if (stateWithProof.getState() != null) {
                 byte[] state = HexUtils.hexToByteArray(stateWithProof.getState());
                 if (state.length > 0) {
-                    Object amount = null;
+                    Object amount;
                     try {
                         amount = BCSPath.select(state, daoVotingResource.getVotingPowerBcsPath());
                     } catch (DeserializationError e) {

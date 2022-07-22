@@ -21,6 +21,8 @@ import org.starcoin.dao.vo.ProposalVO;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -218,4 +220,12 @@ public class DaoController {
         proposalService.removeProposalVotingChoice(proposalVotingChoiceId);
     }
 
+    @GetMapping("getDaoStrategyVotingPowerSupply")
+    public BigInteger getDaoStrategyVotingPowerSupply(@RequestParam("stateRoot") String stateRoot,
+                                                      @RequestParam("daoId") String daoId,
+                                                      @RequestParam("strategyId") String strategyId) {
+        // Insert test data into the database:
+        // daoStrategyService.createStcDaoStrategy(daoId, 0, new BigDecimal("0.04"), DaoStrategy.DAO_STRATEGY_TYPE_OFF_CHAIN);
+        return daoStrategyService.getVotingPowerSupply(stateRoot, daoId, strategyId);
+    }
 }
