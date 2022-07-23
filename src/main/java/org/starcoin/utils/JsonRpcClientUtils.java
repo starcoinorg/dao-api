@@ -3,6 +3,7 @@ package org.starcoin.utils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novi.serde.DeserializationError;
+import org.starcoin.bean.ChainInfo;
 import org.starcoin.bean.Event;
 import org.starcoin.bean.RpcStateWithProof;
 import org.starcoin.jsonrpc.JSONRPC2Request;
@@ -24,11 +25,14 @@ public class JsonRpcClientUtils {
     private JsonRpcClientUtils() {
     }
 
+    public static ChainInfo getChainInfo(JSONRPC2Session session) {
+        String method = "chain.info";
+        return callForObject(session, method, Collections.emptyList(), ChainInfo.class);
+    }
+
     public static RpcStateWithProof getStateWithProofByRoot(JSONRPC2Session jsonRpcSession, String accessPath, String stateRoot) {
         String method = "state.get_with_proof_by_root";
-        Class<RpcStateWithProof> objectClass = RpcStateWithProof.class;
-        RpcStateWithProof stateWithProof = callForObject(jsonRpcSession, method, Arrays.asList(accessPath, stateRoot), objectClass);
-        return stateWithProof;
+        return callForObject(jsonRpcSession, method, Arrays.asList(accessPath, stateRoot), RpcStateWithProof.class);
     }
 
 

@@ -8,12 +8,11 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.starcoin.dao.data.model.Proposal;
-import org.starcoin.dao.data.model.ProposalId;
-import org.starcoin.dao.data.model.ProposalVotingChoice;
-import org.starcoin.dao.data.model.ProposalVotingChoiceId;
+import org.starcoin.dao.data.model.*;
 import org.starcoin.dao.data.repo.ProposalRepository;
 import org.starcoin.dao.data.repo.ProposalVotingChoiceRepository;
+
+import java.math.BigInteger;
 
 @Service
 public class ProposalService {
@@ -24,6 +23,9 @@ public class ProposalService {
 
     @Autowired
     private ProposalVotingChoiceRepository proposalVotingChoiceRepository;
+
+    @Autowired
+    private DaoStrategyService daoStrategyService;
 
     public Page<Proposal> findPaginatedByDaoId(String daoId, Pageable pageable) {
         Proposal proposal = new Proposal();
@@ -68,5 +70,17 @@ public class ProposalService {
         if (p != null) {
             proposalVotingChoiceRepository.delete(p);
         }
+    }
+
+    public void updateVotingTurnoutThreshold(String daoId, String proposalNumber, String stateRoot, String strategyId) {
+        Proposal proposal = proposalRepository.findById(new ProposalId(daoId, proposalNumber)).orElse(null);
+        if (proposal == null) {
+            LOG.info("proposal not found, daoId: {}, proposalNumber: {}", daoId, proposalNumber);
+            return;
+        }
+        Pair<BigInteger, BigInteger> pair = daoStrategyService.getCirculatingVotingPowerAndVotingTurnoutThreshold(stateRoot, daoId, strategyId);
+        proposal.setCirculatingVotingPower(pair.getItem1());
+        proposal.setVotingTurnoutThreshold(pair.getItem2());
+        proposalRepository.save(proposal);
     }
 }

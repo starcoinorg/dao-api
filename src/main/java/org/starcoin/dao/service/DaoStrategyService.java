@@ -84,6 +84,11 @@ public class DaoStrategyService {
         return getCirculatingVotingPowerAndVotingTurnoutThreshold(stateRoot, daoId, strategyId).getItem1();
     }
 
+    public Pair<BigInteger, BigInteger> getCurrentCirculatingVotingPowerAndVotingTurnoutThreshold(String daoId, String strategyId) {
+        String stateRoot = jsonRpcClient.getCurrentChainStateRoot();
+        return getCirculatingVotingPowerAndVotingTurnoutThreshold(stateRoot, daoId, strategyId);
+    }
+
     public Pair<BigInteger, BigInteger> getCirculatingVotingPowerAndVotingTurnoutThreshold(String stateRoot, String daoId, String strategyId) {
         DaoStrategyId daoStrategyId = new DaoStrategyId(daoId, strategyId);
         DaoStrategy daoStrategy = daoStrategyRepository.findById(daoStrategyId).orElse(null);
