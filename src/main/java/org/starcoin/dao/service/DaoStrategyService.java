@@ -77,10 +77,26 @@ public class DaoStrategyService {
         if (daoStrategy == null) {
             return BigInteger.ZERO;
         }
-        String votingPowerSupplyAccountAddress = daoStrategy.getVotingPowerSupplyAccountAddress();
-        String votingPowerSupplyResourceStructTag = daoStrategy.getVotingPowerSupplyResourceStructTag();
-        String votingPowerSupplyBcsPath = daoStrategy.getVotingPowerSupplyBcsPath();
-        return getResourceFieldAsBigInteger(jsonRpcClient, stateRoot, votingPowerSupplyAccountAddress, votingPowerSupplyResourceStructTag, votingPowerSupplyBcsPath);
+        return getVotingPowerSupply(stateRoot, daoStrategy);
+    }
+
+    public BigInteger getVotingTurnoutThreshold(String stateRoot, String daoId, String strategyId) {
+        DaoStrategyId daoStrategyId = new DaoStrategyId(daoId, strategyId);
+        DaoStrategy daoStrategy = daoStrategyRepository.findById(daoStrategyId).orElse(null);
+        if (daoStrategy == null) {
+            return BigInteger.ZERO;
+        }
+        BigInteger votingPowerSupply = getVotingPowerSupply(stateRoot, daoStrategy);
+        BigInteger circulatingVotingPowerSupply = votingPowerSupply.subtract(
+                getLockedVotingPowerSupply(stateRoot, daoId, strategyId));
+        return new BigDecimal(circulatingVotingPowerSupply)
+                .multiply(daoStrategy.getVotingTurnoutThresholdRate()).toBigInteger();
+    }
+
+    private BigInteger getVotingPowerSupply(String stateRoot, DaoStrategy daoStrategy) {
+        return getResourceFieldAsBigInteger(jsonRpcClient, stateRoot,
+                daoStrategy.getVotingPowerSupplyAccountAddress(), daoStrategy.getVotingPowerSupplyResourceStructTag(),
+                daoStrategy.getVotingPowerSupplyBcsPath());
     }
 
     public BigInteger getCirculatingVotingPowerSupply(String stateRoot, String daoId, String strategyId) {

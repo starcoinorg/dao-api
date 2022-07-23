@@ -21,7 +21,6 @@ import org.starcoin.dao.vo.ProposalVO;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
@@ -231,8 +230,15 @@ public class DaoController {
 
     @GetMapping("getDaoStrategyCirculatingVotingPowerSupply")
     public BigInteger getDaoStrategyCirculatingVotingPowerSupply(@RequestParam("stateRoot") String stateRoot,
-                                                      @RequestParam("daoId") String daoId,
-                                                      @RequestParam("strategyId") String strategyId) {
+                                                                 @RequestParam("daoId") String daoId,
+                                                                 @RequestParam("strategyId") String strategyId) {
         return daoStrategyService.getCirculatingVotingPowerSupply(stateRoot, daoId, strategyId);
+    }
+
+    @GetMapping("getDaoStrategyVotingTurnoutThreshold")
+    public BigInteger getDaoStrategyVotingTurnoutThreshold(@RequestParam("stateRoot") String stateRoot,
+                                                           @RequestParam("daoId") String daoId,
+                                                           @RequestParam("strategyId") String strategyId) {
+        return daoStrategyService.getVotingTurnoutThreshold(stateRoot, daoId, strategyId);
     }
 }
