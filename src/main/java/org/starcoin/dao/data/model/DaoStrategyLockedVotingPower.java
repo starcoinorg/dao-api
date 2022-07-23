@@ -21,12 +21,21 @@ public class DaoStrategyLockedVotingPower {
     @AttributeOverride(name = "sequenceId", column = @Column(name = "sequence_id", length = 100, nullable = false))
     private DaoStrategyLockedVotingPowerId daoStrategyLockedVotingPowerId;
 
+    /**
+     * Struct tag of the resource that the voting power is locked in.
+     */
     @Column(length = 500, nullable = false)
     private String resourceStructTag;
 
+    /**
+     * BCS path to get voting power in the resource.
+     */
     @Column(length = 200)
     private String votingPowerBcsPath;
 
+    /**
+     * Account address where the voting power is locked.
+     */
     @Column(length = 100)
     private String accountAddress;
 

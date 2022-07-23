@@ -25,9 +25,9 @@ public class MiscUtils {
             try {
                 amount = BCSPath.select(state, bcsPath);
             } catch (DeserializationError e) {
-                throw new IllegalStateException("BCSPath.select DeserializationError.", e);
+                throw new IllegalArgumentException("BCSPath.select DeserializationError.", e);
             } catch (ParseException e) {
-                throw new IllegalStateException("BCSPath.select ParseException.", e);
+                throw new IllegalArgumentException("BCSPath.select ParseException.", e);
             }
             bi = (BigInteger) amount;
         }

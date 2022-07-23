@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.starcoin.dao.data.model.*;
+import org.starcoin.dao.data.repo.DaoStrategyRepository;
 import org.starcoin.dao.data.repo.ProposalRepository;
 import org.starcoin.dao.data.repo.ProposalVotingChoiceRepository;
 import org.starcoin.dao.utils.JsonRpcClient;
@@ -30,6 +31,9 @@ public class ProposalService {
 
     @Autowired
     private JsonRpcClient jsonRpcClient;
+
+    @Autowired
+    private DaoStrategyRepository daoStrategyRepository;
 
     public Page<Proposal> findPaginatedByDaoId(String daoId, Pageable pageable) {
         Proposal proposal = new Proposal();
@@ -87,7 +91,21 @@ public class ProposalService {
             LOG.info("proposal not found, daoId: {}, proposalNumber: {}", daoId, proposalNumber);
             return;
         }
-        Pair<BigInteger, BigInteger> pair = daoStrategyService.getCirculatingVotingPowerAndVotingTurnoutThreshold(stateRoot, daoId, strategyId);
+        if (!Proposal.VOTING_METHOD_OFF_CHAIN.equals(proposal.getVotingMethod())) {
+            throw new IllegalArgumentException(String.format(
+                    "The proposal voting method is not off-chain, daoId: %s, proposalNumber: %s", daoId, proposalNumber));
+        }
+        DaoStrategyId daoStrategyId = new DaoStrategyId(daoId, strategyId);
+        DaoStrategy daoStrategy = daoStrategyRepository.findById(daoStrategyId).orElse(null);
+        if (daoStrategy == null) {
+            throw new IllegalArgumentException(String.format(
+                    "The dao strategy not found, daoId: %s, strategyId: %s", daoId, strategyId));
+        }
+        if (!DaoStrategy.DAO_STRATEGY_TYPE_OFF_CHAIN.equals(daoStrategy.getDaoStrategyType())) {
+            throw new IllegalArgumentException(String.format(
+                    "The dao strategy type is not off-chain, daoId: %s, strategyId: %s", daoId, strategyId));
+        }
+        Pair<BigInteger, BigInteger> pair = daoStrategyService.getCirculatingVotingPowerAndVotingTurnoutThreshold(stateRoot, daoStrategy);
         proposal.setCirculatingVotingPower(pair.getItem1());
         proposal.setVotingTurnoutThreshold(pair.getItem2());
         proposal.setBlockHeight(height);
