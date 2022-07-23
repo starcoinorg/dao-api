@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.starcoin.bean.Event;
-import org.starcoin.dao.api.utils.JsonRpcClient;
+import org.starcoin.dao.utils.JsonRpcClient;
 import org.starcoin.dao.data.model.PullingEventTask;
 import org.starcoin.dao.data.repo.NodeHeartbeatRepository;
 import org.starcoin.dao.service.NodeHeartbeatService;

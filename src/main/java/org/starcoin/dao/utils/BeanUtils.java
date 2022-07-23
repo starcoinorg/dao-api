@@ -1,4 +1,4 @@
-package org.starcoin.dao.api.utils;
+package org.starcoin.dao.utils;
 
 import org.starcoin.dao.data.model.*;
 import org.starcoin.dao.data.repo.AccountVoteRepository;

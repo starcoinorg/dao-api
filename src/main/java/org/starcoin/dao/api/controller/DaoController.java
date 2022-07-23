@@ -26,8 +26,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
-import static org.starcoin.dao.api.utils.BeanUtils.convertToDaoVO;
-import static org.starcoin.dao.api.utils.BeanUtils.convertToProposalVO;
+import static org.starcoin.dao.utils.BeanUtils.convertToDaoVO;
+import static org.starcoin.dao.utils.BeanUtils.convertToProposalVO;
 
 @Api(tags = {"Starcoin DAO RESTful API"})
 @RestController
@@ -227,5 +227,14 @@ public class DaoController {
         // Insert test data into the database:
         // daoStrategyService.createStcDaoStrategy(daoId, 0, new BigDecimal("0.04"), DaoStrategy.DAO_STRATEGY_TYPE_OFF_CHAIN);
         return daoStrategyService.getVotingPowerSupply(stateRoot, daoId, strategyId);
+    }
+
+    @GetMapping("getDaoStrategyCirculatingVotingPowerSupply")
+    public BigInteger getDaoStrategyCirculatingVotingPowerSupply(@RequestParam("stateRoot") String stateRoot,
+                                                      @RequestParam("daoId") String daoId,
+                                                      @RequestParam("strategyId") String strategyId) {
+        // Insert test data into the database:
+        daoStrategyService.createStcDaoStrategy(daoId, 0, new BigDecimal("0.04"), DaoStrategy.DAO_STRATEGY_TYPE_OFF_CHAIN);
+        return daoStrategyService.getCirculatingVotingPowerSupply(stateRoot, daoId, strategyId);
     }
 }

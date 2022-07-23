@@ -1,4 +1,4 @@
-package org.starcoin.dao.api.utils;
+package org.starcoin.dao.utils;
 
 import com.novi.serde.DeserializationError;
 import org.starcoin.bean.Event;

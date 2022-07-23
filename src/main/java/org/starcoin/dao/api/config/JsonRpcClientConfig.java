@@ -3,7 +3,7 @@ package org.starcoin.dao.api.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.starcoin.dao.api.utils.JsonRpcClient;
+import org.starcoin.dao.utils.JsonRpcClient;
 
 import java.net.MalformedURLException;
 

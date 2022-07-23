@@ -1,22 +1,19 @@
 package org.starcoin.dao.service;
 
-import com.novi.serde.DeserializationError;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-import org.starcoin.bcs.sab.BCSPath;
-import org.starcoin.bcs.sab.ParseException;
-import org.starcoin.bean.RpcStateWithProof;
-import org.starcoin.dao.api.utils.JsonRpcClient;
-import org.starcoin.dao.data.model.DaoStrategy;
-import org.starcoin.dao.data.model.DaoStrategyId;
-import org.starcoin.dao.data.model.Strategy;
+import org.starcoin.dao.data.model.*;
 import org.starcoin.dao.data.repo.DaoStrategyLockedVotingPowerRepository;
 import org.starcoin.dao.data.repo.DaoStrategyRepository;
-import org.starcoin.utils.HexUtils;
+import org.starcoin.dao.utils.JsonRpcClient;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
+
+import static org.starcoin.dao.utils.MiscUtils.getResourceFieldAsBigInteger;
 
 @Service
 public class DaoStrategyService {
@@ -61,6 +58,17 @@ public class DaoStrategyService {
             return;
         }
         daoStrategyRepository.save(daoStrategy);
+
+        DaoStrategyLockedVotingPowerId lockedVotingPowerId = new DaoStrategyLockedVotingPowerId(daoStrategyId, 0);
+        if (daoStrategyLockedVotingPowerRepository.findById(lockedVotingPowerId).orElse(null) != null) {
+            return;
+        }
+        DaoStrategyLockedVotingPower lockedVotingPower = new DaoStrategyLockedVotingPower();
+        lockedVotingPower.setDaoStrategyLockedVotingPowerId(lockedVotingPowerId);
+        lockedVotingPower.setAccountAddress("0x00000000000000000000000000000001");
+        lockedVotingPower.setResourceStructTag("0x00000000000000000000000000000001::Treasury::Treasury<0x00000000000000000000000000000001::STC::STC>");
+        lockedVotingPower.setVotingPowerBcsPath("{{u128},_,_}[0][0]");
+        daoStrategyLockedVotingPowerRepository.save(lockedVotingPower);
     }
 
     public BigInteger getVotingPowerSupply(String stateRoot, String daoId, String strategyId) {
@@ -69,23 +77,31 @@ public class DaoStrategyService {
         if (daoStrategy == null) {
             return BigInteger.ZERO;
         }
-        RpcStateWithProof stateWithProof = jsonRpcClient.getStateWithProofByRoot(
-                JsonRpcClient.getResourceStateAccessPath(daoStrategy.getVotingPowerSupplyAccountAddress(),
-                        daoStrategy.getVotingPowerSupplyResourceStructTag()),
-                stateRoot);
-        BigInteger detailVotingPower = BigInteger.ZERO;
-        byte[] state = HexUtils.hexToByteArray(stateWithProof.getState());
-        if (state.length > 0) {
-            Object amount;
-            try {
-                amount = BCSPath.select(state, daoStrategy.getVotingPowerSupplyBcsPath());
-            } catch (DeserializationError e) {
-                throw new IllegalStateException("BCSPath.select DeserializationError.", e);
-            } catch (ParseException e) {
-                throw new IllegalStateException("BCSPath.select ParseException.", e);
-            }
-            detailVotingPower = (BigInteger) amount;
-        }
-        return detailVotingPower;
+        String votingPowerSupplyAccountAddress = daoStrategy.getVotingPowerSupplyAccountAddress();
+        String votingPowerSupplyResourceStructTag = daoStrategy.getVotingPowerSupplyResourceStructTag();
+        String votingPowerSupplyBcsPath = daoStrategy.getVotingPowerSupplyBcsPath();
+        return getResourceFieldAsBigInteger(jsonRpcClient, stateRoot, votingPowerSupplyAccountAddress, votingPowerSupplyResourceStructTag, votingPowerSupplyBcsPath);
     }
+
+    public BigInteger getCirculatingVotingPowerSupply(String stateRoot, String daoId, String strategyId) {
+        BigInteger votingPowerSupply = getVotingPowerSupply(stateRoot, daoId, strategyId);
+        return votingPowerSupply.subtract(getLockedVotingPowerSupply(stateRoot, daoId, strategyId));
+    }
+
+    public BigInteger getLockedVotingPowerSupply(String stateRoot, String daoId, String strategyId) {
+        BigInteger lockedAmount = BigInteger.ZERO;
+        for (DaoStrategyLockedVotingPower locked : findLockedVotingPowersByDaoStrategyId(daoId, strategyId)) {
+            lockedAmount = lockedAmount.add(getResourceFieldAsBigInteger(jsonRpcClient, stateRoot,
+                    locked.getAccountAddress(), locked.getResourceStructTag(), locked.getVotingPowerBcsPath()));
+        }
+        return lockedAmount;
+    }
+
+    public List<DaoStrategyLockedVotingPower> findLockedVotingPowersByDaoStrategyId(String daoId, String strategyId) {
+        DaoStrategyId daoStrategyId = new DaoStrategyId(daoId, strategyId);
+        DaoStrategyLockedVotingPower lockedVotingPower = new DaoStrategyLockedVotingPower();
+        lockedVotingPower.setDaoStrategyLockedVotingPowerId(new DaoStrategyLockedVotingPowerId(daoStrategyId, null));
+        return daoStrategyLockedVotingPowerRepository.findAll(Example.of(lockedVotingPower));
+    }
+
 }

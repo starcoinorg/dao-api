@@ -1,28 +1,25 @@
 package org.starcoin.dao.service;
 
-import com.novi.serde.DeserializationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.starcoin.bcs.sab.BCSPath;
-import org.starcoin.bcs.sab.ParseException;
-import org.starcoin.bean.RpcStateWithProof;
-import org.starcoin.dao.api.utils.JsonRpcClient;
 import org.starcoin.dao.data.model.*;
 import org.starcoin.dao.data.repo.DaoRepository;
 import org.starcoin.dao.data.repo.DaoVotingResourceRepository;
 import org.starcoin.dao.data.repo.ProposalRepository;
+import org.starcoin.dao.utils.JsonRpcClient;
 import org.starcoin.dao.vo.GetVotingPowerResponse;
 import org.starcoin.types.AccountAddress;
 import org.starcoin.utils.AccountAddressUtils;
-import org.starcoin.utils.HexUtils;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static org.starcoin.dao.utils.MiscUtils.getResourceFieldAsBigInteger;
 
 @Service
 public class VotingPowerQueryService {
@@ -45,69 +42,6 @@ public class VotingPowerQueryService {
 
     @Autowired
     private DaoRepository daoRepository;
-
-    public GetVotingPowerResponse getAccountVotingPower(String accountAddress, String daoId, String proposalNumber) {
-        AccountAddress addressObj = AccountAddressUtils.create(accountAddress);// make sure it is legal
-        Optional<Proposal> proposal = proposalRepository.findById(new ProposalId(daoId, proposalNumber));
-        if (!proposal.isPresent()) {
-            return null;
-        }
-        return getAccountVotingPowerByStateRoot(addressObj, daoId, proposalNumber, proposal.get().getBlockStateRoot());
-    }
-
-    private GetVotingPowerResponse getAccountVotingPowerByStateRoot(AccountAddress accountAddress,
-                                                                    String daoId,
-                                                                    String proposalNumber,
-                                                                    String stateRoot) {
-        BigInteger totalVotingPower = BigInteger.ZERO;
-        GetVotingPowerResponse r = new GetVotingPowerResponse();
-        List<DaoVotingResource> daoVotingResources = getDaoVotingResources(daoId, proposalNumber);
-        List<GetVotingPowerResponse.VotingPowerDetail> details = new ArrayList<>();
-        for (DaoVotingResource daoVotingResource : daoVotingResources) {
-            GetVotingPowerResponse.VotingPowerDetail detail = new GetVotingPowerResponse.VotingPowerDetail();
-            RpcStateWithProof stateWithProof = jsonRpcClient.getStateWithProofByRoot(
-                    JsonRpcClient.getResourceStateAccessPath(
-                            AccountAddressUtils.hex(accountAddress), daoVotingResource.getResourceStructTag()),
-                    stateRoot);
-            BigInteger detailVotingPower = BigInteger.ZERO;
-            if (stateWithProof.getState() != null) {
-                byte[] state = HexUtils.hexToByteArray(stateWithProof.getState());
-                if (state.length > 0) {
-                    Object amount;
-                    try {
-                        amount = BCSPath.select(state, daoVotingResource.getVotingPowerBcsPath());
-                    } catch (DeserializationError e) {
-                        throw new IllegalStateException("BCSPath.select DeserializationError.", e);
-                    } catch (ParseException e) {
-                        throw new IllegalStateException("BCSPath.select ParseException.", e);
-                    }
-                    detailVotingPower = (BigInteger) amount;
-                }
-            }
-            detail.setSequenceId(daoVotingResource.getDaoVotingResourceId().getSequenceId());
-            detail.setResourceStructTag(daoVotingResource.getResourceStructTag());
-            detail.setPower(detailVotingPower);
-            details.add(detail);
-            totalVotingPower = totalVotingPower.add(detailVotingPower);
-        }
-        r.setDetails(details);
-        r.setTotalVotingPower(totalVotingPower);
-        return r;
-    }
-
-    private List<DaoVotingResource> getDaoVotingResources(String daoId,
-                                                          String proposalNumber// ignored proposalNumber!
-    ) {
-        Dao dao = daoRepository.findById(daoId).orElseThrow(() -> new IllegalStateException("Dao not found."));
-        DaoStrategy daoStrategy = daoStrategyService.getPrimaryDaoStrategy(daoId);
-        String strategyId = daoStrategy != null ? daoStrategy.getDaoStrategyId().getStrategyId() : null;
-        return getDaoVotingResources(daoId, dao.getDaoTypeTag(), strategyId);
-    }
-
-
-    public List<DaoVotingResource> getDaoVotingResources(String daoId, String daoTypeTag, String strategyId) {
-        return getDaoVotingResources(daoId, daoTypeTag, strategyId, daoVotingResourceRepository, daoSbtSettings);
-    }
 
     public static List<DaoVotingResource> getDaoVotingResources(String daoId, String daoTypeTag,
                                                                 String strategyId,
@@ -132,6 +66,53 @@ public class VotingPowerQueryService {
         }
 
         return daoVotingResources;
+    }
+
+    public GetVotingPowerResponse getAccountVotingPower(String accountAddress, String daoId, String proposalNumber) {
+        AccountAddress addressObj = AccountAddressUtils.create(accountAddress);// make sure it is legal
+        Optional<Proposal> proposal = proposalRepository.findById(new ProposalId(daoId, proposalNumber));
+        if (!proposal.isPresent()) {
+            return null;
+        }
+        return getAccountVotingPowerByStateRoot(addressObj, daoId, proposalNumber, proposal.get().getBlockStateRoot());
+    }
+
+    private GetVotingPowerResponse getAccountVotingPowerByStateRoot(AccountAddress accountAddress,
+                                                                    String daoId,
+                                                                    String proposalNumber,
+                                                                    String stateRoot) {
+        BigInteger totalVotingPower = BigInteger.ZERO;
+        GetVotingPowerResponse r = new GetVotingPowerResponse();
+        List<DaoVotingResource> daoVotingResources = getDaoVotingResources(daoId, proposalNumber);
+        List<GetVotingPowerResponse.VotingPowerDetail> details = new ArrayList<>();
+        for (DaoVotingResource daoVotingResource : daoVotingResources) {
+            GetVotingPowerResponse.VotingPowerDetail detail = new GetVotingPowerResponse.VotingPowerDetail();
+            BigInteger detailVotingPower = getResourceFieldAsBigInteger(jsonRpcClient, stateRoot,
+                    AccountAddressUtils.hex(accountAddress), daoVotingResource.getResourceStructTag(),
+                    daoVotingResource.getVotingPowerBcsPath());
+
+            detail.setSequenceId(daoVotingResource.getDaoVotingResourceId().getSequenceId());
+            detail.setResourceStructTag(daoVotingResource.getResourceStructTag());
+            detail.setPower(detailVotingPower);
+            details.add(detail);
+            totalVotingPower = totalVotingPower.add(detailVotingPower);
+        }
+        r.setDetails(details);
+        r.setTotalVotingPower(totalVotingPower);
+        return r;
+    }
+
+    private List<DaoVotingResource> getDaoVotingResources(String daoId,
+                                                          String proposalNumber// ignored proposalNumber!
+    ) {
+        Dao dao = daoRepository.findById(daoId).orElseThrow(() -> new IllegalStateException("Dao not found."));
+        DaoStrategy daoStrategy = daoStrategyService.getPrimaryDaoStrategy(daoId);
+        String strategyId = daoStrategy != null ? daoStrategy.getDaoStrategyId().getStrategyId() : null;
+        return getDaoVotingResources(daoId, dao.getDaoTypeTag(), strategyId);
+    }
+
+    public List<DaoVotingResource> getDaoVotingResources(String daoId, String daoTypeTag, String strategyId) {
+        return getDaoVotingResources(daoId, daoTypeTag, strategyId, daoVotingResourceRepository, daoSbtSettings);
     }
 
 }

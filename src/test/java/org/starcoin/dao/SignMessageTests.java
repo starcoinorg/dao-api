@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novi.serde.DeserializationError;
 import com.novi.serde.SerializationError;
 import org.junit.jupiter.api.Test;
-import org.starcoin.dao.api.utils.JsonRpcClient;
+import org.starcoin.dao.utils.JsonRpcClient;
 import org.starcoin.dao.vo.CastVoteVO;
 import org.starcoin.types.AccountResource;
 import org.starcoin.types.ChainId;
