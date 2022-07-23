@@ -233,8 +233,6 @@ public class DaoController {
     public BigInteger getDaoStrategyCirculatingVotingPowerSupply(@RequestParam("stateRoot") String stateRoot,
                                                       @RequestParam("daoId") String daoId,
                                                       @RequestParam("strategyId") String strategyId) {
-        // Insert test data into the database:
-        daoStrategyService.createStcDaoStrategy(daoId, 0, new BigDecimal("0.04"), DaoStrategy.DAO_STRATEGY_TYPE_OFF_CHAIN);
         return daoStrategyService.getCirculatingVotingPowerSupply(stateRoot, daoId, strategyId);
     }
 }
