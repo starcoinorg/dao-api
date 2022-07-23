@@ -8,6 +8,7 @@ import org.starcoin.dao.data.model.*;
 import org.starcoin.dao.data.repo.DaoStrategyLockedVotingPowerRepository;
 import org.starcoin.dao.data.repo.DaoStrategyRepository;
 import org.starcoin.dao.utils.JsonRpcClient;
+import org.starcoin.dao.vo.CirculatingVotingPowerAndVotingTurnoutThreshold;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -84,9 +85,16 @@ public class DaoStrategyService {
         return getCirculatingVotingPowerAndVotingTurnoutThreshold(stateRoot, daoId, strategyId).getItem1();
     }
 
-    public Pair<BigInteger, BigInteger> getCurrentCirculatingVotingPowerAndVotingTurnoutThreshold(String daoId, String strategyId) {
-        String stateRoot = jsonRpcClient.getCurrentChainStateRoot();
-        return getCirculatingVotingPowerAndVotingTurnoutThreshold(stateRoot, daoId, strategyId);
+    public CirculatingVotingPowerAndVotingTurnoutThreshold getCurrentCirculatingVotingPowerAndVotingTurnoutThreshold(String daoId, String strategyId) {
+        Pair<Long, String> hnr = jsonRpcClient.getCurrentChainHeightStateRoot();
+        String stateRoot = hnr.getItem2();
+        CirculatingVotingPowerAndVotingTurnoutThreshold t = new CirculatingVotingPowerAndVotingTurnoutThreshold();
+        t.setHeight(hnr.getItem1());
+        t.setStateRoot(hnr.getItem2());
+        Pair<BigInteger, BigInteger> p = getCirculatingVotingPowerAndVotingTurnoutThreshold(stateRoot, daoId, strategyId);
+        t.setCirculatingVotingPower(p.getItem1());
+        t.setVotingTurnoutThreshold(p.getItem2());
+        return t;
     }
 
     public Pair<BigInteger, BigInteger> getCirculatingVotingPowerAndVotingTurnoutThreshold(String stateRoot, String daoId, String strategyId) {

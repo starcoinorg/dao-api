@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.starcoin.dao.data.model.*;
 import org.starcoin.dao.data.repo.ProposalRepository;
 import org.starcoin.dao.data.repo.ProposalVotingChoiceRepository;
+import org.starcoin.dao.utils.JsonRpcClient;
 
 import java.math.BigInteger;
 
@@ -26,6 +27,9 @@ public class ProposalService {
 
     @Autowired
     private DaoStrategyService daoStrategyService;
+
+    @Autowired
+    private JsonRpcClient jsonRpcClient;
 
     public Page<Proposal> findPaginatedByDaoId(String daoId, Pageable pageable) {
         Proposal proposal = new Proposal();
@@ -72,7 +76,12 @@ public class ProposalService {
         }
     }
 
-    public void updateVotingTurnoutThreshold(String daoId, String proposalNumber, String stateRoot, String strategyId) {
+    public void updateVotingTurnoutThresholdByCurrentStateRoot(String daoId, String proposalNumber, String strategyId) {
+        Pair<Long, String> p = jsonRpcClient.getCurrentChainHeightStateRoot();
+        updateVotingTurnoutThreshold(daoId, proposalNumber, p.getItem1(), p.getItem2(), strategyId);
+    }
+
+    private void updateVotingTurnoutThreshold(String daoId, String proposalNumber, Long height, String stateRoot, String strategyId) {
         Proposal proposal = proposalRepository.findById(new ProposalId(daoId, proposalNumber)).orElse(null);
         if (proposal == null) {
             LOG.info("proposal not found, daoId: {}, proposalNumber: {}", daoId, proposalNumber);
@@ -81,6 +90,8 @@ public class ProposalService {
         Pair<BigInteger, BigInteger> pair = daoStrategyService.getCirculatingVotingPowerAndVotingTurnoutThreshold(stateRoot, daoId, strategyId);
         proposal.setCirculatingVotingPower(pair.getItem1());
         proposal.setVotingTurnoutThreshold(pair.getItem2());
+        proposal.setBlockHeight(height);
+        proposal.setBlockStateRoot(stateRoot);
         proposalRepository.save(proposal);
     }
 }

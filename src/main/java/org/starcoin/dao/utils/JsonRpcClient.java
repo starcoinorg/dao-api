@@ -4,6 +4,7 @@ import com.novi.serde.DeserializationError;
 import org.starcoin.bean.ChainInfo;
 import org.starcoin.bean.Event;
 import org.starcoin.bean.RpcStateWithProof;
+import org.starcoin.dao.data.model.Pair;
 import org.starcoin.jsonrpc.client.JSONRPC2Session;
 import org.starcoin.types.AccountResource;
 import org.starcoin.utils.JsonRpcClientUtils;
@@ -48,8 +49,10 @@ public class JsonRpcClient {
         return JsonRpcClientUtils.getAccountResource(this.jsonRpcSession, accountAddress);
     }
 
-    public String getCurrentChainStateRoot() {
+    public Pair<Long, String> getCurrentChainHeightStateRoot() {
         ChainInfo chainInfo = JsonRpcClientUtils.getChainInfo(this.jsonRpcSession);
-        return chainInfo.getHeader().getStateRoot();
+        Long h = chainInfo.getHeader().getHeight();
+        String sr = chainInfo.getHeader().getStateRoot();
+        return new Pair<>(h, sr);
     }
 }

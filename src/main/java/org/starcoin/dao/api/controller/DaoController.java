@@ -14,10 +14,7 @@ import org.starcoin.dao.api.hateoas.event.PaginatedResultsRetrievedEvent;
 import org.starcoin.dao.data.model.*;
 import org.starcoin.dao.data.repo.*;
 import org.starcoin.dao.service.*;
-import org.starcoin.dao.vo.CastVoteRequest;
-import org.starcoin.dao.vo.DaoVO;
-import org.starcoin.dao.vo.GetVotingPowerResponse;
-import org.starcoin.dao.vo.ProposalVO;
+import org.starcoin.dao.vo.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -198,6 +195,15 @@ public class DaoController {
         proposalService.addOrUpdateProposal(proposal);
     }
 
+
+    @PostMapping("updateProposalVotingTurnoutThreshold")
+    public void updateProposalVotingTurnoutThreshold(@RequestParam("daoId") String daoId,
+                                                     @RequestParam("proposalNumber") String proposalNumber,
+                                                     @RequestParam("strategyId") String strategyId) {
+
+        proposalService.updateVotingTurnoutThresholdByCurrentStateRoot(daoId, proposalNumber, strategyId);
+    }
+
     @ApiOperation("Add or update a proposal voting choice")
     @PutMapping("daos/{daoId}/proposals/{proposalNumber}/proposalVotingChoices/{choiceSequenceId}")
     public void putProposalVotingChoice(@PathVariable("daoId") String daoId,
@@ -260,9 +266,9 @@ public class DaoController {
     }
 
     @GetMapping("getDaoStrategyCurrentCirculatingVotingPowerAndVotingTurnoutThreshold")
-    public BigInteger[] getDaoStrategyCurrentCirculatingVotingPowerAndVotingTurnoutThreshold(@RequestParam("daoId") String daoId,
-                                                                                             @RequestParam("strategyId") String strategyId) {
-        Pair<BigInteger, BigInteger> pair = daoStrategyService.getCurrentCirculatingVotingPowerAndVotingTurnoutThreshold(daoId, strategyId);
-        return new BigInteger[]{pair.getItem1(), pair.getItem2()};
+    public CirculatingVotingPowerAndVotingTurnoutThreshold getDaoStrategyCurrentCirculatingVotingPowerAndVotingTurnoutThreshold(
+            @RequestParam("daoId") String daoId,
+            @RequestParam("strategyId") String strategyId) {
+        return daoStrategyService.getCurrentCirculatingVotingPowerAndVotingTurnoutThreshold(daoId, strategyId);
     }
 }
