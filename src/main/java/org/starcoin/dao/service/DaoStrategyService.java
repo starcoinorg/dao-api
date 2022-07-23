@@ -81,16 +81,21 @@ public class DaoStrategyService {
     }
 
     public BigInteger getVotingTurnoutThreshold(String stateRoot, String daoId, String strategyId) {
+        return getCirculatingVotingPowerAndVotingTurnoutThreshold(stateRoot, daoId, strategyId).getItem1();
+    }
+
+    public Pair<BigInteger, BigInteger> getCirculatingVotingPowerAndVotingTurnoutThreshold(String stateRoot, String daoId, String strategyId) {
         DaoStrategyId daoStrategyId = new DaoStrategyId(daoId, strategyId);
         DaoStrategy daoStrategy = daoStrategyRepository.findById(daoStrategyId).orElse(null);
         if (daoStrategy == null) {
-            return BigInteger.ZERO;
+            return new Pair<>(BigInteger.ZERO, BigInteger.ZERO);
         }
         BigInteger votingPowerSupply = getVotingPowerSupply(stateRoot, daoStrategy);
         BigInteger circulatingVotingPowerSupply = votingPowerSupply.subtract(
                 getLockedVotingPowerSupply(stateRoot, daoId, strategyId));
-        return new BigDecimal(circulatingVotingPowerSupply)
+        BigInteger votingTurnoutThreshold = new BigDecimal(circulatingVotingPowerSupply)
                 .multiply(daoStrategy.getVotingTurnoutThresholdRate()).toBigInteger();
+        return new Pair<>(circulatingVotingPowerSupply, votingTurnoutThreshold);
     }
 
     private BigInteger getVotingPowerSupply(String stateRoot, DaoStrategy daoStrategy) {

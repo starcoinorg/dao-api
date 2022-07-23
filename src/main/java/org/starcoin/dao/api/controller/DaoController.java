@@ -250,4 +250,12 @@ public class DaoController {
                                                            @RequestParam("strategyId") String strategyId) {
         return daoStrategyService.getVotingTurnoutThreshold(stateRoot, daoId, strategyId);
     }
+
+    @GetMapping("getDaoStrategyCirculatingVotingPowerAndVotingTurnoutThreshold")
+    public BigInteger[] getDaoStrategyCirculatingVotingPowerAndVotingTurnoutThreshold(@RequestParam("stateRoot") String stateRoot,
+                                                           @RequestParam("daoId") String daoId,
+                                                           @RequestParam("strategyId") String strategyId) {
+        Pair<BigInteger, BigInteger> pair = daoStrategyService.getCirculatingVotingPowerAndVotingTurnoutThreshold(stateRoot, daoId, strategyId);
+        return new BigInteger[]{pair.getItem1(), pair.getItem2()};
+    }
 }
