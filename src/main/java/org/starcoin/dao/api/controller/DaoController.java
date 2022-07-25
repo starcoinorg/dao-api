@@ -243,11 +243,11 @@ public class DaoController {
         return daoStrategyService.getVotingPowerSupply(stateRoot, daoId, strategyId);
     }
 
-    @GetMapping("getDaoStrategyCirculatingVotingPowerSupply")
-    public BigInteger getDaoStrategyCirculatingVotingPowerSupply(@RequestParam("stateRoot") String stateRoot,
-                                                                 @RequestParam("daoId") String daoId,
-                                                                 @RequestParam("strategyId") String strategyId) {
-        return daoStrategyService.getCirculatingVotingPowerSupply(stateRoot, daoId, strategyId);
+    @GetMapping("getDaoStrategyCirculatingVotingPower")
+    public BigInteger getDaoStrategyCirculatingVotingPower(@RequestParam("stateRoot") String stateRoot,
+                                                           @RequestParam("daoId") String daoId,
+                                                           @RequestParam("strategyId") String strategyId) {
+        return daoStrategyService.getCirculatingVotingPower(stateRoot, daoId, strategyId);
     }
 
     @GetMapping("getDaoStrategyVotingTurnoutThreshold")

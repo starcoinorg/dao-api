@@ -108,12 +108,12 @@ public class DaoStrategyService {
 
     public Pair<BigInteger, BigInteger> getCirculatingVotingPowerAndVotingTurnoutThreshold(String stateRoot, DaoStrategy daoStrategy) {
         BigInteger votingPowerSupply = getVotingPowerSupply(stateRoot, daoStrategy);
-        BigInteger circulatingVotingPowerSupply = votingPowerSupply.subtract(
+        BigInteger circulatingVotingPower = votingPowerSupply.subtract(
                 getLockedVotingPowerSupply(stateRoot, daoStrategy.getDaoStrategyId().getDaoId(),
                         daoStrategy.getDaoStrategyId().getStrategyId()));
-        BigInteger votingTurnoutThreshold = new BigDecimal(circulatingVotingPowerSupply)
+        BigInteger votingTurnoutThreshold = new BigDecimal(circulatingVotingPower)
                 .multiply(daoStrategy.getVotingTurnoutThresholdRate()).toBigInteger();
-        return new Pair<>(circulatingVotingPowerSupply, votingTurnoutThreshold);
+        return new Pair<>(circulatingVotingPower, votingTurnoutThreshold);
     }
 
     private BigInteger getVotingPowerSupply(String stateRoot, DaoStrategy daoStrategy) {
@@ -122,7 +122,7 @@ public class DaoStrategyService {
                 daoStrategy.getVotingPowerSupplyBcsPath());
     }
 
-    public BigInteger getCirculatingVotingPowerSupply(String stateRoot, String daoId, String strategyId) {
+    public BigInteger getCirculatingVotingPower(String stateRoot, String daoId, String strategyId) {
         BigInteger votingPowerSupply = getVotingPowerSupply(stateRoot, daoId, strategyId);
         return votingPowerSupply.subtract(getLockedVotingPowerSupply(stateRoot, daoId, strategyId));
     }
