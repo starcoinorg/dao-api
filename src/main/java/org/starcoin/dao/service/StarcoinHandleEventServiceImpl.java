@@ -4,6 +4,7 @@ import com.novi.serde.DeserializationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.starcoin.bean.Event;
+import org.starcoin.dao.data.model.DaoMember;
 import org.starcoin.dao.types.event.*;
 
 import java.util.HashMap;
@@ -43,7 +44,10 @@ public class StarcoinHandleEventServiceImpl extends AbstractStarcoinHandleEventS
 
             @Override
             public void handle(Event event, MemberJoinEvent eventData) {
-                daoMemberService.addIfNotExists(EventUtils.toDaoMember(eventData));
+                DaoMember daoMember = EventUtils.toDaoMember(eventData);
+                daoMember.setJoinedAtBlockHeight(Long.parseLong(event.getBlockNumber()));
+                //todo add or update Dao Member
+                daoMemberService.addIfNotExists(daoMember);
             }
         });
 

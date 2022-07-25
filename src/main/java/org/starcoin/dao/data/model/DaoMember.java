@@ -31,6 +31,27 @@ public class DaoMember {
     @Column(precision = 50, scale = 0)
     private BigInteger sbtAmount;
 
+    @Column
+    private Long joinedAtBlockHeight;
+
+    @Column
+    private Long quitAtBlockHeight;
+
+    @Column
+    private Boolean deactivated;
+
+    @Column(length = 70)
+    private String createdBy;
+
+    @Column(length = 70)
+    private String updatedBy;
+
+    @Column
+    private Long createdAt;
+
+    @Column
+    private Long updatedAt;
+
     public DaoMemberId getDaoMemberId() {
         return daoMemberId;
     }
@@ -53,5 +74,61 @@ public class DaoMember {
 
     public void setSbtAmount(BigInteger sbtAmount) {
         this.sbtAmount = sbtAmount;
+    }
+
+    public Long getJoinedAtBlockHeight() {
+        return joinedAtBlockHeight;
+    }
+
+    public void setJoinedAtBlockHeight(Long joinedAtBlockHeight) {
+        this.joinedAtBlockHeight = joinedAtBlockHeight;
+    }
+
+    public Long getQuitAtBlockHeight() {
+        return quitAtBlockHeight;
+    }
+
+    public void setQuitAtBlockHeight(Long quitAtBlockHeight) {
+        this.quitAtBlockHeight = quitAtBlockHeight;
+    }
+
+    public Boolean getDeactivated() {
+        return deactivated;
+    }
+
+    public void setDeactivated(Boolean deactivated) {
+        this.deactivated = deactivated;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Long updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
