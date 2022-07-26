@@ -25,6 +25,24 @@ public class EventUtils {
         return daoMember;
     }
 
+    public static DaoMember toDaoMember(MemberQuitEvent e) {
+        DaoMember daoMember = new DaoMember();
+        daoMember.setDaoMemberId(new DaoMemberId(e.dao_id.toString(), AccountAddressUtils.hex(e.address)));
+        daoMember.setOnChainMemberId(e.member_id);
+        daoMember.setSbtAmount(e.sbt);
+        daoMember.setDeactivated(true);
+        return daoMember;
+    }
+
+    public static DaoMember toDaoMember(MemberRevokeEvent e) {
+        DaoMember daoMember = new DaoMember();
+        daoMember.setDaoMemberId(new DaoMemberId(e.dao_id.toString(), AccountAddressUtils.hex(e.address)));
+        daoMember.setOnChainMemberId(e.member_id);
+        daoMember.setSbtAmount(e.sbt);
+        daoMember.setDeactivated(true);
+        return daoMember;
+    }
+
     public static Proposal toProposal(ProposalCreatedEventV2 e) {
         Proposal proposal = new Proposal();
         proposal.setProposalId(new ProposalId(e.dao_id.toString(), e.proposal_id.toString()));
@@ -42,4 +60,5 @@ public class EventUtils {
         accountVote.setVotingPower(e.vote_weight);
         return accountVote;
     }
+
 }

@@ -54,7 +54,7 @@ public class ProposalService {
         }
     }
 
-    public void addIfNotExists(Proposal proposal) {
+    public void addProposalIfNotExists(Proposal proposal) {
         ProposalId proposalId = proposal.getProposalId();
         Proposal p = proposalRepository.findById(proposalId).orElse(null);
         if (p == null) {

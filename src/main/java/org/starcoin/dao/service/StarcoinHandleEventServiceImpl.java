@@ -32,7 +32,7 @@ public class StarcoinHandleEventServiceImpl extends AbstractStarcoinHandleEventS
 
             @Override
             public void handle(Event event, DaoCreatedEvent eventData) {
-                daoService.addIfNotExists(EventUtils.toDao(eventData));
+                daoService.addDaoIfNotExists(EventUtils.toDao(eventData));
             }
         });
 
@@ -46,8 +46,35 @@ public class StarcoinHandleEventServiceImpl extends AbstractStarcoinHandleEventS
             public void handle(Event event, MemberJoinEvent eventData) {
                 DaoMember daoMember = EventUtils.toDaoMember(eventData);
                 daoMember.setJoinedAtBlockHeight(Long.parseLong(event.getBlockNumber()));
-                //todo add or update Dao Member
-                daoMemberService.addIfNotExists(daoMember);
+                daoMemberService.addOrUpdate(daoMember);
+            }
+        });
+
+        eventHandlerMap.put(starcoinEventFilter.getMemberQuitEventTypeTag(), new EventHandler<MemberQuitEvent>() {
+            @Override
+            public MemberQuitEvent bcsDeserializeEventData(byte[] eventData) throws DeserializationError {
+                return MemberQuitEvent.bcsDeserialize(eventData);
+            }
+
+            @Override
+            public void handle(Event event, MemberQuitEvent eventData) {
+                DaoMember daoMember = EventUtils.toDaoMember(eventData);
+                daoMember.setQuitAtBlockHeight(Long.parseLong(event.getBlockNumber()));
+                daoMemberService.daoMemberQuit(daoMember);
+            }
+        });
+
+        eventHandlerMap.put(starcoinEventFilter.getMemberRevokeEventTypeTag(), new EventHandler<MemberRevokeEvent>() {
+            @Override
+            public MemberRevokeEvent bcsDeserializeEventData(byte[] eventData) throws DeserializationError {
+                return MemberRevokeEvent.bcsDeserialize(eventData);
+            }
+
+            @Override
+            public void handle(Event event, MemberRevokeEvent eventData) {
+                DaoMember daoMember = EventUtils.toDaoMember(eventData);
+                daoMember.setQuitAtBlockHeight(Long.parseLong(event.getBlockNumber()));
+                daoMemberService.revokeDaoMember(daoMember);
             }
         });
 
@@ -59,7 +86,7 @@ public class StarcoinHandleEventServiceImpl extends AbstractStarcoinHandleEventS
 
             @Override
             public void handle(Event event, ProposalCreatedEventV2 eventData) {
-                proposalService.addIfNotExists(EventUtils.toProposal(eventData));
+                proposalService.addProposalIfNotExists(EventUtils.toProposal(eventData));
             }
         });
 

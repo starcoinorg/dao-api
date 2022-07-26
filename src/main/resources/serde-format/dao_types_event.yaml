@@ -19,8 +19,22 @@ MemberJoinEvent:
         TYPENAME: AccountAddress
     - sbt: U128
 
-#MemberRevokeEvent:
-#MemberQuitEvent:
+MemberRevokeEvent:
+  STRUCT:
+    - dao_id: U64
+    - member_id: U64
+    - address:
+        TYPENAME: AccountAddress
+    - sbt: U128
+
+MemberQuitEvent:
+  STRUCT:
+    - dao_id: U64
+    - member_id: U64
+    - address:
+        TYPENAME: AccountAddress
+    - sbt: U128
+
 
 # DAOSpace Proposal Created Event
 ProposalCreatedEventV2:

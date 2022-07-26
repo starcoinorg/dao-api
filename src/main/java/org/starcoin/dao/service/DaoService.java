@@ -29,7 +29,7 @@ public class DaoService {
         }
     }
 
-    public void addIfNotExists(Dao dao) {
+    public void addDaoIfNotExists(Dao dao) {
         String daoId = dao.getDaoId();
         Dao d = daoRepository.findById(daoId).orElse(null);
         if (d == null) {

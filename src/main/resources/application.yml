@@ -52,7 +52,9 @@ starcoin:
   event-filter:
     addresses: 0x00000000000000000000000000000001
   dao:
-    dao-created-event-type-tag: "0x00000000000000000000000000000001::GenesisDao::DaoCreatedEvent"
-    member-join-event-type-tag: "0x00000000000000000000000000000001::GenesisDao::MemberJoinEvent"
-    proposal-created-event-type-tag: "0x00000000000000000000000000000001::GenesisDao::ProposalCreatedEvent"
-    voted-event-type-tag: "0x00000000000000000000000000000001::GenesisDao::VotedEvent"
+    dao-created-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::DaoCreatedEvent"
+    member-join-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::MemberJoinEvent"
+    member-quit-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::MemberQuitEvent"
+    member-revoke-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::MemberRevokeEvent"
+    proposal-created-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::ProposalCreatedEvent"
+    voted-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::VotedEvent"
