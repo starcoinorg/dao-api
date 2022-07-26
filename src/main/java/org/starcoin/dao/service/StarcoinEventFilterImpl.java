@@ -51,6 +51,8 @@ public class StarcoinEventFilterImpl implements StarcoinEventFilter {
         return Arrays.asList(
                 daoCreatedEventTypeTag,
                 memberJoinEventTypeTag,
+                memberQuitEventTypeTag,
+                memberRevokeEventTypeTag,
                 proposalCreatedEventTypeTag,
                 votedEventTypeTag);
     }
