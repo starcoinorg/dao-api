@@ -10,10 +10,7 @@ import org.web3j.protocol.Web3jService;
 import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.methods.response.EthSubscribe;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class StarcoinEventSubscriber {
@@ -29,6 +26,13 @@ public class StarcoinEventSubscriber {
     }
 
     private List<Map<String, Object>> createEventFilterList() {
+        if (starcoinEventFilter.getAddresses() == null || starcoinEventFilter.getAddresses().isEmpty()) {
+            Map<String, Object> eventFilter = new HashMap<>();
+            eventFilter.put("addr", null);
+            eventFilter.put("type_tags", starcoinEventFilter.getEventTypeTags());
+            //eventFilter.put("decode", true);
+            return Collections.singletonList(eventFilter);
+        }
         return starcoinEventFilter.getAddresses().stream().map(addr -> {
             Map<String, Object> eventFilter = new HashMap<>();
             eventFilter.put("addr", addr);
@@ -48,15 +52,15 @@ public class StarcoinEventSubscriber {
 
     private List<Flowable<EventNotification>> eventNotificationFlowableList() {
         return createEventFilterList().stream().map(eventFilter ->
-                web3jService.subscribe(
-                        new Request<>(
-                                "starcoin_subscribe",
-                                Arrays.asList(Kind.Events, eventFilter),
-                                web3jService,
-                                EthSubscribe.class),
-                        "starcoin_unsubscribe",
-                        EventNotification.class)
-        ).collect(Collectors.toList());
+                        web3jService.subscribe(
+                                new Request<>(
+                                        "starcoin_subscribe",
+                                        Arrays.asList(Kind.Events, eventFilter),
+                                        web3jService,
+                                        EthSubscribe.class),
+                                "starcoin_unsubscribe",
+                                EventNotification.class))
+                .collect(Collectors.toList());
     }
 
 
