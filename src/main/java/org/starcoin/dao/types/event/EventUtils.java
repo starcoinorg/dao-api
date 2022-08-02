@@ -14,6 +14,7 @@ public class EventUtils {
         dao.setDaoId(e.id.toString());
         dao.setName(new String(e.name.content(), StandardCharsets.UTF_8));
         dao.setOnChainAddress(AccountAddressUtils.hex(e.dao_address));
+        dao.setDescription(dao.getName()); // must not null
         return dao;
     }
 

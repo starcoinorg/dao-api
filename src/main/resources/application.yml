@@ -46,13 +46,13 @@ starcoin:
   dao-sbt-resource-struct-tag-format: ${STARCOIN_DAO_SBT_RESOURCE_STRUCT_TAG_FORMAT}
   identifier-nft-sbt-value-bcs-path: ${STARCOIN_IDENTIFIER_NFT_SBT_VALUE_BCS_PATH}
   pulling-event-task-execute:
-    fixed-delay: 20000
+    fixed-delay: 10000
   pulling-event-task-auto-create:
-    fixed-delay: 60000
+    fixed-delay: 30000
   event-filter:
-    addresses: 0x00000000000000000000000000000001
+    addresses: null
   dao:
-    dao-created-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::DaoCreatedEvent"
+    dao-created-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::DAOCreatedEvent"
     member-join-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::MemberJoinEvent"
     member-quit-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::MemberQuitEvent"
     member-revoke-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::MemberRevokeEvent"
