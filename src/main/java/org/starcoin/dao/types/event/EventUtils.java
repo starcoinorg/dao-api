@@ -50,6 +50,7 @@ public class EventUtils {
         proposal.setSubmittedBy(AccountAddressUtils.hex(e.proposer));
         proposal.setVotingType(VotingType.STANDARD);
         proposal.setVotingMethod(Proposal.VOTING_METHOD_ON_CHAIN);
+        proposal.setTitle(String.format("<UNTITLED>%s:%s", e.dao_id, e.proposal_id));
         return proposal;
     }
 

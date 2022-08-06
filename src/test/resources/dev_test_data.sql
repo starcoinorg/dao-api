@@ -421,3 +421,28 @@ UPDATE `proposal` SET `voting_period_end` = '1658664000000' WHERE (`dao_id` = 's
 UPDATE `proposal` SET `voting_period_end` = '1658664000000' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1');
 
 UPDATE `proposal_voting_choice` SET `title` = 'Multiplier should be x30' WHERE (`dao_id` = 'starswap_dao') and (`proposal_number` = '1') and (`sequence_id` = '0');
+
+
+-- ---------------- insert test data into pulling_event_task ------------------
+INSERT INTO `pulling_event_task` (
+    `from_block_number`,
+    `to_block_number`,
+    `version`,
+    `created_at`,
+    `created_by`,
+    `updated_at`,
+    `updated_by`,
+    `status`
+) VALUES (
+    '31709',
+    '31709',
+    '0',
+    UNIX_TIMESTAMP()*1000,
+    'admin',
+    UNIX_TIMESTAMP()*1000,
+    'admin',
+    'CREATED'
+);
+
+
+
