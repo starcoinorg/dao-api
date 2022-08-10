@@ -445,4 +445,65 @@ INSERT INTO `pulling_event_task` (
 );
 
 
+-- ----------------- insert test propoal ------------------
+INSERT INTO `proposal`
+(`dao_id`,
+`proposal_number`,
+`block_state_root`,
+`block_height`,
+`description`,
+`title`,
+`voting_period_end`,
+`voting_period_start`,
+`voting_type`,
+`submitted_at`,
+`submitted_by`,
+`voting_method`,
+`circulating_voting_power`,
+`voting_turnout_threshold`
+) VALUES (
+'starswap_dao',
+'2',
+'0x561dd037d47b6de49f913440dcb6d321f9740a7a3d006671504f3a8c74a0b9ca',
+'6888260',
+'When Starswap initially applied for the STAR buyback Grant, the plan was to set the 1 million STC buyback period to one year. In recent community discussions, some community users proposed to adjust the buyback period.\n\nThe buyback period and the daily cumulative bought-back STARs are the two most important indicators in the STAR buyback process. The final buyback period of 1 million STC Grant will be decided by this voting.\n\n| Choice   | Buyback Period | Bought-back STARs per Day(equivalent to STC) |\n| -------- | -------------- | -------------------------------------------- |\n| Choice 1 | 365 days       | 2741                                         |\n| Choice 2 | 270 days       | 3703                                         |\n| Choice 3 | 180 days       | 5555                                         |\n\n',
+'Proposal for Starswap STAR Buyback Period',
+'1656676800000',
+'1658318400000',
+'SINGLE_CHOICE',
+'1657109961000',
+'0xd117638e105403784bf6A92AA1276Ec1',
+'OFF_CHAIN',
+'383351685143768',
+'38335168514376'
+);
+
+UPDATE `proposal`
+SET
+  `block_state_root` = '0x5bd8f8934ea0510a0a68dd82a1164fbe6570a153251653e1a05a1342195c1605',
+  `block_height` = '7246693'
+WHERE
+  (`dao_id` = 'starswap_dao') and (`proposal_number` = '2');
+
+
+UPDATE `proposal`
+SET
+    `submitted_at` = UNIX_TIMESTAMP() * 1000,
+    `voting_period_start` = UNIX_TIMESTAMP() * 1000,
+    `voting_period_end` = UNIX_TIMESTAMP('2022-08-15 04:00:00') * 1000
+WHERE
+    (`dao_id` = 'starswap_dao')
+        AND (`proposal_number` = '2');
+        
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '2', '0', 'Buyback Period 365 days');
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '2', '1', 'Buyback Period 270 days');
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '2', '2', 'Buyback Period 180 days');
+
+UPDATE `proposal`
+SET
+  `circulating_voting_power` = '495054294041587',
+  `voting_turnout_threshold` = '148516288212476'
+WHERE
+  (`dao_id` = 'starswap_dao') and (`proposal_number` = '2');
+
 
