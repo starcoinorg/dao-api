@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: dao-api-dev
-          image: ghcr.io/starcoinorg/starcoin_dao_api:sha-a6d26ec
+          image: ghcr.io/starcoinorg/starcoin_dao_api:sha-25da095
           ports:
             - containerPort: 8600
           env:
@@ -46,4 +46,18 @@ spec:
                 secretKeyRef:
                   name: http-basic-auth
                   key: auth
-
+            - name: INFURA_IPFS_API_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: infura-ipfs-api-secrets
+                  key: apiEndpoint
+            - name: INFURA_IPFS_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: infura-ipfs-api-secrets
+                  key: projectId
+            - name: INFURA_IPFS_PROJECT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: infura-ipfs-api-secrets
+                  key: projectSecret
