@@ -18,6 +18,7 @@ import org.starcoin.dao.vo.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
@@ -65,6 +66,9 @@ public class DaoController {
 
     @Resource
     private DaoService daoService;
+
+    @Resource
+    private InfuraIPFSService infuraIPFSService;
 
     private static String[] splitByComma(String str, int expectedCount) {
         String[] a = str.split(",");
@@ -270,5 +274,23 @@ public class DaoController {
             @RequestParam("daoId") String daoId,
             @RequestParam("strategyId") String strategyId) {
         return daoStrategyService.getCurrentCirculatingVotingPowerAndVotingTurnoutThreshold(daoId, strategyId);
+    }
+
+    @PostMapping("descDaoOnIPFS")
+    public @ResponseBody String descDaoOnIPFS(@RequestBody DaoDescriptor desc) {
+        try {
+            return infuraIPFSService.add(desc);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("daoDescriptor", e);
+        }
+    }
+
+    @PostMapping("descProposalOnIPFS")
+    public @ResponseBody String descProposalOnIPFS(@RequestBody ProposalDescriptor desc) {
+        try {
+            return infuraIPFSService.add(desc);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("daoDescriptor", e);
+        }
     }
 }

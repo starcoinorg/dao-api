@@ -58,3 +58,10 @@ starcoin:
     member-revoke-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::MemberRevokeEvent"
     proposal-created-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::ProposalCreatedEvent"
     voted-event-type-tag: "0x00000000000000000000000000000001::DAOSpace::VotedEvent"
+
+infura:
+  ipfs:
+    api-endpoint: ${INFURA_IPFS_API_ENDPOINT}
+    project-id: ${INFURA_IPFS_PROJECT_ID}
+    project-secret: ${INFURA_IPFS_PROJECT_SECRET}
+

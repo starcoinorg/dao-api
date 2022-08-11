@@ -31,6 +31,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(HttpMethod.HEAD, "/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/v1/castVote").permitAll()
+                .antMatchers(HttpMethod.POST, "/v1/descDaoOnIPFS").permitAll()
+                .antMatchers(HttpMethod.POST, "/v1/descProposalOnIPFS").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
