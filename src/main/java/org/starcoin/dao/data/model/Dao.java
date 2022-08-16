@@ -84,6 +84,12 @@ public class Dao implements Serializable {
     @Column
     private Long updatedAt;
 
+    /**
+     * Is this DAO created On-Chain.
+     */
+    @Column
+    private Boolean createdOnChain;
+
     public String getDaoId() {
         return daoId;
     }
@@ -235,5 +241,13 @@ public class Dao implements Serializable {
 
     public void setUpdatedAt(Long updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Boolean getCreatedOnChain() {
+        return createdOnChain;
+    }
+
+    public void setCreatedOnChain(Boolean createdOnChain) {
+        this.createdOnChain = createdOnChain;
     }
 }

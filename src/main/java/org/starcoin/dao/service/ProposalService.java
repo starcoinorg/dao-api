@@ -43,6 +43,10 @@ public class ProposalService {
         return proposalRepository.findAll(example, pageable);
     }
 
+    public Page<Proposal> findPaginated(Pageable pageable) {
+        return proposalRepository.findAll(pageable);
+    }
+
     public void addOrUpdateProposal(Proposal proposal) {
         ProposalId proposalId = proposal.getProposalId();
         Proposal p = proposalRepository.findById(proposalId).orElse(null);

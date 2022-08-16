@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.starcoin.dao.utils.BeanUtils.convertToDaoVO;
 import static org.starcoin.dao.utils.BeanUtils.convertToProposalVO;
@@ -99,10 +100,15 @@ public class DaoController {
                                        @RequestParam("page") final int page, @RequestParam("size") final int size,
                                        final UriComponentsBuilder uriBuilder, final HttpServletResponse response) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Proposal> p = proposalService.findPaginatedByDaoId(daoId, pageable);
+        Page<Proposal> p = daoId == null || daoId.isEmpty()
+                ? proposalService.findPaginated(pageable)
+                : proposalService.findPaginatedByDaoId(daoId, pageable);
         eventPublisher.publishEvent(new PaginatedResultsRetrievedEvent<>(Proposal.class, uriBuilder, response, page,
                 p.getTotalPages(), size));
-        return p.getContent();
+        //todo add cache here?
+        return p.getContent().stream()
+                .map(proposal -> convertToProposalVO(proposal, proposalVotingChoiceRepository, accountVoteRepository))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("proposals/{proposalId}")
