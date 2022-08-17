@@ -445,7 +445,7 @@ INSERT INTO `pulling_event_task` (
 );
 
 
--- ----------------- insert test propoal ------------------
+-- ----------------- insert test proposal ------------------
 INSERT INTO `proposal`
 (`dao_id`,
 `proposal_number`,
@@ -506,4 +506,56 @@ SET
 WHERE
   (`dao_id` = 'starswap_dao') and (`proposal_number` = '2');
 
+
+-- ----------------- insert test proposal ------------------
+
+INSERT INTO `proposal` (`dao_id`, `proposal_number`, `block_state_root`, `block_height`, `description`,
+  `title`, `voting_period_end`, `voting_period_start`,
+  `voting_type`, `submitted_at`,
+  `submitted_by`, `voting_method`,
+  `circulating_voting_power`, `voting_turnout_threshold`
+  ) VALUES (
+  'starswap_dao', '3',
+  '0x5bd8f8934ea0510a0a68dd82a1164fbe6570a153251653e1a05a1342195c1605',
+  '7246693',
+  'The community has voted to buyback STARs using a 1 million STC grant for a period of 270 days. The configuration will take effect when the buyback contract goes live.\n\nThe community now needs to vote on the usage of the bought-back STARs to maximize their value.\n\n| Choice   | Buyback Usage                         |\n| -------- | ------------------------------------- |\n| Choice 1 | Stake, locked for 90 days             |\n| Choice 2 | Increase STC/STAR swap pool liquidity |\n| Choice 3 | Burn                                  |\n| Choice 4 | Return to Starcoin DAO Treasury       |\n\n',
+  'Proposal for Starswap STAR Buyback Usage',
+  '1660482000000', '1660222800000',
+  'SINGLE_CHOICE', '1660120055000',
+  '0xd117638e105403784bf6A92AA1276Ec1',
+  'OFF_CHAIN',
+  '495054294041587',
+  '148516288212476'
+  );
+
+-- ----------------- update proposal block info. ------------------
+UPDATE `proposal`
+SET
+  `block_state_root` = '0x5dbcfee69ac97324430f3730891da82968932193a8b9e8c0f916fb78c03e9879',
+  `block_height` = '7368907'
+WHERE
+  (`dao_id` = 'starswap_dao') and (`proposal_number` = '3');
+
+-- ----------------- update proposal timestamps ------------------
+UPDATE `proposal`
+SET
+    `submitted_at` = UNIX_TIMESTAMP() * 1000,
+    `voting_period_start` = UNIX_TIMESTAMP() * 1000,
+    `voting_period_end` = UNIX_TIMESTAMP('2022-08-22 04:00:00') * 1000
+WHERE
+    (`dao_id` = 'starswap_dao')
+        AND (`proposal_number` = '3');
+
+-- ----------------- update proposal voting info. ------------------
+UPDATE `proposal`
+SET
+  `circulating_voting_power` = '540000000000000',
+  `voting_turnout_threshold` = '162000000000000'
+WHERE
+  (`dao_id` = 'starswap_dao') and (`proposal_number` = '3');
+
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '3', '0', 'Stake, locked for 90 days');
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '3', '1', 'Increase STC/STAR swap pool liquidity');
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '3', '2', 'Burn');
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '3', '3', 'Return to Starcoin DAO Treasury');
 
