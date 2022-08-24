@@ -540,8 +540,8 @@ WHERE
 UPDATE `proposal`
 SET
     `submitted_at` = UNIX_TIMESTAMP() * 1000,
-    `voting_period_start` = UNIX_TIMESTAMP() * 1000,
-    `voting_period_end` = UNIX_TIMESTAMP('2022-08-22 04:00:00') * 1000
+    `voting_period_start` = UNIX_TIMESTAMP('2022-08-18 04:00:00') * 1000,
+    `voting_period_end` = UNIX_TIMESTAMP('2022-08-21 04:00:00') * 1000
 WHERE
     (`dao_id` = 'starswap_dao')
         AND (`proposal_number` = '3');
