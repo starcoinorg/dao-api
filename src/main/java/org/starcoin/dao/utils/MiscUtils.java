@@ -19,6 +19,9 @@ public class MiscUtils {
                         resourceStructTag),
                 stateRoot);
         BigInteger bi = BigInteger.ZERO;
+        if (stateWithProof.getState() == null) {
+            return bi;
+        }
         byte[] state = HexUtils.hexToByteArray(stateWithProof.getState());
         if (state.length > 0) {
             Object amount;
