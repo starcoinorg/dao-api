@@ -559,3 +559,57 @@ INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`
 INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '3', '2', 'Burn');
 INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '3', '3', 'Return to Starcoin DAO Treasury');
 
+
+
+-- ------------ 2022-9-15 ------------
+
+INSERT INTO `proposal`
+(`dao_id`, `proposal_number`, `block_state_root`, `block_height`, `description`, `title`,
+`voting_period_end`, `voting_period_start`,
+`voting_type`, `submitted_at`, `submitted_by`, `voting_method`,
+`circulating_voting_power`, `voting_turnout_threshold`
+) VALUES (
+'starswap_dao',
+'4',
+'0x5bd8f8934ea0510a0a68dd82a1164fbe6570a153251653e1a05a1342195c1605',
+'7246693',
+'When the Starswap staking function was launched, it took time for the number of stakes to reach the expected TVL, and it was also necessary to reserve some bonus release space for the launch of boost and other acceleration functions, so a more conservative figure of 0.002 was chosen for the amount of releases per second, and the APR was in line with the project expectations. The overall stability of the economic model is also satisfied.\n\nSince its launched, the Stake pool results have performed steadily and the lock volume has continued to grow. In order to improve the participation of the Stake pool and to give back to the community users, it is proposed to adjust the release volume per second of the Stake pool, and the overall APR will be increased accordingly after the adjustment, for which a Starswap DAO community vote was initiated to decide the adjusted release volume.\n\n1. The reward remains the same (Current run results show that APR is attractive after boost)\n\n2. the reward is adjusted from 0.002 to 0.023, with the final result being half the amount preset in the economic model (0.023), the APR is expected to increase from a maximum of 7% to 10%-15%\n\n3. the reward is adjusted from 0.002 to 0.046, the final result is the amount preset in the economic model (0.046), the APR is expected to increase from a maximum of 7% to 20%-30%.\n\n| Choice   | Description                                                  |\n| -------- | ------------------------------------------------------------ |\n| Choice 1 | The reward remains the same                                  |\n| Choice 2 | The reward is adjusted from 0.002 to 0.023, with the final result being half the amount preset in the economic model |\n| Choice 3 | The reward is adjusted from 0.002 to 0.046, the final result is the amount preset in the economic model |\n\n\n',
+'Proposal for Starswap Stake mining reward adjustment',
+'1661140800000', '1661140800000',
+'SINGLE_CHOICE',
+'1660120055000',
+'0xd117638e105403784bf6A92AA1276Ec1',
+'OFF_CHAIN',
+'495054294041587',
+'148516288212476'
+);
+
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '4', '0', 'The reward remains the same');
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '4', '1', 'The reward is adjusted from 0.002 to 0.023');
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '4', '2', 'The reward is adjusted from 0.002 to 0.046');
+
+-- ----------------- update proposal block info. ------------------
+UPDATE `proposal`
+SET
+  `block_state_root` = '0x668d8e5b3800d86167cfdf565786de605957c09a5137b27a9c413049279d3bea',
+  `block_height` = '7860932'
+WHERE
+  (`dao_id` = 'starswap_dao') and (`proposal_number` = '4');
+
+-- ----------------- update proposal timestamps ------------------
+UPDATE `proposal`
+SET
+    `submitted_at` = UNIX_TIMESTAMP() * 1000,
+    `voting_period_start` = UNIX_TIMESTAMP('2022-09-15 12:00:00') * 1000,
+    `voting_period_end` = UNIX_TIMESTAMP('2022-09-18 12:00:00') * 1000
+WHERE
+    (`dao_id` = 'starswap_dao') AND (`proposal_number` = '4');
+
+-- ----------------- update proposal voting info. ------------------
+-- Get veSTAR amount from: https://starswap.xyz/#/stake/simulator
+UPDATE `proposal`
+SET
+  `circulating_voting_power` = '611674000000000',
+  `voting_turnout_threshold` = '183502200000000'
+WHERE
+  (`dao_id` = 'starswap_dao') and (`proposal_number` = '4');
