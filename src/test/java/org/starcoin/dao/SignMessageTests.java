@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novi.serde.DeserializationError;
 import com.novi.serde.SerializationError;
 import org.junit.jupiter.api.Test;
+import org.starcoin.bean.Checkpoints;
+import org.starcoin.bean.Resource;
 import org.starcoin.dao.utils.JsonRpcClient;
 import org.starcoin.dao.vo.CastVoteVO;
 import org.starcoin.types.AccountResource;
@@ -40,6 +42,17 @@ public class SignMessageTests {
         AccountResource accountResource = jsonRpcClient.getAccountResource("0x0000000000000000000000000a550c18");
         System.out.println(accountResource);
         System.out.println(HexUtils.byteListToHexWithPrefix(accountResource.authentication_key));
+    }
+
+    @Test
+    void testGetResource() throws MalformedURLException {
+        JsonRpcClient jsonRpcClient = new JsonRpcClient("https://barnard-seed.starcoin.org");
+        Resource<Checkpoints> resource
+                = jsonRpcClient.getResource(
+                "0x00000000000000000000000000000001",
+                "0x1::Block::Checkpoints",
+                Checkpoints.class);
+        System.out.println(resource);
     }
 
     @Test

@@ -3,9 +3,7 @@ package org.starcoin.utils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novi.serde.DeserializationError;
-import org.starcoin.bean.ChainInfo;
-import org.starcoin.bean.Event;
-import org.starcoin.bean.RpcStateWithProof;
+import org.starcoin.bean.*;
 import org.starcoin.jsonrpc.JSONRPC2Request;
 import org.starcoin.jsonrpc.JSONRPC2Response;
 import org.starcoin.jsonrpc.client.JSONRPC2Session;
@@ -41,6 +39,15 @@ public class JsonRpcClientUtils {
         Class<Event[]> objectClass = Event[].class;
         Event[] events = callForObject(jsonRpcSession, method, Collections.singletonList(eventFilter), objectClass);
         return events == null ? new Event[0] : events;
+    }
+
+    public static <T> Resource<T> getResource(JSONRPC2Session jsonRpcSession, String accountAddress, String key, Class<T> resourceType) {
+        String method = "state.get_resource";
+        GetResourceOption getResourceOption = new GetResourceOption();
+        getResourceOption.setDecode(true);
+        Resource<T> resource = callForObject(jsonRpcSession, method, Arrays.asList(accountAddress, key, getResourceOption), new TypeReference<Resource<T>>() {
+        });
+        return resource;
     }
 
     public static BigInteger getTokenScalingFactor(JSONRPC2Session jsonRpcSession, String token) {
