@@ -613,3 +613,58 @@ SET
   `voting_turnout_threshold` = '183502200000000'
 WHERE
   (`dao_id` = 'starswap_dao') and (`proposal_number` = '4');
+
+
+
+-- ------------ 2022-11-16 ------------
+ALTER TABLE `proposal`
+CHANGE COLUMN `description` `description` VARCHAR(5000) NULL DEFAULT NULL ;
+
+INSERT INTO`proposal` (
+  `dao_id`, `proposal_number`, `block_state_root`,
+  `block_height`, `description`, `title`, `voting_period_end`, `voting_period_start`,
+  `voting_type`, `submitted_at`, `submitted_by`, `voting_method`,
+  `circulating_voting_power`, `voting_turnout_threshold`
+  ) VALUES (
+  'starswap_dao', '5',
+  '0x668d8e5b3800d86167cfdf565786de605957c09a5137b27a9c413049279d3bea',
+  '7860932',
+  'The Starswap Aptos mainnet will be launched soon. After the multi-chain deployment, the original Starcoin chain Farm and Stake mining revenue will be reduced by 1/3 for the Aptos ecological economic model.\n\nConsidering that the growth of user popularity on the Aptos chain takes time, releasing too many rewards in the early stage is not conducive to ecological health, so it is proposed to adopt a gradual increase in rewards, and the unreleased rewards are still kept in the Starswap treasury of the Aptos network.\n\nTherefore, it is up to the community to vote to determine the mining rewards when the Aptos mainnet is launched:\n\n1. The reward for the release amount of Farm per second is set to 0.135, and the release amount per day is 11664 STAR. The final result is 1/2 of the amount (0.27) preset in the economic model.\n   Stake releases 0.004 per second and 345.6 STARs per day, and the final result is 1/2 of the amount (0.008) preset in the economic model.\n\n2. The release amount of Farm per second is set to 0.09, and the daily release amount is 7776 STAR. The final result is 1/3 of the amount preset in the economic model (0.27).\n\n   Stake releases 0.004 per second and 345.6 STARs per day, and the final result is 1/2 of the amount (0.008) preset in the economic model.\n\n3. The reward for the release amount of Farm per second is set to 0.0675, and the release amount per day is 5832 STAR. The final result is 1/4 of the amount preset in the economic model (0.27).\n\n   Stake releases 0.004 per second and 345.6 STARs per day, and the final result is 1/2 of the amount (0.008) preset in the economic model.\n\n| Choice   | Description                                                  |\n| -------- | ------------------------------------------------------------ |\n| Choice 1 | farm pool release per second: 0.135;<br/>stake pool release per second: 0.004 |\n| Choice 2 | farm pool release per second: 0.09;<br/>stake pool release per second: 0.004 |\n| Choice 3 | farm pool release per second: 0.0675;<br/>stake pool release per second: 0.004 |\n\n\n\n',
+  'Proposal for Starswap Aptos Mainnet launch mining reward',
+  '1663502400000', '1663243200000',
+  'SINGLE_CHOICE', '1663214040000',
+  '0xd117638e105403784bf6A92AA1276Ec1',
+  'OFF_CHAIN',
+  '611674000000000', '183502200000000'
+);
+
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '5', '0', 'farm pool release per second: 0.135; stake pool release per second: 0.004.');
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '5', '1', 'farm pool release per second: 0.09; stake pool release per second: 0.004.');
+INSERT INTO `proposal_voting_choice` (`dao_id`, `proposal_number`, `sequence_id`, `title`) VALUES ('starswap_dao', '5', '2', 'farm pool release per second: 0.0675; stake pool release per second: 0.004.');
+
+-- ----------------- update proposal block info. ------------------
+-- curl --location --request POST 'https://main-seed.starcoin.org' --header 'Content-Type: application/json' --data-raw '{"id":101,"jsonrpc":"2.0","method":"chain.info","params":[]}'
+UPDATE `proposal`
+SET
+  `block_state_root` = '0x672456c22ddd6b6a5d855a3fd504cea8c41846e9debafa3f428581d3f3347dbc',
+  `block_height` = '8928313'
+WHERE
+  (`dao_id` = 'starswap_dao') and (`proposal_number` = '5');
+
+-- ----------------- update proposal timestamps ------------------
+UPDATE `proposal`
+SET
+    `submitted_at` = UNIX_TIMESTAMP() * 1000,
+    `voting_period_start` = UNIX_TIMESTAMP('2022-11-17 12:00:00') * 1000,
+    `voting_period_end` = UNIX_TIMESTAMP('2022-11-20 12:00:00') * 1000
+WHERE
+    (`dao_id` = 'starswap_dao') AND (`proposal_number` = '5');
+
+-- ----------------- update proposal voting info. ------------------
+-- Get veSTAR amount from: https://starswap.xyz/#/stake/simulator
+UPDATE `proposal`
+SET
+  `circulating_voting_power` = '598783000000000',
+  `voting_turnout_threshold` = '179634900000000'
+WHERE
+  (`dao_id` = 'starswap_dao') and (`proposal_number` = '5');
