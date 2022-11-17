@@ -33,6 +33,11 @@ public class JsonRpcClientUtils {
         return callForObject(jsonRpcSession, method, Arrays.asList(accessPath, stateRoot), RpcStateWithProof.class);
     }
 
+    public static BlockHeader getBlockHeader(JSONRPC2Session session, Long number) {
+        String method = "chain.get_block_by_number";
+        Block block = callForObject(session, method, Collections.singletonList(number), Block.class);
+        return block.getHeader();
+    }
 
     public static Event[] getEvents(JSONRPC2Session jsonRpcSession, Map<String, Object> eventFilter) {
         String method = "chain.get_events";

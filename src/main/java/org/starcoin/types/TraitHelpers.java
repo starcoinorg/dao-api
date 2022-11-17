@@ -1,5 +1,7 @@
 package org.starcoin.types;
 
+import java.util.List;
+
 final class TraitHelpers {
     static void serialize_array16_u8_array(java.util.@com.novi.serde.ArrayLen(length = 16) List<@com.novi.serde.Unsigned Byte> value, com.novi.serde.Serializer serializer) throws com.novi.serde.SerializationError {
         if (value.size() != 16) {
@@ -8,6 +10,40 @@ final class TraitHelpers {
         for (@com.novi.serde.Unsigned Byte item : value) {
             serializer.serialize_u8(item);
         }
+    }
+
+    static void serialize_array4_u8_array(java.util.@com.novi.serde.ArrayLen(length = 16) List<@com.novi.serde.Unsigned Byte> value, com.novi.serde.Serializer serializer) throws com.novi.serde.SerializationError {
+        if (value.size() != 4) {
+            throw new java.lang.IllegalArgumentException("Invalid length for fixed-size array: " + value.size() + " instead of " + 4);
+        }
+        for (@com.novi.serde.Unsigned Byte item : value) {
+            serializer.serialize_u8(item);
+        }
+    }
+
+    static void serialize_array4_u8_array(byte[] value, com.novi.serde.Serializer serializer) throws com.novi.serde.SerializationError {
+        serialize_array4_u8_array(toByteList(value), serializer);
+    }
+
+    private static List<Byte> toByteList(byte[] value) {
+        List<Byte> address = new java.util.ArrayList<>(value.length);
+        for (int i = 0; i < value.length; i++) {
+            address.add(value[i]);
+        }
+        return address;
+    }
+
+    static void serialize_array32_u8_array(java.util.@com.novi.serde.ArrayLen(length = 16) List<@com.novi.serde.Unsigned Byte> value, com.novi.serde.Serializer serializer) throws com.novi.serde.SerializationError {
+        if (value.size() != 32) {
+            throw new java.lang.IllegalArgumentException("Invalid length for fixed-size array: " + value.size() + " instead of " + 32);
+        }
+        for (@com.novi.serde.Unsigned Byte item : value) {
+            serializer.serialize_u8(item);
+        }
+    }
+
+    static void serialize_array32_u8_array(byte[] value, com.novi.serde.Serializer serializer) throws com.novi.serde.SerializationError {
+        serialize_array32_u8_array(toByteList(value), serializer);
     }
 
     static java.util.@com.novi.serde.ArrayLen(length = 16) List<@com.novi.serde.Unsigned Byte> deserialize_array16_u8_array(com.novi.serde.Deserializer deserializer) throws com.novi.serde.DeserializationError {

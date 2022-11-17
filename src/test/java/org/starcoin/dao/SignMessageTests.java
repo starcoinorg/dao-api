@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novi.serde.DeserializationError;
 import com.novi.serde.SerializationError;
 import org.junit.jupiter.api.Test;
+import org.starcoin.bean.BlockHeader;
 import org.starcoin.bean.Checkpoints;
 import org.starcoin.bean.Resource;
 import org.starcoin.dao.utils.JsonRpcClient;
@@ -53,6 +54,13 @@ public class SignMessageTests {
                 "0x1::Block::Checkpoints",
                 Checkpoints.class);
         System.out.println(resource);
+    }
+
+    @Test
+    void testGetBlockHeader() throws MalformedURLException {
+        JsonRpcClient jsonRpcClient = new JsonRpcClient("https://barnard-seed.starcoin.org");
+        BlockHeader blockHeader = jsonRpcClient.getBlockHeader(111111L);
+        System.out.println(blockHeader);
     }
 
     @Test

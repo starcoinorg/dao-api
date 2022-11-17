@@ -1,10 +1,7 @@
 package org.starcoin.dao.utils;
 
 import com.novi.serde.DeserializationError;
-import org.starcoin.bean.ChainInfo;
-import org.starcoin.bean.Event;
-import org.starcoin.bean.Resource;
-import org.starcoin.bean.RpcStateWithProof;
+import org.starcoin.bean.*;
 import org.starcoin.dao.data.model.Pair;
 import org.starcoin.jsonrpc.client.JSONRPC2Session;
 import org.starcoin.types.AccountResource;
@@ -44,6 +41,10 @@ public class JsonRpcClient {
 
     public <T> Resource<T> getResource(String accountAddress, String key, Class<T> resourceType) {
         return JsonRpcClientUtils.getResource(this.jsonRpcSession, accountAddress, key, resourceType);
+    }
+
+    public BlockHeader getBlockHeader(Long number) {
+        return JsonRpcClientUtils.getBlockHeader(this.jsonRpcSession, number);
     }
 
     public RpcStateWithProof getStateWithProofByRoot(String accessPath, String stateRoot) {
