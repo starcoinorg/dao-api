@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novi.serde.DeserializationError;
 import com.novi.serde.SerializationError;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.starcoin.bean.BlockHeader;
 import org.starcoin.bean.Checkpoints;
@@ -13,6 +14,7 @@ import org.starcoin.dao.vo.CastVoteVO;
 import org.starcoin.types.AccountResource;
 import org.starcoin.types.ChainId;
 import org.starcoin.types.SignedMessage;
+import org.starcoin.utils.ConvertUtils;
 import org.starcoin.utils.HexUtils;
 import org.starcoin.utils.SignatureUtils;
 
@@ -21,6 +23,7 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.starcoin.utils.ConvertUtils.getBlockHash;
 
 public class SignMessageTests {
 
@@ -57,11 +60,16 @@ public class SignMessageTests {
     }
 
     @Test
-    void testGetBlockHeader() throws MalformedURLException {
+    void testGetBlockHeader() throws MalformedURLException, SerializationError {
         JsonRpcClient jsonRpcClient = new JsonRpcClient("https://barnard-seed.starcoin.org");
         BlockHeader blockHeader = jsonRpcClient.getBlockHeader(111111L);
         System.out.println(blockHeader);
+        org.starcoin.types.BlockHeader typesBlockHeader = ConvertUtils.toTypesBlockHeader(blockHeader);
+        byte[] hash = getBlockHash(typesBlockHeader);
+        String calculatedHash = HexUtils.encode(hash);
+        Assertions.assertEquals(calculatedHash.toLowerCase(), blockHeader.getBlockHash().toLowerCase());
     }
+
 
     @Test
     void CastVoteVOSerializeTest() throws JsonProcessingException {
