@@ -1,6 +1,7 @@
 package org.starcoin.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novi.serde.DeserializationError;
 import org.starcoin.bean.*;
@@ -50,8 +51,8 @@ public class JsonRpcClientUtils {
         String method = "state.get_resource";
         GetResourceOption getResourceOption = new GetResourceOption();
         getResourceOption.setDecode(true);
-        Resource<T> resource = callForObject(jsonRpcSession, method, Arrays.asList(accountAddress, key, getResourceOption), new TypeReference<Resource<T>>() {
-        });
+        Resource<T> resource = callForObject(jsonRpcSession, method, Arrays.asList(accountAddress, key, getResourceOption),
+                getObjectMapper().getTypeFactory().constructParametricType(Resource.class, resourceType));
         return resource;
     }
 
@@ -130,9 +131,13 @@ public class JsonRpcClientUtils {
      * @return method result
      */
     public static <T> T callForObject(JSONRPC2Session jsonRpcSession, String method, List<Object> params, TypeReference<T> typeRef) {
-        return callForObject(jsonRpcSession, method, params, (result) -> {
-            return getObjectMapper().convertValue(result, typeRef);
-        });
+        return callForObject(jsonRpcSession, method, params,
+                (result) -> getObjectMapper().convertValue(result, typeRef));
+    }
+
+    private static <T> T callForObject(JSONRPC2Session jsonRpcSession, String method, List<Object> params, JavaType javaType) {
+        return callForObject(jsonRpcSession, method, params,
+                (result) -> getObjectMapper().convertValue(result, javaType));
     }
 
     /**

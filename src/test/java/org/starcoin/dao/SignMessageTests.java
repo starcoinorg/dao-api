@@ -2,6 +2,7 @@ package org.starcoin.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.novi.serde.Bytes;
 import com.novi.serde.DeserializationError;
 import com.novi.serde.SerializationError;
 import org.junit.jupiter.api.Assertions;
@@ -11,12 +12,12 @@ import org.starcoin.bean.Checkpoints;
 import org.starcoin.bean.Resource;
 import org.starcoin.dao.utils.JsonRpcClient;
 import org.starcoin.dao.vo.CastVoteVO;
-import org.starcoin.types.AccountResource;
-import org.starcoin.types.ChainId;
-import org.starcoin.types.SignedMessage;
+import org.starcoin.utils.TransactionUtils;
+import org.starcoin.types.*;
 import org.starcoin.utils.ConvertUtils;
 import org.starcoin.utils.HexUtils;
 import org.starcoin.utils.SignatureUtils;
+import org.starcoin.utils.StarcoinClient;
 
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -26,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.starcoin.utils.ConvertUtils.getBlockHash;
 
 public class SignMessageTests {
+
 
     @Test
     public void testVerifySignedMessage() throws SerializationError, DeserializationError {
@@ -70,7 +72,6 @@ public class SignMessageTests {
         Assertions.assertEquals(calculatedHash.toLowerCase(), blockHeader.getBlockHash().toLowerCase());
     }
 
-
     @Test
     void CastVoteVOSerializeTest() throws JsonProcessingException {
         CastVoteVO castVoteVO = new CastVoteVO();
@@ -86,4 +87,45 @@ public class SignMessageTests {
         String hex = HexUtils.byteArrayToHex(json.getBytes(StandardCharsets.UTF_8));
         System.out.println(hex);
     }
+
+    @Test
+    void test_checkpoint_entry() throws MalformedURLException, SerializationError, DeserializationError {
+        StarcoinClient starcoinClient = new StarcoinClient("https://barnard-seed.starcoin.org", 251);
+        TransactionPayload transactionPayload = TransactionUtils.encodeEmptyArgsScriptFunction(
+                "0x00000000000000000000000000000001::Block",
+                "checkpoint_entry");
+        submitTxUsingTestAccount(starcoinClient, transactionPayload);
+    }
+
+    @Test
+    void test_update_state_root_entry() throws MalformedURLException, SerializationError, DeserializationError {
+        JsonRpcClient jsonRpcClient = new JsonRpcClient("https://barnard-seed.starcoin.org");
+        Resource<Checkpoints> checkpointsResource
+                = jsonRpcClient.getResource(
+                "0x00000000000000000000000000000001",
+                "0x1::Block::Checkpoints",
+                Checkpoints.class);
+        Long blockNumber = checkpointsResource.getJson().getLastNumber();
+        System.out.println("LastNumber: " + blockNumber);
+        BlockHeader blockHeader = jsonRpcClient.getBlockHeader(blockNumber);
+
+        StarcoinClient starcoinClient = new StarcoinClient("https://barnard-seed.starcoin.org", 251);
+
+        TransactionPayload transactionPayload = TransactionUtils.encodeU8VectorScriptFunction(
+                "0x00000000000000000000000000000001::Block",
+                "update_state_root_entry",
+                Bytes.valueOf(ConvertUtils.toTypesBlockHeader(blockHeader).bcsSerialize()));
+
+        submitTxUsingTestAccount(starcoinClient, transactionPayload);
+    }
+
+
+    private void submitTxUsingTestAccount(StarcoinClient starcoinClient, TransactionPayload transactionPayload) throws SerializationError, DeserializationError {
+        Object result = starcoinClient.submitTransaction(
+                AccountAddress.valueOf(HexUtils.hexToByteArray("0x5e66ebe084f888160acd24e3a320cf2b")),
+                new Ed25519PrivateKey(Bytes.valueOf(HexUtils.decode(""))),
+                transactionPayload);
+        System.out.println(result);
+    }
+
 }
