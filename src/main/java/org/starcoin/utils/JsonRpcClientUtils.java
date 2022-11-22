@@ -61,7 +61,7 @@ public class JsonRpcClientUtils {
         // public fun scaling_factor<TokenType: store>(): u128
         //
         List<BigInteger> resultFields = contractCallV2(jsonRpcSession, "0x1::Token::scaling_factor",
-                Arrays.asList(token), Collections.emptyList(), new TypeReference<List<BigInteger>>() {
+                Collections.singletonList(token), Collections.emptyList(), new TypeReference<List<BigInteger>>() {
                 });
         return resultFields.get(0);
     }
@@ -141,7 +141,7 @@ public class JsonRpcClientUtils {
     }
 
     /**
-     * Call RPC method and get result of type 'T'.
+     * Call RPC method and get result of type `T`.
      **/
     @SuppressWarnings("unchecked")
     public static <T> T callForObject(JSONRPC2Session jsonRpcSession, String method, List<Object> params, Class<T> objectClass) {

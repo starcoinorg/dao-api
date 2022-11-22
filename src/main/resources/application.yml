@@ -49,6 +49,10 @@ starcoin:
     fixed-delay: 10000
   pulling-event-task-auto-create:
     fixed-delay: 30000
+  checkpoint-update:
+    fixed-delay: 30000
+    account-address: ${STARCOIN_CHECKPOINT_UPDATE_ACCOUNT_ADDRESS}
+    private-key: ${STARCOIN_CHECKPOINT_UPDATE_PRIVATE_KEY}
   event-filter:
     addresses: null
   dao:
