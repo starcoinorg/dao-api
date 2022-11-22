@@ -13,18 +13,18 @@ spec:
   rules:
     - http:
         paths:
-          - path: /dev/*
-            backend:
-              serviceName: "dao-api-dev"
-              servicePort: 80
+#          - path: /dev/*
+#            backend:
+#              serviceName: "dao-api-dev"
+#              servicePort: 80
           - path: /main/*
             backend:
               serviceName: "dao-api"
               servicePort: 80
-#          - path: /barnard/*
-#            backend:
-#              serviceName: "dao-api-barnard"
-#              servicePort: 80
+          - path: /barnard/*
+            backend:
+              serviceName: "dao-api-barnard"
+              servicePort: 80
 #          - path: /proxima/*
 #            backend:
 #              serviceName: "dao-api-proxima"
