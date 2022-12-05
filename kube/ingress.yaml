@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "dao-api-ingress"
@@ -18,13 +18,19 @@ spec:
 #              serviceName: "dao-api-dev"
 #              servicePort: 80
           - path: /main/*
+            pathType: ImplementationSpecific
             backend:
-              serviceName: "dao-api"
-              servicePort: 80
+              service:
+                name: "dao-api"
+                port:
+                  number: 80
           - path: /barnard/*
+            pathType: ImplementationSpecific
             backend:
-              serviceName: "dao-api-barnard"
-              servicePort: 80
+              service:
+                name: "dao-api-barnard"
+                port:
+                  number: 80
 #          - path: /proxima/*
 #            backend:
 #              serviceName: "dao-api-proxima"
