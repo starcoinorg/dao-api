@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: dao-api-barnard
-          image: ghcr.io/starcoinorg/starcoin_dao_api:sha-395ae5a
+          image: ghcr.io/starcoinorg/starcoin_dao_api:sha-cd0647e
           ports:
             - containerPort: 8600
           env:
